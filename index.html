@@ -52,13 +52,13 @@
         .leitfrage-header { font-weight: bold; font-size: 20px; color: var(--text-main); margin-bottom: 10px; display: block; }
         .leitfrage-text { font-size: 22px; font-style: italic; line-height: 1.4; color: #333; }
 
-        /* --- TIMELINE BILDER POPUPS (Slide 2 - NEU) --- */
+        /* --- TIMELINE BILDER POPUPS (Slide 2) --- */
         .hist-popup-img {
             position: absolute;
-            bottom: 60px; /* Über dem Text */
+            bottom: 60px;
             left: 50%;
             transform: translateX(-50%) scale(0.5);
-            width: 220px; /* Bildgröße */
+            width: 220px;
             opacity: 0;
             transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
@@ -76,7 +76,6 @@
             border-radius: 4px;
             background: #fff;
         }
-
 
         /* --- CSS FÜR SLIDE 12 (Häuser Zerstörung) --- */
         .house-grid-container {
@@ -169,20 +168,22 @@
         .budget-summary { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 15px; border-top: 2px solid #ccc; font-size: 18px; }
 
 
-        /* --- AVATARE (Ganz links positioniert) --- */
+        /* --- AVATARE (Ganz links & unten positioniert) --- */
         .char-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; display: grid; grid-template-columns: 1fr; align-items: end; justify-items: start; }
         
         .character-container { 
             position: relative; 
-            bottom: -450px; 
+            bottom: -450px; /* Startet außerhalb des Bildes */
             transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
             width: 300px; 
             text-align: left; 
             margin: 0;
             left: -30px; /* GANZ LINKS rangezogen */
         }
-        .character-container.visible { bottom: 0; }
+        .character-container.visible { bottom: 0; /* Fährt nach oben an den unteren Rand */ }
         .char-img { width: 100%; height: auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); transition: opacity 0.1s ease; -webkit-user-drag: none; }
+        
+        /* UPDATE: Namen vereinfacht */
         .char-label { background: var(--myanmar-red); color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; display: inline-block; margin-top: -25px; position: relative; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.3); margin-left: 40px; }
         #char-general .char-label { background: var(--military-green); }
 
@@ -231,11 +232,11 @@
     <div class="char-overlay">
         <div class="character-container" id="char-expert">
             <img id="expert-img" src="" class="char-img" alt="Expertin">
-            <div class="char-label">Dr. Thida (Expertin)</div>
+            <div class="char-label">Expertin</div>
         </div>
         <div class="character-container" id="char-general">
             <img id="general-img" src="" class="char-img" alt="General">
-            <div class="char-label">General Aung (Militär)</div>
+             <div class="char-label">General</div>
         </div>
     </div>
     
@@ -639,16 +640,14 @@
         ['expert', 'general'].forEach(c => document.getElementById(`char-${c}`).classList.remove('visible'));
         closeDialog();
 
-        // SLIDE 2: Historie (Expertin erscheint)
+        // SLIDE 2: Historie (KEINE EXPERTIN MEHR)
         if(n === 2) {
              initHistCanvas();
-             document.getElementById('char-expert').classList.add('visible'); // Expertin hier sichtbar
-             setTimeout(() => triggerDialog('expert', 'Willkommen. Um das Ausmaß von Nargis zu verstehen, müssen wir zuerst die Geschichte Myanmars kennen.'), 500);
+             // Expertin entfernt: Keine Sichtbarkeit, kein Dialog
         }
         
-        // SLIDE 3: Diagramm (KEINE EXPERTIN MEHR)
+        // SLIDE 3: Diagramm (KEINE EXPERTIN)
         if(n === 3) { 
-            // Expertin wird NICHT angezeigt (gemäß Anweisung)
             resetDiagram(); 
             document.getElementById('leitfrage-popup').classList.remove('visible'); // Popup reset
         }
@@ -699,8 +698,9 @@
     function triggerDialog(who, text) {
         const bubble = document.getElementById('dialog-bubble');
         let displayName = '', bubbleClass = '';
-        if(who === 'expert') { displayName = 'Dr. Thida'; bubbleClass = 'bubble-pos-expert'; }
-        else if(who === 'general') { displayName = 'General Aung'; bubbleClass = 'bubble-pos-general'; }
+        // UPDATE: Namen in Sprechblasen vereinfacht
+        if(who === 'expert') { displayName = 'Expertin'; bubbleClass = 'bubble-pos-expert'; }
+        else if(who === 'general') { displayName = 'General'; bubbleClass = 'bubble-pos-general'; }
         
         document.getElementById('dialog-text').innerHTML = `<strong>${displayName}:</strong><br>"${text}"`;
         bubble.className = "speech-bubble " + bubbleClass;
@@ -714,7 +714,7 @@
         stopTalkingAnimation();
         // Weiterleitungslogik
         if(current === 'slide1') nextSlide(); 
-        if(current === 'slide2' && histStep === 0) { setTimeout(() => triggerDialog('expert', 'Jahrzehnte der Militärherrschaft haben den Staat ausgehöhlt und isoliert.'), 500); histStep = -1; }
+        // Slide 2 Logik für Dialoge entfernt
     }
 
     // --- FUNKTIONEN FÜR DIAGRAMM ANIMATION (Slide 3) ---
@@ -725,7 +725,7 @@
              nargisBar.classList.remove('nargis-placeholder');
              nargisBar.classList.add('nargis-grown');
              
-             // NEU: Statt Expertin, zeige das Popup mit der Leitfrage
+             // Popup mit der Leitfrage anzeigen
              setTimeout(() => {
                  document.getElementById('leitfrage-popup').classList.add('visible');
              }, 1000);
@@ -782,9 +782,12 @@
             histActorX += 3; 
             if(histActorX >= histTargetX) {
                 histActorX = histTargetX;
-                if(histStep === 2) { histActorType = 'tank'; triggerDialog('general', 'Das Militär übernimmt Verantwortung für die Stabilität.'); }
-                if(histStep === 3) { tankFiredTimer = 30; setTimeout(() => { uprisingEliminated = true; }, 500); triggerDialog('general', 'Ordnung muss um jeden Preis wiederhergestellt werden.'); isHistAnimating = false; document.getElementById('hist-btn').innerText = "Weiter zu 2008"; }
-                if(histStep === 4) { histActorType = 'ballotbox'; triggerDialog('expert', '2008: Ein isolierter Staat, der sein Volk als Bedrohung sieht, ist nicht bereit für eine Naturkatastrophe.'); document.getElementById('hist-btn').innerText = "Zum Vergleich"; }
+                // Dialoge auf Slide 2 entfernt
+                if(histStep === 3) { tankFiredTimer = 30; setTimeout(() => { uprisingEliminated = true; }, 500); isHistAnimating = false; document.getElementById('hist-btn').innerText = "Weiter zu 2008"; }
+                if(histStep === 4) { 
+                    histActorType = 'ballotbox'; 
+                    document.getElementById('hist-btn').innerText = "Zum Vergleich"; 
+                }
             }
         }
     }
@@ -854,23 +857,25 @@
         if(histStep === 1) { 
             chainBroken = true; isHistAnimating = true; animateHistLoop(); 
             status.innerText = "1948: Unabhängigkeit! Doch die Freude währt kurz."; btn.innerText = "Aufbruch nach 1962"; 
-            document.getElementById('img-1948').classList.add('visible'); // BILD POPUP
-            triggerDialog('expert', 'Die Unabhängigkeit 1948 war ein Moment der Hoffnung.'); 
+            document.getElementById('img-1948').classList.add('visible'); 
+            // KEIN Dialog der Expertin mehr hier
         } 
         else if(histStep === 2) { 
             histTargetX = histCanvas.width * 0.35; isHistAnimating = true; 
             status.innerText = "1962: Der Putsch beendet die Demokratie."; btn.innerText = "Weiter zum Aufstand (1988)"; 
-            document.getElementById('img-1962').classList.add('visible'); // BILD POPUP
+            document.getElementById('img-1962').classList.add('visible');
+            // KEIN Dialog des Generals mehr hier
         } 
         else if(histStep === 3) { 
             histTargetX = histCanvas.width * 0.6; showUprising = true; isHistAnimating = true; 
             status.innerText = "1988: Volksaufstand wird niedergeschlagen."; 
-            document.getElementById('img-1988').classList.add('visible'); // BILD POPUP
+            document.getElementById('img-1988').classList.add('visible');
+             // KEIN Dialog des Generals mehr hier
         } 
         else if(histStep === 4) { 
             histTargetX = histCanvas.width * 0.9; isHistAnimating = true; 
             status.innerText = "2008: Eine isolierte Militärdiktatur trifft auf einen Zyklon."; 
-            document.getElementById('img-2008').classList.add('visible'); // BILD POPUP
+            document.getElementById('img-2008').classList.add('visible');
         } 
         else if(histStep > 4) { nextSlide(); }
     }
