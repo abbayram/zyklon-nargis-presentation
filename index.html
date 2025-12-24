@@ -14,6 +14,8 @@
             --text-main: #333;
             --text-light: #666;
             --bg-slide: #fcfcfc;
+            --brown-box: #8D6E63;
+            --dark-green-circle: #1B5E20;
         }
         body { margin: 0; height: 100vh; background-color: #111; display: flex; justify-content: center; align-items: center; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; overflow: hidden; user-select: none; -webkit-user-select: none; }
         #presentation-stage { width: 1280px; height: 720px; background-color: var(--bg-slide); position: relative; overflow: hidden; }
@@ -26,7 +28,30 @@
         .nav-controls { position: absolute; bottom: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
         h1 { font-size: 42px; color: var(--myanmar-red); margin: 0 0 10px 0; } h2 { font-size: 32px; color: var(--text-main); border-bottom: 4px solid var(--myanmar-red); padding-bottom: 15px; margin-bottom: 30px; } h3 { font-size: 24px; color: var(--text-light); margin: 0; } p, li { font-size: 20px; line-height: 1.6; color: var(--text-main); }
         
-        /* --- NEU: STYLES FÜR NARGIS FAKTEN SLIDE (Slide 5) --- */
+        /* --- NEU: STYLES FÜR "DAS URTEIL" SLIDE (Slide 12) --- */
+        .urteil-container { display: flex; flex-direction: column; height: 85%; }
+        .diagram-top-row { display: flex; justify-content: space-between; align-items: flex-start; position: relative; margin-bottom: 20px; }
+        .diagram-box { border: 3px solid var(--brown-box); background: #fff; width: 30%; position: relative; z-index: 2; }
+        .diagram-box-header { background: var(--brown-box); color: white; font-weight: bold; padding: 10px; text-align: center; font-size: 20px; }
+        .diagram-box ul { padding: 15px 20px 15px 40px; margin: 0; }
+        .diagram-box li { font-size: 16px; margin-bottom: 8px; }
+        
+        .diagram-center { position: absolute; top: 100px; left: 50%; transform: translateX(-50%); z-index: 1; text-align: center; }
+        .central-circle { width: 220px; height: 220px; background: var(--dark-green-circle); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 24px; text-align: center; line-height: 1.2; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; z-index: 5;}
+        
+        .diagram-bottom-row { display: flex; justify-content: center; margin-top: 40px; position: relative; }
+        .diagram-box-bottom { width: 40%; }
+
+        /* Dicke Pfeile für das Diagramm */
+        .big-arrow { position: absolute; z-index: 0; }
+        .arrow-left-to-center { top: 70px; left: 28%; width: 180px; height: 60px; background: var(--brown-box); clip-path: polygon(0 20%, 60% 20%, 60% 0, 100% 50%, 60% 100%, 60% 80%, 0 80%); transform: rotate(20deg); }
+        .arrow-right-to-center { top: 70px; right: 28%; width: 180px; height: 60px; background: var(--brown-box); clip-path: polygon(0 20%, 60% 20%, 60% 0, 100% 50%, 60% 100%, 60% 80%, 0 80%); transform: rotate(160deg); }
+        .arrow-bottom-to-center { bottom: 130px; left: 50%; width: 120px; height: 80px; background: var(--brown-box); clip-path: polygon(20% 100%, 20% 40%, 0 40%, 50% 0, 100% 40%, 80% 40%, 80% 100%); transform: translateX(-50%); }
+
+        .diagram-summary-text { text-align: center; font-size: 18px; margin: 30px auto 20px; max-width: 90%; }
+        .final-answer-box { border: 4px solid #333; padding: 20px; background: #f0f0f0; font-weight: bold; font-size: 20px; text-align: center; }
+
+        /* --- STYLES FÜR NARGIS FAKTEN SLIDE (Slide 5) --- */
         .facts-container { display: flex; gap: 40px; align-items: flex-start; margin-top: 30px; }
         .facts-map { width: 50%; flex-shrink: 0; }
         .facts-map img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
@@ -49,44 +74,7 @@
         .bar-value-outside { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 20px; color: var(--myanmar-red); font-weight: bold; font-size: 36px; opacity: 0; transition: opacity 1s 1s; }
         .nargis-grown + .bar-value-outside { opacity: 1; }
 
-        /* --- NEU: STYLES FÜR ANALYSE A (Slide 6) --- */
-        .analysis-col-container { display: flex; gap: 40px; align-items: flex-start; margin-top: 30px; }
-        .analysis-col { flex: 1; }
-        .analysis-col h3 { color: var(--myanmar-red); border-bottom: 2px solid var(--myanmar-red); padding-bottom: 10px; margin-bottom: 20px; }
-        .analysis-col ul { list-style-type: disc; padding-left: 20px; }
-        .analysis-col li { margin-bottom: 15px; font-size: 18px; }
-        .analysis-highlight { background: #f4f4f4; padding: 20px; border-left: 5px solid var(--myanmar-red); margin-top: 30px; font-style: italic; font-size: 20px; color: var(--text-main); }
-
-        /* --- NEU: STYLES FÜR CONTROL STATE SLIDE (Slide 7) --- */
-        .control-state-container { display: flex; gap: 40px; margin-top: 30px; align-items: center; }
-        .left-column, .right-column { flex: 1; }
-        .center-graphic { flex: 1.5; position: relative; text-align: center; }
-        .center-graphic img { width: 80%; height: auto; }
-        .graphic-arrow { position: absolute; width: 0; height: 0; border-style: solid; }
-        .arrow-label { position: absolute; font-weight: bold; font-size: 18px; color: var(--text-main); }
-        
-        /* Pfeile nach innen */
-        .arrow-in { border-width: 15px 0 15px 40px; border-color: transparent transparent transparent var(--myanmar-red); }
-        .arrow-kontrolle { top: 25%; left: 5%; transform: rotate(30deg); }
-        .label-kontrolle { top: 20%; left: 0%; }
-        .arrow-macht { top: 55%; left: 5%; transform: rotate(-30deg); }
-        .label-macht { top: 60%; left: 0%; }
-        .arrow-sicherheit { top: 25%; right: 5%; transform: rotate(150deg); }
-        .label-sicherheit { top: 20%; right: 0%; }
-        .arrow-ordnung { top: 55%; right: 5%; transform: rotate(210deg); }
-        .label-ordnung { top: 60%; right: 0%; }
-        
-        /* Pfeile nach außen (gestrichelt) */
-        .arrow-out-dashed { position: absolute; width: 80px; height: 0; border-top: 4px dashed #666; }
-        .arrow-out-dashed::after { content: ''; position: absolute; right: -10px; top: -10px; border-width: 10px 0 10px 20px; border-style: solid; border-color: transparent transparent transparent #666; }
-        .arrow-schutz { top: 15%; right: 25%; transform: rotate(-20deg); }
-        .label-schutz { top: 10%; right: 20%; color: #666; }
-        .arrow-dienstleistungen-r { bottom: 20%; right: 20%; transform: rotate(20deg); }
-        .label-dienstleistungen-r { bottom: 15%; right: 15%; color: #666; }
-        .arrow-dienstleistungen-l { bottom: 20%; left: 20%; transform: rotate(160deg); }
-        .label-dienstleistungen-l { bottom: 15%; left: 15%; color: #666; }
-
-        /* --- NEUE ANALYSE PUNKTE STYLES (Slide 8 & 10) --- */
+        /* --- ANALYSE PUNKTE STYLES (Slide 8 & 10) --- */
         .analysis-point { background: #f4f4f4; border-left: 5px solid var(--myanmar-red); padding: 20px; margin-bottom: 20px; opacity: 0; transform: translateX(-20px); transition: all 0.8s ease; }
         .analysis-point.visible { opacity: 1; transform: translateX(0); }
         .analysis-point h3 { color: var(--myanmar-red); margin-bottom: 10px; }
@@ -303,63 +291,25 @@
         <h3>Ein Staat, der auf Kontrolle, nicht auf Schutz ausgerichtet ist</h3>
         <div class="analysis-col-container">
             <div class="analysis-col">
-                <h3>Die Tatmadaw (Militär)</h3>
-                <ul>
-                    <li>Zentrale Ordnungsfunktion im Inneren (Croissant 2015, S. 318)</li>
-                    <li>Selbstverständnis als „Bewahrer der Nation“, nicht als Dienstleister</li>
-                </ul>
-                <h3>Ressourcenlogik</h3>
-                <ul>
-                    <li>Militär beansprucht Großteil der ökonomischen Ressourcen (Croissant 2015, S. 317)</li>
-                </ul>
-            </div>
-            <div class="analysis-col">
-                <h3>Schwache Zivilinstitutionen</h3>
-                <ul>
-                    <li>Zivile Staatsstrukturen nach 1988 gezielt geschwächt (Croissant 2015, S. 317)</li>
-                    <li>Geringe administrative Kapazität, fehlende Rechenschaftspflicht (Croissant 2015, S. 317)</li>
-                </ul>
-                 <div class="analysis-highlight">
-                    Fokus auf Sicherheit und Machterhalt, nicht auf öffentliche Dienstleistungen wie Schutz.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="slide" id="slide7">
-        <h2>Politische Verwundbarkeit (1/2): Ein Staat, der auf Kontrolle, nicht auf Schutz ausgerichtet ist</h2>
-        <div class="control-state-container">
-            <div class="left-column">
                 <ul>
                     <li><strong>Die Tatmadaw (Militär):</strong> Zentrale Ordnungsfunktion im Inneren (Croissant 2015, S. 318).</li>
                     <li>Selbstverständnis als „Bewahrer der Nation“, nicht als Dienstleister.</li>
                 </ul>
+                <div style="background: #eee; padding: 15px; border-left: 4px solid var(--myanmar-red); margin-top:20px;">
+                    <i>"Fokus auf Sicherheit und Machterhalt, nicht auf öffentliche Dienstleistungen wie Schutz."</i>
+                </div>
             </div>
-            <div class="center-graphic">
-                <img src="./assets/map_blockade.png" alt="Karte von Myanmar">
-                <div class="graphic-arrow arrow-in arrow-kontrolle"></div><span class="arrow-label label-kontrolle">Kontrolle</span>
-                <div class="graphic-arrow arrow-in arrow-macht"></div><span class="arrow-label label-macht">Macht</span>
-                <div class="graphic-arrow arrow-in arrow-sicherheit"></div><span class="arrow-label label-sicherheit">Sicherheit</span>
-                <div class="graphic-arrow arrow-in arrow-ordnung"></div><span class="arrow-label label-ordnung">Ordnung</span>
-                <div class="arrow-out-dashed arrow-schutz"></div><span class="arrow-label label-schutz">Schutz</span>
-                <div class="arrow-out-dashed arrow-dienstleistungen-r"></div><span class="arrow-label label-dienstleistungen-r">Dienstleistungen</span>
-                <div class="arrow-out-dashed arrow-dienstleistungen-l"></div><span class="arrow-label label-dienstleistungen-l">Dienstleistungen</span>
-            </div>
-            <div class="right-column">
+            <div class="analysis-col">
                 <ul>
                     <li><strong>Schwache Zivilinstitutionen:</strong> Zivile Staatsstrukturen nach 1988 gezielt geschwächt (Croissant 2015, S. 317).</li>
                     <li>Geringe administrative Kapazität, fehlende Rechenschaftspflicht (Croissant 2015, S. 317).</li>
                     <li><strong>Ressourcenlogik:</strong> Militär beansprucht Großteil der ökonomischen Ressourcen (Croissant 2015, S. 317).</li>
-                    <li>Fokus auf Sicherheit und Machterhalt, nicht auf öffentliche Dienstleistungen.</li>
                 </ul>
             </div>
         </div>
-        <div style="text-align: center; margin-top: 30px;">
-            <button class="btn-outline" onclick="triggerDialog('expert', 'Diese Grafik verdeutlicht: Der Staat war mit sich selbst beschäftigt. Ressourcen flossen in Kontrolle und Machterhalt, nicht in den Schutz der Bürger oder Dienstleistungen.')">Fazit der Expertin</button>
-        </div>
     </div>
 
-    <div class="slide slide-blockade" id="slide8">
+    <div class="slide slide-blockade" id="slide7">
         <h2>Der Zynismus der Macht: Die Blockade der Hilfe</h2>
         <p>In den Tagen nach dem Sturm warteten internationale Hilfsschiffe und Flugzeuge vergeblich auf eine Einreiseerlaubnis.</p>
         <div style="position: relative; width: 100%; height: 400px; margin-top: 30px;">
@@ -371,7 +321,7 @@
         </div>
     </div>
 
-    <div class="slide" id="slide9">
+    <div class="slide" id="slide8">
         <h2>Analyse B: Ökonomische Faktoren</h2>
         <div style="margin-top: 40px;">
             <div class="analysis-point" id="eco-point-1">
@@ -389,7 +339,7 @@
         </div>
     </div>
 
-    <div class="slide" id="slide10">
+    <div class="slide" id="slide9">
         <h2>Der Faktor "Preparedness" (Vergleich: Mala 2006)</h2>
         <p>Zoom auf ein Dorf während Zyklon Mala (2006). Dank Warnung wussten die Menschen, was zu tun war.</p>
         <canvas id="evacuation-canvas"></canvas>
@@ -398,7 +348,7 @@
         </div>
     </div>
 
-    <div class="slide" id="slide11">
+    <div class="slide" id="slide10">
         <h2>Analyse C: Umweltfaktoren</h2>
         <div style="display: flex; align-items: center; gap: 40px; margin-top: 40px;">
             <div style="width: 50%">
@@ -414,7 +364,7 @@
         </div>
     </div>
 
-    <div class="slide" id="slide12">
+    <div class="slide" id="slide11">
         <h2>Die Anatomie des Sturms (Simulation)</h2>
         <p>Das Ayeyarwady-Delta liegt extrem tief. Eine 5-Meter-Sturmflut traf auf ungeschützte Küsten.</p>
         <canvas id="flood-canvas"></canvas>
@@ -422,6 +372,63 @@
             <button class="btn" id="btn-mangroves" onclick="toggleMangroves()">Mangroven: INTAKT</button>
             <button class="btn" onclick="startFlood()">Flut auslösen</button>
             <button class="btn-outline" onclick="resetFlood()">Reset</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide12">
+        <h2 style="border-bottom: none; margin-bottom: 20px; font-size: 36px; text-align: center;">Das Urteil: Eine von Menschen gemachte Tragödie</h2>
+        
+        <div class="urteil-container">
+            <div class="diagram-top-row">
+                <div class="diagram-box">
+                    <div class="diagram-box-header">Politisches System</div>
+                    <ul>
+                        <li>Isolation</li>
+                        <li>Paranoia</li>
+                        <li>Blockierte Hilfe</li>
+                        <li>Fehlende Warnung</li>
+                    </ul>
+                </div>
+                
+                <div class="diagram-box" style="margin-left: auto;">
+                    <div class="diagram-box-header">Ökonomische Struktur</div>
+                    <ul>
+                        <li>Misswirtschaft</li>
+                        <li>Strukturelle Armut</li>
+                        <li>Keine Fluchtmöglichkeit</li>
+                        <li>Instabile Lebensgrundlage</li>
+                    </ul>
+                </div>
+
+                <div class="big-arrow arrow-left-to-center"></div>
+                <div class="big-arrow arrow-right-to-center"></div>
+            </div>
+
+            <div class="diagram-center">
+                <div class="central-circle">
+                    KATASTROPHE<br>NARGIS
+                </div>
+                 <div class="big-arrow arrow-bottom-to-center"></div>
+            </div>
+
+            <div class="diagram-bottom-row">
+                 <div class="diagram-box diagram-box-bottom">
+                    <div class="diagram-box-header">Ökologische Lage</div>
+                    <ul>
+                        <li>Systematische Vernachlässigung</li>
+                        <li>Fehlender Küstenschutz</li>
+                        <li>Zerstörte Schutzwälle</li>
+                    </ul>
+                </div>
+            </div>
+
+             <div class="diagram-summary-text">
+                Der Zyklon Nargis war der Auslöser, aber die jahrzehntelange Politik der Militärjunta war die Ursache. Die Katastrophe war das Resultat eines Systems, das seine eigene Bevölkerung extrem verwundbar gemacht hatte.
+            </div>
+
+             <div class="final-answer-box">
+                Antwort auf die Leitfrage: Die Gegebenheiten waren nicht zufällig, sondern das Ergebnis gezielter Politik, die Kontrolle über Wohlstand und Sicherheit stellte.
+            </div>
         </div>
     </div>
 
@@ -454,11 +461,9 @@
     </div>
 
     <div class="slide" id="slide14">
-        <h2>Fazit</h2>
-        <div style="background: #fff0f0; border: 2px solid var(--myanmar-red); padding: 30px; border-radius: 8px;">
-            <h3 style="color: var(--myanmar-red);">Antwort auf die Leitfrage:</h3>
-            <p>Nargis war ein extremes <strong>Naturereignis</strong>.</p>
-            <p>Die Dimension der Katastrophe war jedoch eindeutig <strong>Staatsversagen</strong>, verstärkt durch Armut und Umweltzerstörung.</p>
+        <h2>Abschluss</h2>
+        <div style="text-align: center; margin-top: 150px;">
+            <h1>Vielen Dank für Ihre Aufmerksamkeit.</h1>
         </div>
         <div style="text-align: center; margin-top: 30px;">
             <button class="btn-outline" onclick="location.reload()">Präsentation Neustarten</button>
@@ -543,7 +548,7 @@
          if(blockadeCanvas) { blockadeCanvas.width = blockadeCanvas.parentElement.offsetWidth; blockadeCanvas.height = 450; initBlockadeScene(); }
     }
 
-    // --- NAVIGATION & NEUE LOGIK (ANGESPASST AN NEUE REIHENFOLGE) ---
+    // --- NAVIGATION & NEUE LOGIK ---
     function showSlide(n) {
         document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
         document.getElementById(`slide${n}`).classList.add('active');
@@ -551,7 +556,7 @@
         closeDialog();
 
         // Expertin ist Standard, außer auf General-Slides
-        if(n !== 8) document.getElementById('char-expert').classList.add('visible');
+        if(n !== 7) document.getElementById('char-expert').classList.add('visible');
 
         // SLIDE 2: Historie
         if(n === 2) {
@@ -567,13 +572,13 @@
             resetTimeline();
         }
 
-        // SLIDE 5: Nargis Fakten (NEU) - Keine automatische Aktion
+        // SLIDE 5: Nargis Fakten
 
-        // SLIDE 6: Politische Analyse (Verschoben & Aktualisiert)
+        // SLIDE 6: Politische Analyse
         if(n === 6) { setTimeout(() => triggerDialog('expert', 'Der Staat war auf Kontrolle ausgerichtet, nicht auf den Schutz seiner Bürger.'), 500); }
 
-        // SLIDE 8: Blockade (Nur General, Verschoben)
-        if(n === 8) {
+        // SLIDE 7: Blockade (Nur General)
+        if(n === 7) {
              document.getElementById('char-expert').classList.remove('visible');
              document.getElementById('char-general').classList.add('visible');
              initBlockadeScene();
@@ -581,24 +586,29 @@
              setTimeout(() => triggerDialog('general', 'Unsere Souveränität ist unantastbar. Diese "Hilfe" ist nur ein Vorwand für ausländische Einmischung.'), 500);
         }
 
-        // SLIDE 9: Ökonomische Analyse (Animation, Verschoben)
-        if(n === 9) { 
+        // SLIDE 8: Ökonomische Analyse (Animation)
+        if(n === 8) { 
             document.querySelectorAll('.analysis-point').forEach(p => p.classList.remove('visible'));
             setTimeout(() => { document.getElementById('eco-point-1').classList.add('visible'); triggerDialog('expert', 'Erstens: Extreme Armut. Die Menschen hatten keine Reserven.'); }, 1000);
             setTimeout(() => { document.getElementById('eco-point-2').classList.add('visible'); triggerDialog('expert', 'Zweitens: Die instabilen Bambushütten boten null Schutz gegen die Flut.'); }, 4000);
             setTimeout(() => { document.getElementById('eco-point-3').classList.add('visible'); triggerDialog('expert', 'Drittens: Ohne Boote oder Fahrzeuge gab es keine Chance zur Flucht.'); }, 7000);
         }
 
-        // SLIDE 11: Umwelt Analyse (Animation, Verschoben)
-        if(n === 11) {
+        // SLIDE 10: Umwelt Analyse (Animation)
+        if(n === 10) {
             document.getElementById('env-point-1').classList.remove('visible');
             setTimeout(() => {
                  document.getElementById('env-point-1').classList.add('visible');
                  triggerDialog('expert', 'Ein entscheidender Faktor war der Verlust der Mangrovenwälder durch Abholzung. Der natürliche Schutzschild fehlte.');
             }, 1000);
         }
+        
+        // NEU: SLIDE 12: Das Urteil
+        if(n === 12) {
+             setTimeout(() => triggerDialog('expert', 'Fassen wir zusammen. Nargis war der Auslöser, aber die Katastrophe war menschengemacht.'), 500);
+        }
 
-        if(n === 13) { stopTalkingAnimation(); }
+        if(n === 14) { stopTalkingAnimation(); }
     }
     function nextSlide() { if(currentSlide < totalSlides) showSlide(++currentSlide); }
     function prevSlide() { if(currentSlide > 1) showSlide(--currentSlide); }
@@ -758,7 +768,7 @@
     }
 
     // ==========================================
-    // --- BLOCKADE ANIMATION (Slide 8) ---
+    // --- BLOCKADE ANIMATION (Slide 7) ---
     // ==========================================
     class HelpArrow {
         constructor(side) {
@@ -815,7 +825,7 @@
 
 
     // ==========================================
-    // --- SIMULATIONEN (Slides 9 & 12) ---
+    // --- SIMULATIONEN (Slides 9 & 11) ---
     // ==========================================
     class WaterParticle {
         constructor() { this.reset(); }
