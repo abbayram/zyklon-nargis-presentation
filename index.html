@@ -183,7 +183,7 @@
         .character-container.visible { bottom: 0; /* Fährt nach oben an den unteren Rand */ }
         .char-img { width: 100%; height: auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); transition: opacity 0.1s ease; -webkit-user-drag: none; }
         
-        /* UPDATE: Namen vereinfacht */
+        /* Namen vereinfacht */
         .char-label { background: var(--myanmar-red); color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; display: inline-block; margin-top: -25px; position: relative; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.3); margin-left: 40px; }
         #char-general .char-label { background: var(--military-green); }
 
@@ -236,7 +236,7 @@
         </div>
         <div class="character-container" id="char-general">
             <img id="general-img" src="" class="char-img" alt="General">
-             <div class="char-label">General</div>
+            <div class="char-label">General</div>
         </div>
     </div>
     
@@ -636,14 +636,14 @@
         document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
         document.getElementById(`slide${n}`).classList.add('active');
         
-        // Generelles Ausblenden der Avatare
+        // Generelles Ausblenden der Avatare zu Beginn jedes Slide-Wechsels
         ['expert', 'general'].forEach(c => document.getElementById(`char-${c}`).classList.remove('visible'));
         closeDialog();
 
-        // SLIDE 2: Historie (KEINE EXPERTIN MEHR)
+        // SLIDE 2: Historie (KEINE EXPERTIN)
         if(n === 2) {
              initHistCanvas();
-             // Expertin entfernt: Keine Sichtbarkeit, kein Dialog
+             // Expertin entfernt
         }
         
         // SLIDE 3: Diagramm (KEINE EXPERTIN)
@@ -658,7 +658,7 @@
             resetTimeline();
         }
 
-        // SLIDE 6: Politische Analyse (Expertin erscheint)
+        // SLIDE 6: Politische Analyse (Expertin erscheint hier erstmals!)
         if(n === 6) { 
             document.getElementById('char-expert').classList.add('visible');
             setTimeout(() => triggerDialog('expert', 'Der Staat war auf Kontrolle ausgerichtet, nicht auf den Schutz seiner Bürger.'), 500); 
@@ -674,6 +674,7 @@
 
         // SLIDE 8 & 10 (Keine Avatare)
         if(n === 8) { 
+            // Avatare bleiben unsichtbar
             document.querySelectorAll('.analysis-point').forEach(p => p.classList.remove('visible'));
             setTimeout(() => { document.getElementById('eco-point-1').classList.add('visible'); }, 1000);
             setTimeout(() => { document.getElementById('eco-point-2').classList.add('visible'); }, 3000);
@@ -684,7 +685,7 @@
             setTimeout(() => { document.getElementById('env-point-1').classList.add('visible'); }, 1000);
         }
         
-        // SLIDE 12: Zerstörung (Expertin erscheint)
+        // SLIDE 12: Zerstörung (Expertin erscheint wieder)
         if(n === 12) {
             initHouseGrid();
             document.getElementById('char-expert').classList.add('visible');
@@ -698,7 +699,6 @@
     function triggerDialog(who, text) {
         const bubble = document.getElementById('dialog-bubble');
         let displayName = '', bubbleClass = '';
-        // UPDATE: Namen in Sprechblasen vereinfacht
         if(who === 'expert') { displayName = 'Expertin'; bubbleClass = 'bubble-pos-expert'; }
         else if(who === 'general') { displayName = 'General'; bubbleClass = 'bubble-pos-general'; }
         
@@ -714,7 +714,6 @@
         stopTalkingAnimation();
         // Weiterleitungslogik
         if(current === 'slide1') nextSlide(); 
-        // Slide 2 Logik für Dialoge entfernt
     }
 
     // --- FUNKTIONEN FÜR DIAGRAMM ANIMATION (Slide 3) ---
@@ -725,7 +724,7 @@
              nargisBar.classList.remove('nargis-placeholder');
              nargisBar.classList.add('nargis-grown');
              
-             // Popup mit der Leitfrage anzeigen
+             // Popup mit der Leitfrage anzeigen (Keine Expertin!)
              setTimeout(() => {
                  document.getElementById('leitfrage-popup').classList.add('visible');
              }, 1000);
@@ -782,10 +781,18 @@
             histActorX += 3; 
             if(histActorX >= histTargetX) {
                 histActorX = histTargetX;
-                // Dialoge auf Slide 2 entfernt
-                if(histStep === 3) { tankFiredTimer = 30; setTimeout(() => { uprisingEliminated = true; }, 500); isHistAnimating = false; document.getElementById('hist-btn').innerText = "Weiter zu 2008"; }
+                if(histStep === 2) { histActorType = 'tank'; 
+                    document.getElementById('img-1962').classList.add('visible'); 
+                    // Kein Dialog hier
+                }
+                if(histStep === 3) { 
+                    tankFiredTimer = 30; setTimeout(() => { uprisingEliminated = true; }, 500); isHistAnimating = false; 
+                    document.getElementById('img-1988').classList.add('visible');
+                    document.getElementById('hist-btn').innerText = "Weiter zu 2008"; 
+                }
                 if(histStep === 4) { 
                     histActorType = 'ballotbox'; 
+                    document.getElementById('img-2008').classList.add('visible');
                     document.getElementById('hist-btn').innerText = "Zum Vergleich"; 
                 }
             }
@@ -858,19 +865,18 @@
             chainBroken = true; isHistAnimating = true; animateHistLoop(); 
             status.innerText = "1948: Unabhängigkeit! Doch die Freude währt kurz."; btn.innerText = "Aufbruch nach 1962"; 
             document.getElementById('img-1948').classList.add('visible'); 
-            // KEIN Dialog der Expertin mehr hier
+            // KEIN Dialog mehr hier
         } 
         else if(histStep === 2) { 
             histTargetX = histCanvas.width * 0.35; isHistAnimating = true; 
             status.innerText = "1962: Der Putsch beendet die Demokratie."; btn.innerText = "Weiter zum Aufstand (1988)"; 
             document.getElementById('img-1962').classList.add('visible');
-            // KEIN Dialog des Generals mehr hier
+            // KEIN Dialog mehr hier
         } 
         else if(histStep === 3) { 
             histTargetX = histCanvas.width * 0.6; showUprising = true; isHistAnimating = true; 
             status.innerText = "1988: Volksaufstand wird niedergeschlagen."; 
             document.getElementById('img-1988').classList.add('visible');
-             // KEIN Dialog des Generals mehr hier
         } 
         else if(histStep === 4) { 
             histTargetX = histCanvas.width * 0.9; isHistAnimating = true; 
