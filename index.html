@@ -50,22 +50,24 @@
 
         /* --- AVATARE --- */
         .char-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; display: grid; grid-template-columns: repeat(4, 1fr); align-items: end; padding: 0 20px; }
+        /* Angepasst für 3 Charaktere statt 4 */
         .character-container { position: relative; bottom: -450px; transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); width: 200px; text-align: center; margin: 0 auto; }
         .character-container.visible { bottom: 0; }
         .char-img { width: 100%; height: auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); transition: opacity 0.1s ease; -webkit-user-drag: none; }
         .mirror-avatar { transform: scaleX(-1); }
         .char-label { background: var(--myanmar-red); color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; display: inline-block; margin-top: -25px; position: relative; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        #char-interviewer .char-label { background: var(--interviewer-color); } #char-general .char-label { background: var(--military-green); }
+        #char-general .char-label { background: var(--military-green); }
 
         /* --- SPRECHBLASEN --- */
         .speech-bubble { position: absolute; background: white; border-radius: 20px; padding: 20px; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 2px solid #333; font-size: 18px; z-index: 2000; display: none; pointer-events: auto; animation-duration: 0.3s; animation-fill-mode: forwards; }
         @keyframes popIn { from { opacity: 0; transform: scale(0.8) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         .speech-bubble:after { content: ''; position: absolute; bottom: -20px; border-width: 20px 20px 0; border-style: solid; display: block; width: 0; }
         .speech-bubble:before { content: ''; position: absolute; bottom: -23px; border-width: 22px 22px 0; border-style: solid; border-color: #333 transparent; width: 0; z-index: -1; }
-        .bubble-pos-expert { left: 150px; bottom: 250px; animation-name: popIn; } .bubble-pos-expert:after { left: 40px; border-color: white transparent; } .bubble-pos-expert:before { left: 38px; }
-        .bubble-pos-general { left: 450px; bottom: 250px; animation-name: popIn; } .bubble-pos-general:after { left: 40px; border-color: white transparent; } .bubble-pos-general:before { left: 38px; }
-        .bubble-pos-local { right: 450px; bottom: 250px; animation-name: popIn; } .bubble-pos-local:after { right: 40px; border-color: white transparent; } .bubble-pos-local:before { right: 38px; }
-        .bubble-pos-interviewer { right: 150px; bottom: 250px; animation-name: popIn; } .bubble-pos-interviewer:after { right: 40px; border-color: white transparent; } .bubble-pos-interviewer:before { right: 38px; }
+        
+        /* Positionen angepasst da Fragesteller weg ist */
+        .bubble-pos-expert { left: 200px; bottom: 250px; animation-name: popIn; } .bubble-pos-expert:after { left: 40px; border-color: white transparent; } .bubble-pos-expert:before { left: 38px; }
+        .bubble-pos-general { left: 50%; transform: translateX(-50%); bottom: 250px; animation-name: popIn; } .bubble-pos-general:after { left: 50%; transform: translateX(-50%); border-color: white transparent; } .bubble-pos-general:before { left: 50%; transform: translateX(-50%); }
+        .bubble-pos-local { right: 200px; bottom: 250px; animation-name: popIn; } .bubble-pos-local:after { right: 40px; border-color: white transparent; } .bubble-pos-local:before { right: 38px; }
 
         /* --- TIMELINE STYLES (Slide 3) --- */
         .tl-container { position: relative; width: 90%; margin: 100px auto 0; height: 300px; }
@@ -103,18 +105,14 @@
             <div class="char-label">Dr. Thida (Expertin)</div>
         </div>
         <div class="character-container" id="char-general">
-            <img id="general-img" src="https://api.dicebear.com/7.x/micah/svg?seed=GeneralStereotype&baseColor=8d5524&hair=fonze&hairColor=222222&shirt=collared&shirtColor=4B5320&coat=suit&coatColor=3A421B&fabric=camouflage&fabricColor=2F3616&glasses=round&eyebrows=down" class="char-img" alt="General">
+             <img id="general-img" src="" class="char-img" alt="General">
             <div class="char-label">General Aung (Militär)</div>
         </div>
         <div class="character-container" id="char-local">
             <img src="https://api.dicebear.com/7.x/micah/svg?seed=GrandpaKyawPermanent&baseColor=ac6651&hair=doug&hairColor=d3d3d3&facialHair=beard&facialHairColor=d3d3d3&mouth=sad&shirt=crew&shirtColor=795548&coat=none" class="char-img" alt="U Kyaw">
             <div class="char-label">U Kyaw (Bewohner)</div>
         </div>
-        <div class="character-container" id="char-interviewer">
-            <img id="interviewer-img" src="" class="char-img mirror-avatar" alt="Fragesteller">
-            <div class="char-label">Fragesteller</div>
         </div>
-    </div>
     
     <div class="speech-bubble" id="dialog-bubble">
         <p style="margin-top: 0; margin-bottom: 15px;" id="dialog-text">...</p>
@@ -128,7 +126,7 @@
             <h3>Eine Analyse der sozialen Verwundbarkeit</h3>
             <h1>Zyklon Nargis (2008):<br>Naturereignis oder Staatsversagen?</h1>
             <div style="width: 100px; height: 4px; background: var(--myanmar-red); margin: 30px auto;"></div>
-            <button class="btn" onclick="triggerDialog('interviewer', 'Frau Doktor, wir blicken heute auf 2008 zurück. Ein Sturm wurde zur Tragödie. War das unvermeidbar?')">Präsentation Starten</button>
+            <button class="btn" onclick="triggerDialog('expert', 'Willkommen. Wir blicken heute auf 2008 zurück. Ein Sturm wurde zur Tragödie. War das unvermeidbar?')">Präsentation Starten</button>
         </div>
     </div>
 
@@ -147,7 +145,7 @@
             </div>
         </div>
         <div style="margin-top: 30px; text-align: center;">
-            <button class="btn-outline btn-interviewer" onclick="triggerDialog('interviewer', 'Die Zahlen sind schockierend. Frau Dr. Thida, die Stürme waren fast gleich stark. Wie erklären Sie diese Diskrepanz?')">Frage an Expertin stellen</button>
+             <button class="btn-outline" onclick="triggerDialog('expert', 'Die Zahlen sind schockierend. Meteorologisch waren die Stürme ähnlich. Der Unterschied war: 2008 gab es keine Warnung und keine Bunker.')">Analyse der Expertin</button>
         </div>
     </div>
 
@@ -164,7 +162,7 @@
                 <span class="tl-date">2. Mai: Landfall & Zerstörung</span><span class="tl-desc">Nargis trifft mit Kat. 4 auf das Delta. Keine Warnung für die Bevölkerung.</span>
             </div><div class="tl-connector conn-bottom tl-pos-2"></div>
             <div class="tl-event-box tl-top tl-pos-3" id="tl-ev-3">
-                <img src="https://api.dicebear.com/7.x/micah/svg?seed=GeneralStereotype&baseColor=8d5524&hair=fonze&hairColor=222222&shirt=collared&shirtColor=4B5320&coat=suit&coatColor=3A421B&fabric=camouflage&fabricColor=2F3616&glasses=round&mouth=smile&eyebrows=up" alt="Referendum/General" style="object-fit: contain; background: #eee;">
+                 <img src="./assets/avatars/general1.png" alt="Referendum/General" style="object-fit: contain; background: #eee;">
                 <span class="tl-date">3.-10. Mai: Das Referendum</span><span class="tl-desc">Die Junta führt das Verfassungsreferendum durch und blockiert internationale Hilfe.</span>
             </div><div class="tl-connector conn-top tl-pos-3"></div>
         </div>
@@ -217,7 +215,7 @@
         <p>In den Tagen nach dem Sturm warteten internationale Hilfsschiffe und Flugzeuge vergeblich auf eine Einreiseerlaubnis.</p>
         
         <div style="position: relative; width: 100%; height: 450px; margin-top: 30px;">
-            <img src="./assets/map_blockade.png" alt="Karte von Myanmar" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; -webkit-user-drag: none; opacity: 0.7;">
+            <img src="./assets/map_blockade.png" alt="Karte von Myanmar mit Blockade" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; -webkit-user-drag: none;">
             
             <canvas id="blockade-canvas" style="position: absolute; top: 0; left: 0; z-index: 2;"></canvas>
         </div>
@@ -241,7 +239,7 @@
                     <i>"Hilfe wurde als Bedrohung der Souveränität gesehen."</i>
                 </div>
                  <div style="margin-top: 20px; text-align: center;">
-                    <button class="btn-outline btn-interviewer" onclick="triggerDialog('interviewer', 'Das klingt zynisch. Hat diese Blockade wirklich direkt Menschenleben gekostet?')">Kritische Nachfrage</button>
+                    <button class="btn-outline" onclick="triggerDialog('expert', 'Das ist der zynischste Aspekt. In den ersten Tagen starben tausende an vermeidbaren Folgen, während Hilfsgüter festsaßen.')">Kommentar der Expertin</button>
                 </div>
             </div>
             <div style="width: 40%; text-align: center; font-size: 100px;">🔒</div>
@@ -329,86 +327,65 @@
     let isBlockadeAnimating = false;
 
     // --- AVATAR CONFIG ---
-    // NEU: Array angepasst an deinen Wunsch.
-    // Index 0 = Neutral (expertin1.png)
-    // Index 1 = Reden (expertin2.png)
-    // Index 2 = Staunen (expertin8.png - von dir als "3" bezeichnet)
+    // Array für die lokalen Expertinnen-Bilder (PNG)
     const expertImages = [
         "./assets/avatars/expertin1.png", // Index 0: Neutral
         "./assets/avatars/expertin2.png", // Index 1: Reden
-        "./assets/avatars/expertin8.png", // Index 2: Staunen
-        // Die anderen sind erstmal nicht in Benutzung:
-        // "./assets/avatars/expertin3.png",
-        // "./assets/avatars/expertin4.png",
-        // "./assets/avatars/expertin5.png",
-        // "./assets/avatars/expertin6.png",
-        // "./assets/avatars/expertin7.png",
+        "./assets/avatars/expertin8.png", // Index 2: Staunen (optional)
+    ];
+    // NEU: Array für die lokalen General-Bilder (PNG)
+    const generalImages = [
+        "./assets/avatars/general1.png", // Index 0: Neutral
+        "./assets/avatars/general2.png", // Index 1: Reden
+        "./assets/avatars/general3.png", // Index 2: Ernst/Böse
     ];
 
-    // Global variable for expert mouth state
+    // Global variables for mouth states
     let expertMouthOpen = false;
+    let generalMouthOpen = false;
 
-    // Die anderen bleiben (vorerst) Cartoon-Avatare über API:
-    const interviewerBase = "https://api.dicebear.com/7.x/micah/svg?seed=InterviewerTom&baseColor=ac6651&hair=fonze&hairColor=362c47&shirt=collared&shirtColor=ffffff&coat=suit&coatColor=2a3b5c";
-    const generalBase = "https://api.dicebear.com/7.x/micah/svg?seed=GeneralStereotype&baseColor=8d5524&hair=fonze&hairColor=222222&shirt=collared&shirtColor=4B5320&coat=suit&coatColor=3A421B&fabric=camouflage&fabricColor=2F3616&glasses=round&eyebrows=down";
-
-    let talkingInterval = null; let isMouthOpen = false;
+    let talkingInterval = null;
 
     // --- FUNKTIONEN (AVATARE & DIALOG) ---
-    function setSpeakerImage(who, paramsOrIndex) {
-        let imgId = ''; let baseUrl = '';
+    function setSpeakerImage(who, index) {
+        let imgId = ''; let imageArray = [];
         
-        // SPECIAL CASE FÜR DIE EXPERTIN (Lokale PNGs)
-        if(who === 'expert') {
-            imgId = 'expert-img';
-            const img = document.getElementById(imgId);
-            // Wenn paramsOrIndex eine gültige Zahl für das Array ist
-            if(img && typeof paramsOrIndex === 'number' && expertImages[paramsOrIndex]) {
-                 img.src = expertImages[paramsOrIndex];
-            }
-            // Falls nichts übergeben wird, Standardbild (Index 0, Mund zu) laden
-            else if (img && paramsOrIndex === undefined) {
-                 img.src = expertImages[0];
-            }
-            return; // WICHTIG: Hier die Funktion verlassen.
-        }
-        // LOGIK FÜR DIE ANDEREN (Cartoon API)
-        else if(who === 'interviewer') { imgId = 'interviewer-img'; baseUrl = interviewerBase; }
-        else if(who === 'general') { imgId = 'general-img'; baseUrl = generalBase; }
-        
+        if(who === 'expert') { imgId = 'expert-img'; imageArray = expertImages; }
+        else if(who === 'general') { imgId = 'general-img'; imageArray = generalImages; }
+        else { return; } // Andere Charaktere werden hier nicht mehr behandelt
+
         const img = document.getElementById(imgId);
-        if(img && baseUrl && typeof paramsOrIndex === 'string') img.src = baseUrl + paramsOrIndex;
+        // Prüfen ob das Bild und der Index existieren
+        if(img && typeof index === 'number' && imageArray[index]) {
+                img.src = imageArray[index];
+        }
     }
 
-    // NEU: Angepasst für einfaches Auf/Zu (Index 0 und 1) bei der Expertin
+    // Angepasst für lokale Bilder von Expertin UND General
     function startTalkingAnimation(who) {
         if(talkingInterval) clearInterval(talkingInterval);
-        if(['expert','interviewer','general'].indexOf(who) === -1) return;
+        if(['expert','general'].indexOf(who) === -1) return;
 
         talkingInterval = setInterval(() => {
             if (who === 'expert') {
-                // Umschalten zwischen Index 0 und 1
                 expertMouthOpen = !expertMouthOpen;
-                setSpeakerImage('expert', expertMouthOpen ? 1 : 0);
-            } else {
-                // Alte Logik für die Cartoons (einfaches Auf/Zu)
-                isMouthOpen = !isMouthOpen;
-                setSpeakerImage(who, isMouthOpen ? "&mouth=laughing" : "&mouth=smile");
+                setSpeakerImage('expert', expertMouthOpen ? 1 : 0); // Toggle 0 <-> 1
+            } else if (who === 'general') {
+                generalMouthOpen = !generalMouthOpen;
+                setSpeakerImage('general', generalMouthOpen ? 1 : 0); // Toggle 0 <-> 1
             }
-        }, 200); // Geschwindigkeit auf 200ms zurückgesetzt, passt besser für 2 Bilder
+        }, 200); 
     }
 
     function stopTalkingAnimation(isWorried = false) {
         if(talkingInterval) clearInterval(talkingInterval);
         talkingInterval = null;
 
-        // Expertin auf neutrales Bild (Index 0, Mund zu) zurücksetzen und Status resetten
+        // Beide auf neutrales Bild (Index 0) zurücksetzen
         setSpeakerImage('expert', 0);
         expertMouthOpen = false;
-
-        // Alte Logik für die anderen
-        setSpeakerImage('interviewer', "&mouth=smile");
-        setSpeakerImage('general', "&mouth=frown");
+        setSpeakerImage('general', 0);
+        generalMouthOpen = false;
     }
 
     window.onload = function() {
@@ -423,9 +400,12 @@
         document.getElementById('dialog-bubble').style.display = 'none';
         stopTalkingAnimation(false);
         
-        // NEU: Initiales Bild der Expertin laden (Index 0)
+        // Initiale Bilder laden (Index 0)
         setSpeakerImage('expert', 0);
-        document.getElementById('char-interviewer').classList.add('visible');
+        setSpeakerImage('general', 0);
+        
+        // Expertin ist jetzt der Hauptcharakter und von Anfang an sichtbar
+        document.getElementById('char-expert').classList.add('visible');
     };
     window.onresize = resizeAllCanvases;
     function resizeAllCanvases() {
@@ -439,33 +419,32 @@
     function showSlide(n) {
         document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
         document.getElementById(`slide${n}`).classList.add('active');
-        ['expert', 'interviewer', 'local', 'general'].forEach(c => document.getElementById(`char-${c}`).classList.remove('visible'));
+        // Fragesteller entfernt aus der Liste
+        ['expert', 'local', 'general'].forEach(c => document.getElementById(`char-${c}`).classList.remove('visible'));
         closeDialog();
         
-        if(n === 1) document.getElementById('char-interviewer').classList.add('visible'); 
-        if(n === 2) { document.getElementById('char-interviewer').classList.add('visible'); document.getElementById('char-expert').classList.add('visible'); stopTalkingAnimation(false); }
+        // Expertin ist fast immer sichtbar
+        if(n !== 7) document.getElementById('char-expert').classList.add('visible');
+
         if(n === 3) { 
-            document.getElementById('char-expert').classList.add('visible'); 
             document.getElementById('char-general').classList.add('visible');
             document.getElementById('char-local').classList.add('visible');
             resetTimeline();
         }
-        if(n === 4) { document.getElementById('char-interviewer').classList.add('visible'); document.getElementById('char-expert').classList.add('visible'); }
-        if(n === 5) { document.getElementById('char-interviewer').classList.add('visible'); document.getElementById('char-expert').classList.add('visible'); }
         if(n === 6) { 
-            document.getElementById('char-expert').classList.add('visible'); 
             initHistCanvas(); 
             setTimeout(() => triggerDialog('expert', 'Um Nargis zu verstehen, müssen wir zurückblicken. Jahrzehnte der Militärherrschaft haben den Staat ausgehöhlt.'), 500);
         }
-        // SLIDE 7 (Blockade)
+        // SLIDE 7 (Blockade) - Hier nur General
         if(n === 7) {
+             document.getElementById('char-expert').classList.remove('visible');
              document.getElementById('char-general').classList.add('visible');
              initBlockadeScene();
+             // General nutzt hier das ernste/böse Bild (Index 2)
+             setSpeakerImage('general', 2);
              setTimeout(() => triggerDialog('general', 'Unsere Souveränität ist unantastbar. Diese "Hilfe" ist nur ein Vorwand für ausländische Einmischung.'), 500);
         }
-        if(n === 8) { document.getElementById('char-interviewer').classList.add('visible'); document.getElementById('char-expert').classList.add('visible'); }
-        if(n === 9) { document.getElementById('char-interviewer').classList.add('visible'); document.getElementById('char-expert').classList.add('visible');} 
-        if(n === 10) { document.getElementById('char-expert').classList.add('visible'); document.getElementById('char-interviewer').classList.add('visible'); stopTalkingAnimation(true); }
+        if(n === 10) { stopTalkingAnimation(true); }
     }
     function nextSlide() { if(currentSlide < totalSlides) showSlide(++currentSlide); }
     function prevSlide() { if(currentSlide > 1) showSlide(--currentSlide); }
@@ -474,9 +453,9 @@
         const bubble = document.getElementById('dialog-bubble');
         let displayName = '', bubbleClass = '';
         if(who === 'expert') { displayName = 'Dr. Thida'; bubbleClass = 'bubble-pos-expert'; }
-        else if(who === 'interviewer') { displayName = 'Fragesteller'; bubbleClass = 'bubble-pos-interviewer'; }
         else if(who === 'general') { displayName = 'General Aung'; bubbleClass = 'bubble-pos-general'; }
         else if(who === 'local') { displayName = 'U Kyaw'; bubbleClass = 'bubble-pos-local'; }
+        
         document.getElementById('dialog-text').innerHTML = `<strong>${displayName}:</strong><br>"${text}"`;
         bubble.className = "speech-bubble " + bubbleClass;
         bubble.style.display = 'block';
@@ -486,11 +465,8 @@
     function closeDialog() { 
         document.getElementById('dialog-bubble').style.display = 'none'; 
         const current = document.querySelector('.slide.active').id;
-        const worriedContext = (current === 'slide4' && isFlooding) || current === 'slide10';
-        stopTalkingAnimation(worriedContext);
+        stopTalkingAnimation();
         if(current === 'slide1') nextSlide();
-        if(current === 'slide2' && document.getElementById('dialog-text').innerHTML.includes('Fragesteller')) { setTimeout(() => { triggerDialog('expert', 'Meteorologisch war Nargis nicht stärker. Aber: Es gab keine Warnung, keine Bunker und politische Isolation. Das machte den Unterschied.'); }, 500); }
-        if(current === 'slide8' && document.getElementById('dialog-text').innerHTML.includes('Fragesteller')) { setTimeout(() => { triggerDialog('expert', 'Absolut. In den ersten Tagen starben tausende an unbehandelten Verletzungen und verseuchtem Wasser, während Hilfsgüter am Flughafen festsaßen.'); }, 500); }
     }
 
     // ==========================================
@@ -666,7 +642,8 @@
     function startBlockadeAnimation() {
         if(isBlockadeAnimating) return;
         isBlockadeAnimating = true;
-        triggerDialog('interviewer', 'Aber General, die Menschen sterben! Warum lassen Sie die Schiffe und Flugzeuge nicht landen?');
+        // Da kein Fragesteller mehr da ist, kommentiert die Expertin die Situation
+        triggerDialog('expert', 'Sehen Sie die roten Kreuze? Das sind Hilfslieferungen, die abgewiesen werden. Mitten in der Katastrophe.');
         animateBlockadeLoop();
     }
 
@@ -817,7 +794,8 @@
     // --- WAAGE & BUDGET ---
     let rotation = 0;
     function addWeight(type) {
-        if(type === 'poverty') { rotation += 15; triggerDialog('interviewer', 'Armut bedeutet also: Keine stabilen Häuser, keine Radios. Man ist dem Schicksal ausgeliefert?'); }
+        // Fragesteller entfernt, Expertin übernimmt den Kommentar zur Armut
+        if(type === 'poverty') { rotation += 15; triggerDialog('expert', 'Armut bedeutet: Keine stabilen Häuser, keine Radios. Man ist dem Schicksal ausgeliefert.'); }
         if(type === 'env') { rotation += 15; triggerDialog('expert', 'Korrekt. Und die Umweltzerstörung nahm ihnen den letzten natürlichen Schutz.'); }
         if(rotation > 40) rotation = 40;
         document.getElementById('scale-beam').style.transform = `translateX(-50%) rotate(${rotation}deg)`;
