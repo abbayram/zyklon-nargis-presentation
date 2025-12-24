@@ -28,15 +28,26 @@
         .nav-controls { position: absolute; bottom: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
         h1 { font-size: 42px; color: var(--myanmar-red); margin: 0 0 10px 0; } h2 { font-size: 32px; color: var(--text-main); border-bottom: 4px solid var(--myanmar-red); padding-bottom: 15px; margin-bottom: 30px; } h3 { font-size: 24px; color: var(--text-light); margin: 0; } p, li { font-size: 20px; line-height: 1.6; color: var(--text-main); }
 
-        /* --- NEU: STYLES FÜR ZERSTÖRUNGS-STATISTIK (Slide 12) --- */
+        /* --- NEU: CSS-HÄUSER FÜR SLIDE 12 (Statt Bildern) --- */
         .house-grid-container { display: flex; align-items: center; gap: 40px; margin-top: 40px; }
-        .house-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; width: 60%; }
-        .house-icon { width: 100%; height: auto; opacity: 1; transition: all 0.5s ease; }
-        .house-destroyed { filter: brightness(0.5) sepia(1) hue-rotate(-50deg) saturate(5); opacity: 0.7; transform: rotate(5deg); }
+        .house-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 15px; width: 60%; }
+        .house-icon {
+            width: 100%;
+            height: 35px;
+            background: #A1887F; /* Helles Braun für intakte Hütte */
+            /* Eine einfache Haus-Form mit CSS clip-path */
+            clip-path: polygon(50% 0%, 100% 35%, 100% 100%, 0% 100%, 0% 35%);
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .house-destroyed {
+            background: #5D4037; /* Dunkles Braun für zerstörte Hütte */
+            transform: rotate(25deg) translateY(10px) scale(0.9); /* Eingefallen und schief */
+            opacity: 0.7;
+        }
         .destruction-arrow { font-size: 60px; color: var(--myanmar-red); }
         .destruction-text { font-size: 48px; font-weight: bold; color: var(--myanmar-red); line-height: 1.2; }
 
-        /* --- NEU: STYLES FÜR "DAS URTEIL" SLIDE (Slide 13) --- */
+        /* --- STYLES FÜR "DAS URTEIL" SLIDE (Slide 13) --- */
         .urteil-container { display: flex; flex-direction: column; height: 85%; }
         .diagram-top-row { display: flex; justify-content: space-between; align-items: flex-start; position: relative; margin-bottom: 20px; }
         .diagram-box { border: 3px solid var(--brown-box); background: #fff; width: 30%; position: relative; z-index: 2; }
@@ -44,18 +55,30 @@
         .diagram-box ul { padding: 15px 20px 15px 40px; margin: 0; }
         .diagram-box li { font-size: 16px; margin-bottom: 8px; }
         
-        /* Kreis weiter nach unten geschoben */
+        /* Kreis Position */
         .diagram-center { position: absolute; top: 140px; left: 50%; transform: translateX(-50%); z-index: 1; text-align: center; }
         .central-circle { width: 220px; height: 220px; background: var(--dark-green-circle); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 24px; text-align: center; line-height: 1.2; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; z-index: 5;}
         
-        .diagram-bottom-row { display: flex; justify-content: center; margin-top: 40px; position: relative; }
-        .diagram-box-bottom { width: 40%; }
+        .diagram-bottom-row { display: flex; justify-content: center; margin-top: 60px; position: relative; }
+        .diagram-box-bottom { width: 40%; z-index: 2; }
 
         /* Dicke Pfeile für das Diagramm */
         .big-arrow { position: absolute; z-index: 0; }
+        /* Pfeile oben */
         .arrow-left-to-center { top: 70px; left: 28%; width: 180px; height: 60px; background: var(--brown-box); clip-path: polygon(0 20%, 60% 20%, 60% 0, 100% 50%, 60% 100%, 60% 80%, 0 80%); transform: rotate(20deg); }
         .arrow-right-to-center { top: 70px; right: 28%; width: 180px; height: 60px; background: var(--brown-box); clip-path: polygon(0 20%, 60% 20%, 60% 0, 100% 50%, 60% 100%, 60% 80%, 0 80%); transform: rotate(160deg); }
-        .arrow-bottom-to-center { bottom: 130px; left: 50%; width: 120px; height: 80px; background: var(--brown-box); clip-path: polygon(20% 100%, 20% 40%, 0 40%, 50% 0, 100% 40%, 80% 40%, 80% 100%); transform: translateX(-50%); }
+        
+        /* NEUER PFEIL VON UNTEN NACH OBEN */
+        .arrow-connecting-up {
+            width: 100px;
+            height: 100px; /* Hoch genug um die Lücke zu schließen */
+            background: var(--brown-box);
+            /* Pfeil zeigt nach OBEN */
+            clip-path: polygon(50% 0, 100% 40%, 75% 40%, 75% 100%, 25% 100%, 25% 40%, 0 40%);
+            bottom: 95%; /* Positioniert direkt über der unteren Box */
+            left: 50%;
+            transform: translateX(-50%);
+        }
 
         .diagram-summary-text { text-align: center; font-size: 18px; margin: 30px auto 20px; max-width: 90%; }
         .final-answer-box { border: 4px solid #333; padding: 20px; background: #f0f0f0; font-weight: bold; font-size: 20px; text-align: center; }
@@ -82,15 +105,6 @@
         .bar.nargis-grown { width: 100% !important; background: var(--myanmar-red); }
         .bar-value-outside { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 20px; color: var(--myanmar-red); font-weight: bold; font-size: 36px; opacity: 0; transition: opacity 1s 1s; }
         .nargis-grown + .bar-value-outside { opacity: 1; }
-
-        /* --- NEU: STYLES FÜR ANALYSE A (Slide 6) --- */
-        .analysis-col-container { display: flex; gap: 40px; align-items: flex-start; margin-top: 30px; }
-        .analysis-col { flex: 1; }
-        .analysis-col h3 { color: var(--myanmar-red); border-bottom: 2px solid var(--myanmar-red); padding-bottom: 10px; margin-bottom: 20px; }
-        .analysis-col ul { list-style-type: disc; padding-left: 20px; }
-        .analysis-col li { margin-bottom: 15px; font-size: 18px; }
-        .analysis-highlight { background: #f4f4f4; padding: 20px; border-left: 5px solid var(--myanmar-red); margin-top: 30px; font-style: italic; font-size: 20px; color: var(--text-main); }
-
 
         /* --- ANALYSE PUNKTE STYLES (Slide 8 & 10) --- */
         .analysis-point { background: #f4f4f4; border-left: 5px solid var(--myanmar-red); padding: 20px; margin-bottom: 20px; opacity: 0; transform: translateX(-20px); transition: all 0.8s ease; }
@@ -357,8 +371,7 @@
     <div class="slide" id="slide12">
         <h2>Das Ergebnis: Totale Verwüstung</h2>
         <div class="house-grid-container">
-            <div class="house-grid" id="house-grid">
-                </div>
+            <div class="house-grid" id="house-grid"></div>
             <div style="text-align: center;">
                 <div class="destruction-arrow">➔</div>
                 <div class="destruction-text">Nahezu 100%<br>Zerstörung</div>
@@ -387,9 +400,9 @@
             </div>
             <div class="diagram-center">
                 <div class="central-circle">KATASTROPHE<br>NARGIS</div>
-                <div class="big-arrow arrow-bottom-to-center"></div>
             </div>
             <div class="diagram-bottom-row">
+                <div class="big-arrow arrow-connecting-up"></div>
                 <div class="diagram-box diagram-box-bottom">
                     <div class="diagram-box-header">Ökologische Lage</div>
                     <ul><li>Systematische Vernachlässigung</li><li>Fehlender Küstenschutz</li><li>Zerstörte Schutzwälle</li></ul>
@@ -943,10 +956,9 @@
         const grid = document.getElementById('house-grid');
         grid.innerHTML = '';
         for (let i = 0; i < 100; i++) {
-            const img = document.createElement('img');
-            img.src = './assets/house_icon.png';
-            img.className = 'house-icon';
-            grid.appendChild(img);
+            const houseDiv = document.createElement('div'); // Changed to div
+            houseDiv.className = 'house-icon';
+            grid.appendChild(houseDiv);
         }
     }
 
