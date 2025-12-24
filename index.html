@@ -28,20 +28,33 @@
         .nav-controls { position: absolute; bottom: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
         h1 { font-size: 42px; color: var(--myanmar-red); margin: 0 0 10px 0; } h2 { font-size: 32px; color: var(--text-main); border-bottom: 4px solid var(--myanmar-red); padding-bottom: 15px; margin-bottom: 30px; } h3 { font-size: 24px; color: var(--text-light); margin: 0; } p, li { font-size: 20px; line-height: 1.6; color: var(--text-main); }
 
-        /* --- NEU: CSS FÜR SLIDE 12 (Zerstörung mit SVGs) --- */
-        .house-grid-container { display: flex; align-items: center; gap: 40px; margin-top: 40px; }
-        .house-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; width: 60%; }
+        /* --- NEU: CSS FÜR SLIDE 12 (Häuser Zerstörung - Zentriert & Skaliert) --- */
+        .house-grid-container {
+            display: flex;
+            flex-direction: column; /* Untereinander anordnen */
+            align-items: center; /* Horizontal zentrieren */
+            justify-content: center; /* Vertikal zentrieren */
+            gap: 30px;
+            margin-top: 20px;
+            height: 70%; /* Höhe geben für vertikale Zentrierung */
+        }
+        .house-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
+            width: 50%; /* Skaliert: Nur 50% der Breite */
+        }
         .house-cell { width: 100%; aspect-ratio: 1/1; display: flex; justify-content: center; align-items: center; transition: all 0.5s ease; }
-        .house-svg { width: 80%; height: 80%; display: block; }
+        .house-svg { width: 90%; height: 90%; display: block; }
         /* Zustand zerstört */
         .house-cell.is-destroyed .house-svg {
-            filter: sepia(1) saturate(3) hue-rotate(-50deg) brightness(0.6); /* Macht es rötlich/dunkel */
+            filter: sepia(1) saturate(3) hue-rotate(-50deg) brightness(0.6);
             transform: rotate(15deg) scale(0.9);
             transition: transform 0.5s ease, filter 0.5s ease;
         }
 
-        .destruction-arrow { font-size: 60px; color: var(--myanmar-red); }
-        .destruction-text { font-size: 48px; font-weight: bold; color: var(--myanmar-red); line-height: 1.2; }
+        .destruction-arrow { font-size: 50px; color: var(--myanmar-red); transform: rotate(90deg); /* Pfeil nach unten */ }
+        .destruction-text { font-size: 40px; font-weight: bold; color: var(--myanmar-red); line-height: 1.2; text-align: center; }
 
         /* --- STYLES FÜR "DAS URTEIL" SLIDE (Slide 13) --- */
         .urteil-container { display: flex; flex-direction: column; height: 85%; }
@@ -109,40 +122,35 @@
 
         .sim-controls { display: flex; gap: 20px; justify-content: center; margin-top: 15px; z-index: 100; position: relative; }
         
-        /* --- BUDGET STYLES (Updated) --- */
+        /* --- BUDGET STYLES (Neutralisiert) --- */
         .budget-container { width: 85%; margin: 0 auto; background: #eee; padding: 30px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .slider-row { display: flex; align-items: center; margin-bottom: 15px; padding: 5px; border-radius: 4px; }
-        .slider-row.bad-option { background-color: #ffdddd; border-left: 5px solid var(--myanmar-red); }
-        .slider-row.good-option { background-color: #ddffdd; border-left: 5px solid var(--military-green); }
+        .slider-row { display: flex; align-items: center; margin-bottom: 15px; padding: 15px; border-radius: 4px; background: #fff; border: 1px solid #ccc; }
+        /* Keine farbliche Markierung mehr für good/bad options */
         .slider-row label { width: 280px; font-weight: bold; font-size: 18px;}
-        input[type=range] { flex-grow: 1; cursor: pointer; position: relative; z-index: 50; outline: none; margin: 0 15px; }
-        /* Farbliche Anpassung der Slider */
-        input[type=range].budget-bad { accent-color: var(--myanmar-red); }
-        input[type=range].budget-good { accent-color: var(--military-green); }
+        input[type=range] { flex-grow: 1; cursor: pointer; position: relative; z-index: 50; outline: none; margin: 0 15px; accent-color: var(--myanmar-red); /* Einheitliche Farbe */ }
         .points { font-weight: bold; font-size: 20px; width: 40px; text-align: right; }
         .budget-summary { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 15px; border-top: 2px solid #ccc; font-size: 18px; }
 
 
-        /* --- AVATARE --- */
-        .char-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; display: grid; grid-template-columns: 1fr 1fr; align-items: end; padding: 0 100px; }
-        .character-container { position: relative; bottom: -450px; transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); width: 250px; text-align: center; margin: 0 auto; }
+        /* --- AVATARE (Ganz links positioniert) --- */
+        .char-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; display: grid; grid-template-columns: 1fr 1fr; align-items: end; padding: 0 20px; justify-items: start; }
+        .character-container { position: relative; bottom: -450px; transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); width: 300px; text-align: left; margin: 0; }
         .character-container.visible { bottom: 0; }
         .char-img { width: 100%; height: auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); transition: opacity 0.1s ease; -webkit-user-drag: none; }
-        .char-label { background: var(--myanmar-red); color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; display: inline-block; margin-top: -25px; position: relative; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .char-label { background: var(--myanmar-red); color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; display: inline-block; margin-top: -25px; position: relative; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.3); margin-left: 20px; }
         #char-general .char-label { background: var(--military-green); }
-        /* Spezielle Positionierung für Blockade Slide */
-        .slide-blockade #char-general { margin-left: 0; }
+        /* Spezielle Positionierung für Blockade Slide - nicht mehr nötig da eh links */
+        /* .slide-blockade #char-general { margin-left: 0; } */
 
-        /* --- SPRECHBLASEN (Höher und weiter links) --- */
+        /* --- SPRECHBLASEN (Angepasst an linke Position) --- */
         .speech-bubble { position: absolute; background: white; border-radius: 20px; padding: 20px; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 2px solid #333; font-size: 18px; z-index: 2000; display: none; pointer-events: auto; animation-duration: 0.3s; animation-fill-mode: forwards; }
         @keyframes popIn { from { opacity: 0; transform: scale(0.8) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         .speech-bubble:after { content: ''; position: absolute; bottom: -20px; border-width: 20px 20px 0; border-style: solid; display: block; width: 0; }
         .speech-bubble:before { content: ''; position: absolute; bottom: -23px; border-width: 22px 22px 0; border-style: solid; border-color: #333 transparent; width: 0; z-index: -1; }
         
-        /* Expertin Blase: Weiter links positioniert (left: 50px) */
-        .bubble-pos-expert { left: 50px; bottom: 400px; animation-name: popIn; } .bubble-pos-expert:after { left: 40px; border-color: white transparent; } .bubble-pos-expert:before { left: 38px; }
-        /* General weiter links für Blockade Slide */
-        .bubble-pos-general { left: 150px; bottom: 400px; animation-name: popIn; } .bubble-pos-general:after { left: 40px; border-color: white transparent; } .bubble-pos-general:before { left: 38px; }
+        /* Expertin & General Blase: Links positioniert */
+        .bubble-pos-expert { left: 30px; bottom: 400px; animation-name: popIn; } .bubble-pos-expert:after { left: 40px; border-color: white transparent; } .bubble-pos-expert:before { left: 38px; }
+        .bubble-pos-general { left: 30px; bottom: 400px; animation-name: popIn; } .bubble-pos-general:after { left: 40px; border-color: white transparent; } .bubble-pos-general:before { left: 38px; }
 
         /* --- TIMELINE STYLES --- */
         .tl-container { position: relative; width: 90%; margin: 60px auto 0; height: 300px; }
@@ -264,7 +272,7 @@
         <h2>Das Ereignis: Zyklon Nargis trifft das Irawadi-Delta</h2>
         <div class="facts-container">
             <div class="facts-map">
-                <img src="./assets/nargis_fakten_karte.png" alt="Karte des Überflutungsgebiets von Nargis">
+                <img src="./assets/KarteUberflutungsgebiet.png" alt="Karte des Überflutungsgebiets von Nargis">
                 <p class="facts-map-caption">Abb. 1: Überflutungsgebiet des Zyklons Nargis</p>
             </div>
             <div class="facts-list">
@@ -353,8 +361,8 @@
                     <p>Dieser natürliche "Puffer" gegen Sturmfluten war 2008 größtenteils verschwunden.</p>
                 </div>
             </div>
-            <div style="width: 40%; text-align: center; opacity: 0.3;">
-                 (Hier könnte ein Vorher/Nachher Bild stehen) 🌳🪓
+            <div style="width: 40%; text-align: center;">
+                 <img src="./assets/vorhernacher.png" alt="Mangroven Vorher/Nachher" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
             </div>
         </div>
     </div>
@@ -379,7 +387,7 @@
                 <div class="destruction-text">Nahezu 100%<br>Zerstörung</div>
             </div>
         </div>
-        <div style="text-align: center; margin-top: 50px;">
+        <div style="text-align: center; margin-top: 30px;">
              <button class="btn" onclick="animateDestruction()">Zerstörung visualisieren</button>
         </div>
     </div>
@@ -423,28 +431,28 @@
         <h2>Krisenmanager: Budget verteilen</h2>
         <p>Sie haben <strong>10 Punkte</strong>. Verteilen Sie diese weise. Achten Sie auf die Art der Investition!</p>
         <div class="budget-container">
-            <div class="slider-row good-option">
+            <div class="slider-row">
                 <label>Frühwarnsysteme</label>
                 <input type="range" class="budget-input budget-good" value="0" max="10" oninput="updateBudget()">
                 <span class="points">0</span>
             </div>
-            <div class="slider-row good-option">
+            <div class="slider-row">
                 <label>Schutzbauten / Mangroven</label>
                 <input type="range" class="budget-input budget-good" value="0" max="10" oninput="updateBudget()">
                 <span class="points">0</span>
             </div>
-            <div class="slider-row good-option">
+            <div class="slider-row">
                 <label>Infrastruktur / Evakuierung</label>
                 <input type="range" class="budget-input budget-good" value="0" max="10" oninput="updateBudget()">
                 <span class="points">0</span>
             </div>
 
-            <div class="slider-row bad-option" style="margin-top: 30px;">
+            <div class="slider-row" style="margin-top: 30px;">
                 <label>Militärausrüstung & Kontrolle</label>
                 <input type="range" class="budget-input budget-bad" value="0" max="10" oninput="updateBudget()">
                 <span class="points">0</span>
             </div>
-            <div class="slider-row bad-option">
+            <div class="slider-row">
                 <label>Staatsmedien & Propaganda</label>
                 <input type="range" class="budget-input budget-bad" value="0" max="10" oninput="updateBudget()">
                 <span class="points">0</span>
@@ -452,7 +460,7 @@
 
             <div class="budget-summary">
                 <div>Verbraucht: <span id="total-points" style="font-weight: bold;">0</span> / 10</div>
-                <div style="font-size: 16px;">(Gut: <span id="good-points">0</span> | Schlecht: <span id="bad-points" style="color: var(--myanmar-red);">0</span>)</div>
+                <div style="font-size: 16px; display: none;">(Gut: <span id="good-points">0</span> | Schlecht: <span id="bad-points" style="color: var(--myanmar-red);">0</span>)</div>
             </div>
         </div>
         <div style="text-align: center; margin-top: 20px;">
@@ -986,23 +994,21 @@
 
     function animateDestruction() {
         const houseCells = document.querySelectorAll('.house-cell');
-        const survivorIndex = 42; // Ein Haus überlebt
+        // KEIN ÜBERLEBENDER MEHR - ALLE WERDEN ZERSTÖRT
         
         houseCells.forEach((cell, index) => {
-            if (index !== survivorIndex) {
-                setTimeout(() => {
-                    // Ersetze das SVG und füge die Zerstörungsklasse hinzu
-                    cell.innerHTML = houseDestroyedSVG;
-                    cell.classList.add('is-destroyed');
-                }, index * 15); // Etwas schnellere Animation
-            }
+            setTimeout(() => {
+                // Ersetze das SVG und füge die Zerstörungsklasse hinzu
+                cell.innerHTML = houseDestroyedSVG;
+                cell.classList.add('is-destroyed');
+            }, index * 10); // Etwas schnellere Animation für alle
         });
         setTimeout(() => {
              triggerDialog('expert', 'Das ist die Realität. Von 100 Häusern im Delta blieben oft nur ein oder zwei stehen. Die Zerstörung war total.');
-        }, 2000);
+        }, 1500);
     }
 
-    // --- BUDGET (NEU MIT SCHLECHTEN OPTIONEN) ---
+    // --- BUDGET (NEU MIT SCHLECHTEN OPTIONEN - NEUTRAL) ---
     function updateBudget() {
         let total = 0;
         let good = 0;
@@ -1017,6 +1023,7 @@
         });
 
         document.getElementById('total-points').innerText = total;
+        // Die genaue Aufschlüsselung wird im HTML versteckt, aber hier berechnet
         document.getElementById('good-points').innerText = good;
         document.getElementById('bad-points').innerText = bad;
         document.getElementById('total-points').style.color = total > 10 ? "red" : "black";
