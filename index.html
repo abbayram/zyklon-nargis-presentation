@@ -26,7 +26,7 @@
         .nav-controls { position: absolute; bottom: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
         h1 { font-size: 42px; color: var(--myanmar-red); margin: 0 0 10px 0; } h2 { font-size: 32px; color: var(--text-main); border-bottom: 4px solid var(--myanmar-red); padding-bottom: 15px; margin-bottom: 30px; } h3 { font-size: 24px; color: var(--text-light); margin: 0; } p, li { font-size: 20px; line-height: 1.6; color: var(--text-main); }
         
-        /* --- NEU: STYLES FÜR NARGIS FAKTEN SLIDE --- */
+        /* --- NEU: STYLES FÜR NARGIS FAKTEN SLIDE (Slide 5) --- */
         .facts-container { display: flex; gap: 40px; align-items: flex-start; margin-top: 30px; }
         .facts-map { width: 50%; flex-shrink: 0; }
         .facts-map img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
@@ -49,7 +49,15 @@
         .bar-value-outside { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 20px; color: var(--myanmar-red); font-weight: bold; font-size: 36px; opacity: 0; transition: opacity 1s 1s; }
         .nargis-grown + .bar-value-outside { opacity: 1; }
 
-        /* --- NEUE ANALYSE PUNKTE STYLES --- */
+        /* --- NEU: STYLES FÜR ANALYSE A (Slide 6) --- */
+        .analysis-col-container { display: flex; gap: 40px; align-items: flex-start; margin-top: 30px; }
+        .analysis-col { flex: 1; }
+        .analysis-col h3 { color: var(--myanmar-red); border-bottom: 2px solid var(--myanmar-red); padding-bottom: 10px; margin-bottom: 20px; }
+        .analysis-col ul { list-style-type: disc; padding-left: 20px; }
+        .analysis-col li { margin-bottom: 15px; font-size: 18px; }
+        .analysis-highlight { background: #f4f4f4; padding: 20px; border-left: 5px solid var(--myanmar-red); margin-top: 30px; font-style: italic; font-size: 20px; color: var(--text-main); }
+
+        /* --- NEUE ANALYSE PUNKTE STYLES (Slide 8 & 10) --- */
         .analysis-point { background: #f4f4f4; border-left: 5px solid var(--myanmar-red); padding: 20px; margin-bottom: 20px; opacity: 0; transform: translateX(-20px); transition: all 0.8s ease; }
         .analysis-point.visible { opacity: 1; transform: translateX(0); }
         .analysis-point h3 { color: var(--myanmar-red); margin-bottom: 10px; }
@@ -262,19 +270,30 @@
     </div>
 
     <div class="slide" id="slide6">
-        <h2>Analyse A: Politischer Kontext</h2>
-        <div style="display: flex; align-items: center; gap: 40px;">
-            <div style="width: 60%">
+        <h2>Analyse A: Politische Verwundbarkeit</h2>
+        <h3>Ein Staat, der auf Kontrolle, nicht auf Schutz ausgerichtet ist</h3>
+        <div class="analysis-col-container">
+            <div class="analysis-col">
+                <h3>Die Tatmadaw (Militär)</h3>
                 <ul>
-                    <li><strong>Isolation:</strong> Die Militärjunta schottete das Land ab.</li>
-                    <li><strong>Priorität Machterhalt:</strong> Das Verfassungsreferendum war wichtiger als der Schutz der Bevölkerung.</li>
-                    <li><strong>Blockade als Waffe:</strong> Internationale Hilfe wurde als Bedrohung der Souveränität gesehen.</li>
+                    <li>Zentrale Ordnungsfunktion im Inneren (Croissant 2015, S. 318)</li>
+                    <li>Selbstverständnis als „Bewahrer der Nation“, nicht als Dienstleister</li>
                 </ul>
-                <div style="background: #eee; padding: 15px; border-left: 4px solid var(--myanmar-red); margin-top:20px;">
-                    <i>"Das Regime fürchtete ausländische Helfer mehr als den Tod der eigenen Bürger."</i>
+                <h3>Ressourcenlogik</h3>
+                <ul>
+                    <li>Militär beansprucht Großteil der ökonomischen Ressourcen (Croissant 2015, S. 317)</li>
+                </ul>
+            </div>
+            <div class="analysis-col">
+                <h3>Schwache Zivilinstitutionen</h3>
+                <ul>
+                    <li>Zivile Staatsstrukturen nach 1988 gezielt geschwächt (Croissant 2015, S. 317)</li>
+                    <li>Geringe administrative Kapazität, fehlende Rechenschaftspflicht (Croissant 2015, S. 317)</li>
+                </ul>
+                 <div class="analysis-highlight">
+                    Fokus auf Sicherheit und Machterhalt, nicht auf öffentliche Dienstleistungen wie Schutz.
                 </div>
             </div>
-            <div style="width: 30%; text-align: center; font-size: 120px;">🔒</div>
         </div>
     </div>
 
@@ -488,8 +507,8 @@
 
         // SLIDE 5: Nargis Fakten (NEU) - Keine automatische Aktion
 
-        // SLIDE 6: Politische Analyse (Verschoben)
-        if(n === 6) { setTimeout(() => triggerDialog('expert', 'Das war der zynischste Aspekt. Hilfe wurde als Bedrohung der eigenen Macht gesehen.'), 500); }
+        // SLIDE 6: Politische Analyse (Verschoben & Aktualisiert)
+        if(n === 6) { setTimeout(() => triggerDialog('expert', 'Der Staat war auf Kontrolle ausgerichtet, nicht auf den Schutz seiner Bürger.'), 500); }
 
         // SLIDE 7: Blockade (Nur General, Verschoben)
         if(n === 7) {
