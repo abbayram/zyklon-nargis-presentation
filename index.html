@@ -14,9 +14,7 @@
             --text-main: #333;
             --text-light: #666;
             --bg-slide: #fcfcfc;
-            --interviewer-color: #555;
         }
-        /* Body angepasst für Electron/Vollbild */
         body { margin: 0; height: 100vh; background-color: #111; display: flex; justify-content: center; align-items: center; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; overflow: hidden; user-select: none; -webkit-user-select: none; }
         #presentation-stage { width: 1280px; height: 720px; background-color: var(--bg-slide); position: relative; overflow: hidden; }
         .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 60px; box-sizing: border-box; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; background: white; z-index: 10; }
@@ -28,6 +26,17 @@
         .nav-controls { position: absolute; bottom: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
         h1 { font-size: 42px; color: var(--myanmar-red); margin: 0 0 10px 0; } h2 { font-size: 32px; color: var(--text-main); border-bottom: 4px solid var(--myanmar-red); padding-bottom: 15px; margin-bottom: 30px; } h3 { font-size: 24px; color: var(--text-light); margin: 0; } p, li { font-size: 20px; line-height: 1.6; color: var(--text-main); }
         
+        /* --- NEU: STYLES FÜR NARGIS FAKTEN SLIDE --- */
+        .facts-container { display: flex; gap: 40px; align-items: flex-start; margin-top: 30px; }
+        .facts-map { width: 50%; flex-shrink: 0; }
+        .facts-map img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .facts-map-caption { font-size: 12px; color: #666; margin-top: 10px; font-style: italic; }
+        .facts-list { width: 50%; }
+        .fact-item { display: flex; align-items: flex-start; margin-bottom: 25px; }
+        .fact-icon { font-size: 32px; margin-right: 15px; color: var(--myanmar-red); width: 40px; text-align: center; flex-shrink: 0; }
+        .fact-text strong { display: block; font-size: 22px; color: var(--myanmar-red); margin-bottom: 5px; }
+        .source-ref { font-size: 14px; color: #888; }
+
         /* --- DIAGRAM STYLES (Slide 3) --- */
         .chart-container { margin-top: 50px; padding: 20px; position: relative; }
         .bar-group { margin-bottom: 40px; position: relative; }
@@ -35,7 +44,6 @@
         .bar { height: 60px; background: var(--myanmar-red); transition: width 2.5s cubic-bezier(0.25, 1, 0.5, 1), background 0.5s; display: flex; align-items: center; justify-content: end; padding-right: 15px; color: white; font-weight: bold; font-size: 24px; white-space: nowrap; overflow: visible; border-radius: 4px;box-shadow: 2px 2px 5px rgba(0,0,0,0.2);}
         .bar.mala-initial { width: 70%; background: #777; } 
         .bar.mala-shrunk { width: 1.5% !important; background: #777; justify-content: start; padding-left: 5px; overflow: hidden;} .bar.mala-shrunk span { display: none; }
-        /* NEU: Platzhalter-Stil für Nargis vor der Animation */
         .bar.nargis-placeholder { width: 2%; background: #eee; box-shadow: none; }
         .bar.nargis-grown { width: 100% !important; background: var(--myanmar-red); }
         .bar-value-outside { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 20px; color: var(--myanmar-red); font-weight: bold; font-size: 36px; opacity: 0; transition: opacity 1s 1s; }
@@ -116,7 +124,7 @@
             <img id="general-img" src="" class="char-img" alt="General">
             <div class="char-label">General Aung (Militär)</div>
         </div>
-        </div>
+    </div>
     
     <div class="speech-bubble" id="dialog-bubble">
         <p style="margin-top: 0; margin-bottom: 15px;" id="dialog-text">...</p>
@@ -193,15 +201,63 @@
         </div>
     </div>
 
-    <div class="slide slide-blockade" id="slide5">
-        <h2>Der Zynismus der Macht: Die Blockade der Hilfe</h2>
-        <p>In den Tagen nach dem Sturm warteten internationale Hilfsschiffe und Flugzeuge vergeblich auf eine Einreiseerlaubnis.</p>
-        <div style="position: relative; width: 100%; height: 400px; margin-top: 30px;">
-            <img src="./assets/map_blockade.png" alt="Karte von Myanmar mit Blockade" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; -webkit-user-drag: none;">
-            <canvas id="blockade-canvas" style="position: absolute; top: 0; left: 0; z-index: 2;"></canvas>
+    <div class="slide" id="slide5">
+        <h2>Das Ereignis: Zyklon Nargis trifft das Irawadi-Delta</h2>
+        <div class="facts-container">
+            <div class="facts-map">
+                <img src="./assets/nargis_fakten_karte.png" alt="Karte des Überflutungsgebiets von Nargis">
+                <p class="facts-map-caption">Abb. 1: Überflutungsgebiet des Zyklons Nargis – Quelle: Angelehnt an Fritz et al. (2009)</p>
+            </div>
+            <div class="facts-list">
+                <div class="fact-item">
+                    <div class="fact-icon">📅</div>
+                    <div class="fact-text">
+                        <strong>Datum: 2. Mai 2008</strong>
+                        <span class="source-ref">(Fritz et al. 2009, S. 1)</span>
+                    </div>
+                </div>
+                <div class="fact-item">
+                    <div class="fact-icon">🌀</div>
+                    <div class="fact-text">
+                        <strong>Stärke: Kategorie 4</strong>
+                        <span>beim Auftreffen auf Land</span>
+                        <span class="source-ref">(Fritz et al. 2009, S. 1)</span>
+                    </div>
+                </div>
+                <div class="fact-item">
+                    <div class="fact-icon">💨</div>
+                    <div class="fact-text">
+                        <strong>Wind: >210 km/h</strong>
+                        <span>anhaltend</span>
+                        <span class="source-ref">(Fritz et al. 2009, S. 1)</span>
+                    </div>
+                </div>
+                <div class="fact-item">
+                    <div class="fact-icon">🌊</div>
+                    <div class="fact-text">
+                        <strong>Sturmflut: Bis zu 5 Meter hoch</strong>
+                        <span class="source-ref">(Fritz et al. 2009, S. 1)</span>
+                    </div>
+                </div>
+                <div class="fact-item">
+                    <div class="fact-icon">🏘️</div>
+                    <div class="fact-text">
+                        <strong>Überflutung: Bis zu 50 km landeinwärts</strong>
+                        <span class="source-ref">(Fritz et al. 2009, S. 1)</span>
+                    </div>
+                </div>
+                 <div class="fact-item">
+                    <div class="fact-icon">💲</div>
+                    <div class="fact-text">
+                        <strong>Schaden: >10 Mrd. US-Dollar</strong>
+                        <span>tödlichster Zyklon im Indischen Ozean seit 1970</span>
+                        <span class="source-ref">(Fritz et al. 2009, S. 1)</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div style="text-align: center; margin-top: 20px;">
-            <button class="btn" onclick="startBlockadeAnimation()">Hilfslieferungen starten</button>
+         <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-outline" onclick="triggerDialog('expert', 'Diese Fakten zeigen die rohe Gewalt der Natur. Doch die Katastrophe wurde durch menschliche Faktoren potenziert. Schauen wir uns die politische Lage an.')">Überleitung zur Analyse</button>
         </div>
     </div>
 
@@ -222,7 +278,19 @@
         </div>
     </div>
 
-    <div class="slide" id="slide7">
+     <div class="slide slide-blockade" id="slide7">
+        <h2>Der Zynismus der Macht: Die Blockade der Hilfe</h2>
+        <p>In den Tagen nach dem Sturm warteten internationale Hilfsschiffe und Flugzeuge vergeblich auf eine Einreiseerlaubnis.</p>
+        <div style="position: relative; width: 100%; height: 400px; margin-top: 30px;">
+            <img src="./assets/map_blockade.png" alt="Karte von Myanmar mit Blockade" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; -webkit-user-drag: none;">
+            <canvas id="blockade-canvas" style="position: absolute; top: 0; left: 0; z-index: 2;"></canvas>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn" onclick="startBlockadeAnimation()">Hilfslieferungen starten</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide8">
         <h2>Analyse B: Ökonomische Faktoren</h2>
         <div style="margin-top: 40px;">
             <div class="analysis-point" id="eco-point-1">
@@ -240,7 +308,7 @@
         </div>
     </div>
 
-    <div class="slide" id="slide8">
+    <div class="slide" id="slide9">
         <h2>Der Faktor "Preparedness" (Vergleich: Mala 2006)</h2>
         <p>Zoom auf ein Dorf während Zyklon Mala (2006). Dank Warnung wussten die Menschen, was zu tun war.</p>
         <canvas id="evacuation-canvas"></canvas>
@@ -249,7 +317,7 @@
         </div>
     </div>
 
-    <div class="slide" id="slide9">
+    <div class="slide" id="slide10">
         <h2>Analyse C: Umweltfaktoren</h2>
         <div style="display: flex; align-items: center; gap: 40px; margin-top: 40px;">
             <div style="width: 50%">
@@ -265,7 +333,7 @@
         </div>
     </div>
 
-    <div class="slide" id="slide10">
+    <div class="slide" id="slide11">
         <h2>Die Anatomie des Sturms (Simulation)</h2>
         <p>Das Ayeyarwady-Delta liegt extrem tief. Eine 5-Meter-Sturmflut traf auf ungeschützte Küsten.</p>
         <canvas id="flood-canvas"></canvas>
@@ -276,7 +344,7 @@
         </div>
     </div>
 
-    <div class="slide" id="slide11">
+    <div class="slide" id="slide12">
         <h2>Krisenmanager: Budget verteilen</h2>
         <p>Sie haben <strong>10 Punkte</strong> für die Zukunft.</p>
         <div class="budget-container">
@@ -304,7 +372,7 @@
         </div>
     </div>
 
-    <div class="slide" id="slide12">
+    <div class="slide" id="slide13">
         <h2>Fazit</h2>
         <div style="background: #fff0f0; border: 2px solid var(--myanmar-red); padding: 30px; border-radius: 8px;">
             <h3 style="color: var(--myanmar-red);">Antwort auf die Leitfrage:</h3>
@@ -325,7 +393,7 @@
 
 <script>
     // --- SETUP & GLOBALS ---
-    let currentSlide = 1; const totalSlides = 12; // Jetzt 12 Slides
+    let currentSlide = 1; const totalSlides = 13; // Jetzt 13 Slides
     let canvas, ctx, evacCanvas, evacCtx, histCanvas, histCtx, blockadeCanvas, blockadeCtx;
     let waterParticles = [], debrisParticles = [], mangroveRoots = [], villagers = [];
     let isFlooding = false, mangrovesActive = true, villageDestroyed = false, isEvacuating = false;
@@ -340,7 +408,7 @@
     let helpArrows = [];
     let isBlockadeAnimating = false;
 
-    // --- AVATAR CONFIG (Nur noch Expertin & General) ---
+    // --- AVATAR CONFIG ---
     const expertImages = ["./assets/avatars/expertin1.png", "./assets/avatars/expertin2.png", "./assets/avatars/expertin8.png"];
     const generalImages = ["./assets/avatars/general1.png", "./assets/avatars/general2.png", "./assets/avatars/general3.png"];
 
@@ -394,16 +462,15 @@
          if(blockadeCanvas) { blockadeCanvas.width = blockadeCanvas.parentElement.offsetWidth; blockadeCanvas.height = 450; initBlockadeScene(); }
     }
 
-    // --- NAVIGATION & NEUE LOGIK ---
+    // --- NAVIGATION & NEUE LOGIK (ANGESPASST AN NEUE REIHENFOLGE) ---
     function showSlide(n) {
         document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
         document.getElementById(`slide${n}`).classList.add('active');
-        // U Kyaw entfernt
         ['expert', 'general'].forEach(c => document.getElementById(`char-${c}`).classList.remove('visible'));
         closeDialog();
 
         // Expertin ist Standard, außer auf General-Slides
-        if(n !== 5) document.getElementById('char-expert').classList.add('visible');
+        if(n !== 7) document.getElementById('char-expert').classList.add('visible');
 
         // SLIDE 2: Historie
         if(n === 2) {
@@ -419,8 +486,13 @@
             resetTimeline();
         }
 
-        // SLIDE 5: Blockade (Nur General)
-        if(n === 5) {
+        // SLIDE 5: Nargis Fakten (NEU) - Keine automatische Aktion
+
+        // SLIDE 6: Politische Analyse (Verschoben)
+        if(n === 6) { setTimeout(() => triggerDialog('expert', 'Das war der zynischste Aspekt. Hilfe wurde als Bedrohung der eigenen Macht gesehen.'), 500); }
+
+        // SLIDE 7: Blockade (Nur General, Verschoben)
+        if(n === 7) {
              document.getElementById('char-expert').classList.remove('visible');
              document.getElementById('char-general').classList.add('visible');
              initBlockadeScene();
@@ -428,20 +500,16 @@
              setTimeout(() => triggerDialog('general', 'Unsere Souveränität ist unantastbar. Diese "Hilfe" ist nur ein Vorwand für ausländische Einmischung.'), 500);
         }
 
-        // SLIDE 6: Politische Analyse
-        if(n === 6) { setTimeout(() => triggerDialog('expert', 'Das war der zynischste Aspekt. Hilfe wurde als Bedrohung der eigenen Macht gesehen.'), 500); }
-
-        // SLIDE 7: Ökonomische Analyse (Animation)
-        if(n === 7) { 
-            // Reset und Start der Sequenz
+        // SLIDE 8: Ökonomische Analyse (Animation, Verschoben)
+        if(n === 8) { 
             document.querySelectorAll('.analysis-point').forEach(p => p.classList.remove('visible'));
             setTimeout(() => { document.getElementById('eco-point-1').classList.add('visible'); triggerDialog('expert', 'Erstens: Extreme Armut. Die Menschen hatten keine Reserven.'); }, 1000);
             setTimeout(() => { document.getElementById('eco-point-2').classList.add('visible'); triggerDialog('expert', 'Zweitens: Die instabilen Bambushütten boten null Schutz gegen die Flut.'); }, 4000);
             setTimeout(() => { document.getElementById('eco-point-3').classList.add('visible'); triggerDialog('expert', 'Drittens: Ohne Boote oder Fahrzeuge gab es keine Chance zur Flucht.'); }, 7000);
         }
 
-        // SLIDE 9: Umwelt Analyse (Animation)
-        if(n === 9) {
+        // SLIDE 10: Umwelt Analyse (Animation, Verschoben)
+        if(n === 10) {
             document.getElementById('env-point-1').classList.remove('visible');
             setTimeout(() => {
                  document.getElementById('env-point-1').classList.add('visible');
@@ -449,7 +517,7 @@
             }, 1000);
         }
 
-        if(n === 11) { stopTalkingAnimation(); }
+        if(n === 12) { stopTalkingAnimation(); }
     }
     function nextSlide() { if(currentSlide < totalSlides) showSlide(++currentSlide); }
     function prevSlide() { if(currentSlide > 1) showSlide(--currentSlide); }
@@ -459,7 +527,6 @@
         let displayName = '', bubbleClass = '';
         if(who === 'expert') { displayName = 'Dr. Thida'; bubbleClass = 'bubble-pos-expert'; }
         else if(who === 'general') { displayName = 'General Aung'; bubbleClass = 'bubble-pos-general'; }
-        // U Kyaw entfernt
         
         document.getElementById('dialog-text').innerHTML = `<strong>${displayName}:</strong><br>"${text}"`;
         bubble.className = "speech-bubble " + bubbleClass;
@@ -478,7 +545,6 @@
     function animateDiagram() {
         document.getElementById('bar-mala').classList.add('mala-shrunk');
         setTimeout(() => {
-             // Entferne Platzhalter-Klasse, füge Wachstums-Klasse hinzu
              const nargisBar = document.getElementById('bar-nargis');
              nargisBar.classList.remove('nargis-placeholder');
              nargisBar.classList.add('nargis-grown');
@@ -487,7 +553,6 @@
     }
     function resetDiagram() {
         document.getElementById('bar-mala').classList.remove('mala-shrunk');
-        // Zurücksetzen auf Platzhalter-Status
         const nargisBar = document.getElementById('bar-nargis');
         nargisBar.classList.remove('nargis-grown');
         nargisBar.classList.add('nargis-placeholder');
@@ -514,7 +579,7 @@
             triggerDialog('expert', 'Der Wind kam in der Nacht. Es gab keine Sirenen, kein Radio. Die Menschen wurden im Schlaf überrascht.');
         } else if(timelineStep === 3) {
             document.getElementById('tl-ev-3').classList.add('active'); status.innerText = "Phase 3: Politik über Menschenleben.";
-            triggerDialog('general', 'Das Referendum ist entscheidend für die Stabilität. Ausländische Hilfe bringt nur Unruhe. Die Lage ist unter Kontrolle.'); btn.innerText = "Zur Blockade";
+            triggerDialog('general', 'Das Referendum ist entscheidend für die Stabilität. Ausländische Hilfe bringt nur Unruhe. Die Lage ist unter Kontrolle.'); btn.innerText = "Zu den Fakten";
         } else if(timelineStep > 3) { nextSlide(); }
     }
 
@@ -541,7 +606,6 @@
             }
         }
     }
-    // (Zeichenfunktionen für HistTimeline hier einfügen - der Kürze halber weggelassen, sind im vorherigen Code)
     function drawChain(x, y, broken) {
         histCtx.strokeStyle = '#555'; histCtx.lineWidth = 4;
         for(let i=0; i<5; i++) {
@@ -613,7 +677,7 @@
     }
 
     // ==========================================
-    // --- BLOCKADE ANIMATION (Slide 5) ---
+    // --- BLOCKADE ANIMATION (Slide 7) ---
     // ==========================================
     class HelpArrow {
         constructor(side) {
@@ -670,7 +734,7 @@
 
 
     // ==========================================
-    // --- SIMULATIONEN (Slides 8 & 10) ---
+    // --- SIMULATIONEN (Slides 9 & 11) ---
     // ==========================================
     class WaterParticle {
         constructor() { this.reset(); }
@@ -715,7 +779,6 @@
             ctx.fillStyle = '#558b2f'; ctx.beginPath(); ctx.arc(root.x + sway, root.y - 10, 12, 0, Math.PI*2); ctx.fill();
         });
         ctx.restore();
-        // Text nach oben verschoben (y=60)
         ctx.fillStyle = '#1b5e20'; ctx.font = "bold 16px Arial"; ctx.fillText("MANGROVEN SCHUTZ", canvas.width*0.28, 60);
     }
     class DebrisParticle {
