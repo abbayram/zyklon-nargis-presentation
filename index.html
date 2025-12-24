@@ -27,23 +27,24 @@
         .btn-outline:hover { background: var(--myanmar-red); color: white; }
         .nav-controls { position: absolute; bottom: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
         h1 { font-size: 42px; color: var(--myanmar-red); margin: 0 0 10px 0; } h2 { font-size: 32px; color: var(--text-main); border-bottom: 4px solid var(--myanmar-red); padding-bottom: 15px; margin-bottom: 30px; } h3 { font-size: 24px; color: var(--text-light); margin: 0; } p, li { font-size: 20px; line-height: 1.6; color: var(--text-main); }
-        .source { font-size: 11px; color: #aaa; position: absolute; bottom: 15px; left: 40px; font-style: italic; z-index: 5; } .highlight { color: var(--myanmar-red); font-weight: bold; }
         
-        /* --- DIAGRAM STYLES (NEU für Slide 3) --- */
+        /* --- DIAGRAM STYLES (Slide 3) --- */
         .chart-container { margin-top: 50px; padding: 20px; position: relative; }
         .bar-group { margin-bottom: 40px; position: relative; }
         .bar-label { font-weight: bold; font-size: 20px; display: block; margin-bottom: 10px; color: var(--text-main); }
-        /* Basis-Stil für Balken */
-        .bar { height: 60px; background: var(--myanmar-red); width: 0%; transition: width 2.5s cubic-bezier(0.25, 1, 0.5, 1); display: flex; align-items: center; justify-content: end; padding-right: 15px; color: white; font-weight: bold; font-size: 24px; white-space: nowrap; overflow: visible; border-radius: 4px;box-shadow: 2px 2px 5px rgba(0,0,0,0.2);}
-        /* Mala Startzustand (groß, grau) */
+        .bar { height: 60px; background: var(--myanmar-red); transition: width 2.5s cubic-bezier(0.25, 1, 0.5, 1), background 0.5s; display: flex; align-items: center; justify-content: end; padding-right: 15px; color: white; font-weight: bold; font-size: 24px; white-space: nowrap; overflow: visible; border-radius: 4px;box-shadow: 2px 2px 5px rgba(0,0,0,0.2);}
         .bar.mala-initial { width: 70%; background: #777; } 
-        /* Mala Endzustand (winzig, grau) */
         .bar.mala-shrunk { width: 1.5% !important; background: #777; justify-content: start; padding-left: 5px; overflow: hidden;} .bar.mala-shrunk span { display: none; }
-        /* Nargis Endzustand (riesig, rot) */
-        .bar.nargis-grown { width: 100% !important; }
-        /* Wert außerhalb des Balkens für Nargis */
+        /* NEU: Platzhalter-Stil für Nargis vor der Animation */
+        .bar.nargis-placeholder { width: 2%; background: #eee; box-shadow: none; }
+        .bar.nargis-grown { width: 100% !important; background: var(--myanmar-red); }
         .bar-value-outside { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 20px; color: var(--myanmar-red); font-weight: bold; font-size: 36px; opacity: 0; transition: opacity 1s 1s; }
         .nargis-grown + .bar-value-outside { opacity: 1; }
+
+        /* --- NEUE ANALYSE PUNKTE STYLES --- */
+        .analysis-point { background: #f4f4f4; border-left: 5px solid var(--myanmar-red); padding: 20px; margin-bottom: 20px; opacity: 0; transform: translateX(-20px); transition: all 0.8s ease; }
+        .analysis-point.visible { opacity: 1; transform: translateX(0); }
+        .analysis-point h3 { color: var(--myanmar-red); margin-bottom: 10px; }
 
         /* --- CANVAS STYLES --- */
         #flood-canvas, #evacuation-canvas { width: 100%; height: 350px; background: linear-gradient(to bottom, #e0e0e0 0%, #d7ccc8 80%, #a1887f 100%); border-bottom: 10px solid #5d4037; cursor: crosshair; display: block; }
@@ -51,36 +52,33 @@
         #blockade-canvas { border: none; height: 100%; width: 100%; background: transparent; cursor: default; }
 
         .sim-controls { display: flex; gap: 20px; justify-content: center; margin-top: 15px; z-index: 100; position: relative; }
-        .scale-wrapper { position: relative; width: 600px; height: 300px; margin: 40px auto; }
-        .scale-base { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 20px; height: 150px; background: #333; }
-        .scale-beam-pivot { position: absolute; top: 150px; left: 50%; transform: translateX(-50%); width: 400px; height: 10px; background: #444; border-radius: 5px; transition: transform 1s; transform-origin: center; }
-        .scale-plate { width: 100px; height: 80px; border: 2px solid #444; border-top: none; position: absolute; top: 10px; display: flex; justify-content: center; align-items: flex-end; font-weight: bold; }
-        .plate-left { left: 0; } .plate-right { right: 0; }
-        .rope { width: 2px; height: 60px; background: #888; position: absolute; top: 0; } .rope.left { left: 0; } .rope.right { right: 0; }
         .budget-container { width: 80%; margin: 0 auto; background: #eee; padding: 30px; border-radius: 8px; }
         .slider-row { display: flex; align-items: center; margin-bottom: 20px; } .slider-row label { width: 250px; font-weight: bold; }
         input[type=range] { flex-grow: 1; accent-color: var(--myanmar-red); cursor: pointer; position: relative; z-index: 50; outline: none;}
 
         /* --- AVATARE --- */
-        .char-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; display: grid; grid-template-columns: repeat(4, 1fr); align-items: end; padding: 0 20px; }
-        .character-container { position: relative; bottom: -450px; transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); width: 200px; text-align: center; margin: 0 auto; }
+        .char-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; display: grid; grid-template-columns: 1fr 1fr; align-items: end; padding: 0 100px; }
+        .character-container { position: relative; bottom: -450px; transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); width: 250px; text-align: center; margin: 0 auto; }
         .character-container.visible { bottom: 0; }
         .char-img { width: 100%; height: auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); transition: opacity 0.1s ease; -webkit-user-drag: none; }
         .char-label { background: var(--myanmar-red); color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; display: inline-block; margin-top: -25px; position: relative; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
         #char-general .char-label { background: var(--military-green); }
+        /* Spezielle Positionierung für Blockade Slide */
+        .slide-blockade #char-general { margin-left: 0; }
 
-        /* --- SPRECHBLASEN --- */
-        .speech-bubble { position: absolute; background: white; border-radius: 20px; padding: 20px; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 2px solid #333; font-size: 18px; z-index: 2000; display: none; pointer-events: auto; animation-duration: 0.3s; animation-fill-mode: forwards; }
+        /* --- SPRECHBLASEN (Höher positioniert) --- */
+        .speech-bubble { position: absolute; background: white; border-radius: 20px; padding: 20px; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 2px solid #333; font-size: 18px; z-index: 2000; display: none; pointer-events: auto; animation-duration: 0.3s; animation-fill-mode: forwards; }
         @keyframes popIn { from { opacity: 0; transform: scale(0.8) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
         .speech-bubble:after { content: ''; position: absolute; bottom: -20px; border-width: 20px 20px 0; border-style: solid; display: block; width: 0; }
         .speech-bubble:before { content: ''; position: absolute; bottom: -23px; border-width: 22px 22px 0; border-style: solid; border-color: #333 transparent; width: 0; z-index: -1; }
         
-        .bubble-pos-expert { left: 200px; bottom: 250px; animation-name: popIn; } .bubble-pos-expert:after { left: 40px; border-color: white transparent; } .bubble-pos-expert:before { left: 38px; }
-        .bubble-pos-general { left: 50%; transform: translateX(-50%); bottom: 250px; animation-name: popIn; } .bubble-pos-general:after { left: 50%; transform: translateX(-50%); border-color: white transparent; } .bubble-pos-general:before { left: 50%; transform: translateX(-50%); }
-        .bubble-pos-local { right: 200px; bottom: 250px; animation-name: popIn; } .bubble-pos-local:after { right: 40px; border-color: white transparent; } .bubble-pos-local:before { right: 38px; }
+        /* Höhere Grundposition (bottom: 400px) damit nichts verdeckt wird */
+        .bubble-pos-expert { left: 250px; bottom: 400px; animation-name: popIn; } .bubble-pos-expert:after { left: 40px; border-color: white transparent; } .bubble-pos-expert:before { left: 38px; }
+        /* General weiter links für Blockade Slide */
+        .bubble-pos-general { left: 150px; bottom: 400px; animation-name: popIn; } .bubble-pos-general:after { left: 40px; border-color: white transparent; } .bubble-pos-general:before { left: 38px; }
 
         /* --- TIMELINE STYLES --- */
-        .tl-container { position: relative; width: 90%; margin: 100px auto 0; height: 300px; }
+        .tl-container { position: relative; width: 90%; margin: 60px auto 0; height: 300px; }
         .tl-line { position: absolute; top: 50%; left: 5%; width: 90%; height: 6px; background: #333; transform: translateY(-50%); z-index: 1; }
         .tl-event-box { position: absolute; width: 240px; background: white; border: 3px solid var(--myanmar-red); border-radius: 8px; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); opacity: 0; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 5; }
         .tl-event-box.active { opacity: 1; transform: translateY(0) scale(1) !important; }
@@ -92,7 +90,7 @@
         .tl-connector { position: absolute; width: 3px; background: var(--myanmar-red); z-index: 2; height: 0; transition: height 0.6s 0.3s ease; }
         .tl-event-box.active + .tl-connector { height: 60px; } .conn-top { bottom: 50%; } .conn-bottom { top: 50%; }
 
-        /* --- HISTORISCHE TIMELINE STYLES (Jetzt Slide 2) --- */
+        /* --- HISTORISCHE TIMELINE STYLES (Slide 2) --- */
         .hist-tl-container { position: relative; width: 90%; margin: 80px auto 0; height: 400px; }
         #hist-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
         .hist-labels-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
@@ -118,11 +116,7 @@
             <img id="general-img" src="" class="char-img" alt="General">
             <div class="char-label">General Aung (Militär)</div>
         </div>
-        <div class="character-container" id="char-local">
-            <img src="https://api.dicebear.com/7.x/micah/svg?seed=GrandpaKyawPermanent&baseColor=ac6651&hair=doug&hairColor=d3d3d3&facialHair=beard&facialHairColor=d3d3d3&mouth=sad&shirt=crew&shirtColor=795548&coat=none" class="char-img" alt="U Kyaw">
-            <div class="char-label">U Kyaw (Bewohner)</div>
         </div>
-    </div>
     
     <div class="speech-bubble" id="dialog-bubble">
         <p style="margin-top: 0; margin-bottom: 15px;" id="dialog-text">...</p>
@@ -136,7 +130,7 @@
             <h3>Eine Analyse der sozialen Verwundbarkeit</h3>
             <h1>Zyklon Nargis (2008):<br>Naturereignis oder Staatsversagen?</h1>
             <div style="width: 100px; height: 4px; background: var(--myanmar-red); margin: 30px auto;"></div>
-            <button class="btn" onclick="triggerDialog('expert', 'Willkommen. Um Nargis zu verstehen, müssen wir zuerst weit zurückblicken. Folgen Sie mir in die Geschichte Myanmars.')">Präsentation Starten</button>
+            <button class="btn" onclick="triggerDialog('expert', 'Willkommen. Um das Ausmaß von Nargis zu verstehen, müssen wir zuerst die Geschichte Myanmars kennen.')">Präsentation Starten</button>
         </div>
     </div>
 
@@ -160,22 +154,19 @@
 
     <div class="slide" id="slide3">
         <h2>Zwei Stürme, verschiedene Ausmaße</h2>
-        
         <div class="chart-container">
             <div class="bar-group">
                 <span class="bar-label">Zyklon Mala (2006) - Ähnliche Stärke</span>
                 <div class="bar mala-initial" id="bar-mala"><span>22 Tote</span></div>
             </div>
-
             <div class="bar-group" style="margin-top: 80px;">
                 <span class="bar-label">Zyklon Nargis (2008)</span>
-                <div class="bar" style="width: 0%;" id="bar-nargis"></div>
+                <div class="bar nargis-placeholder" id="bar-nargis"></div>
                 <span class="bar-value-outside" id="val-nargis">> 138.000 Tote</span>
             </div>
         </div>
-
         <div style="margin-top: 50px; text-align: center;">
-             <button class="btn-outline" onclick="animateDiagram(); triggerDialog('expert', 'Die Zahlen sind unfassbar. Meteorologisch waren beide Stürme ähnlich stark. Doch 2008 gab es keine Warnung, keine Bunker – das machte den tödlichen Unterschied.')">Analyse der Expertin (Animation starten)</button>
+            <button class="btn-outline" onclick="animateDiagram(); triggerDialog('expert', 'Die Zahlen sind unfassbar. Meteorologisch waren beide Stürme ähnlich stark. Doch 2008 gab es keine Warnung, keine Bunker – das machte den tödlichen Unterschied.')">Analyse der Expertin (Animation starten)</button>
         </div>
     </div>
 
@@ -202,7 +193,79 @@
         </div>
     </div>
 
-    <div class="slide" id="slide5">
+    <div class="slide slide-blockade" id="slide5">
+        <h2>Der Zynismus der Macht: Die Blockade der Hilfe</h2>
+        <p>In den Tagen nach dem Sturm warteten internationale Hilfsschiffe und Flugzeuge vergeblich auf eine Einreiseerlaubnis.</p>
+        <div style="position: relative; width: 100%; height: 400px; margin-top: 30px;">
+            <img src="./assets/map_blockade.png" alt="Karte von Myanmar mit Blockade" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; -webkit-user-drag: none;">
+            <canvas id="blockade-canvas" style="position: absolute; top: 0; left: 0; z-index: 2;"></canvas>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn" onclick="startBlockadeAnimation()">Hilfslieferungen starten</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide6">
+        <h2>Analyse A: Politischer Kontext</h2>
+        <div style="display: flex; align-items: center; gap: 40px;">
+            <div style="width: 60%">
+                <ul>
+                    <li><strong>Isolation:</strong> Die Militärjunta schottete das Land ab.</li>
+                    <li><strong>Priorität Machterhalt:</strong> Das Verfassungsreferendum war wichtiger als der Schutz der Bevölkerung.</li>
+                    <li><strong>Blockade als Waffe:</strong> Internationale Hilfe wurde als Bedrohung der Souveränität gesehen.</li>
+                </ul>
+                <div style="background: #eee; padding: 15px; border-left: 4px solid var(--myanmar-red); margin-top:20px;">
+                    <i>"Das Regime fürchtete ausländische Helfer mehr als den Tod der eigenen Bürger."</i>
+                </div>
+            </div>
+            <div style="width: 30%; text-align: center; font-size: 120px;">🔒</div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide7">
+        <h2>Analyse B: Ökonomische Faktoren</h2>
+        <div style="margin-top: 40px;">
+            <div class="analysis-point" id="eco-point-1">
+                <h3>1. Extreme strukturelle Armut</h3>
+                <p>Die Menschen im Delta lebten von der Hand in den Mund. Es gab keine Reserven für Notfälle, keine stabilen Steinhäuser.</p>
+            </div>
+            <div class="analysis-point" id="eco-point-2">
+                <h3>2. Instabile Bambushäuser</h3>
+                <p>Die traditionelle Bauweise war der 5-Meter-Sturmflut nicht gewachsen. Ganze Dörfer wurden einfach weggespült.</p>
+            </div>
+             <div class="analysis-point" id="eco-point-3">
+                <h3>3. Keine Evakuierungsmöglichkeiten</h3>
+                <p>Es fehlten Boote, Fahrzeuge und befestigte Straßen, um das riesige Delta rechtzeitig zu verlassen.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide8">
+        <h2>Der Faktor "Preparedness" (Vergleich: Mala 2006)</h2>
+        <p>Zoom auf ein Dorf während Zyklon Mala (2006). Dank Warnung wussten die Menschen, was zu tun war.</p>
+        <canvas id="evacuation-canvas"></canvas>
+        <div style="text-align: center; margin-top: 20px;">
+             <button class="btn" onclick="startEvacuationDemo()">Evakuierung starten</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide9">
+        <h2>Analyse C: Umweltfaktoren</h2>
+        <div style="display: flex; align-items: center; gap: 40px; margin-top: 40px;">
+            <div style="width: 50%">
+                 <div class="analysis-point" id="env-point-1">
+                    <h3>Die Mangrovenrodung</h3>
+                    <p>Über Jahrzehnte wurden die Mangrovenwälder des Deltas für Holzkohle und Garnelenzucht abgeholzt.</p>
+                    <p>Dieser natürliche "Puffer" gegen Sturmfluten war 2008 größtenteils verschwunden.</p>
+                </div>
+            </div>
+            <div style="width: 40%; text-align: center; opacity: 0.3;">
+                 (Hier könnte ein Vorher/Nachher Bild stehen) 🌳🪓
+            </div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide10">
         <h2>Die Anatomie des Sturms (Simulation)</h2>
         <p>Das Ayeyarwady-Delta liegt extrem tief. Eine 5-Meter-Sturmflut traf auf ungeschützte Küsten.</p>
         <canvas id="flood-canvas"></canvas>
@@ -213,68 +276,9 @@
         </div>
     </div>
 
-    <div class="slide" id="slide6">
-        <h2>Der Faktor "Preparedness" (Vorbereitung)</h2>
-        <p>Zoom auf ein Dorf während Zyklon Mala (2006). Die Menschen wussten, was zu tun war.</p>
-        <canvas id="evacuation-canvas"></canvas>
-        <div style="text-align: center; margin-top: 20px;">
-             <button class="btn" onclick="startEvacuationDemo()">Evakuierung starten</button>
-        </div>
-    </div>
-
-    <div class="slide" id="slide7">
-        <h2>Der Zynismus der Macht: Die Blockade der Hilfe</h2>
-        <p>In den Tagen nach dem Sturm warteten internationale Hilfsschiffe und Flugzeuge vergeblich auf eine Einreiseerlaubnis.</p>
-        
-        <div style="position: relative; width: 100%; height: 450px; margin-top: 30px;">
-            <img src="./assets/map_blockade.png" alt="Karte von Myanmar mit Blockade" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; -webkit-user-drag: none;">
-            <canvas id="blockade-canvas" style="position: absolute; top: 0; left: 0; z-index: 2;"></canvas>
-        </div>
-        
-        <div style="text-align: center; margin-top: 20px;">
-            <button class="btn" onclick="startBlockadeAnimation()">Hilfslieferungen starten</button>
-        </div>
-    </div>
-
-    <div class="slide" id="slide8">
-        <h2>Analyse A: Politischer Kontext (Nargis 2008)</h2>
-        <div style="display: flex; align-items: center;">
-            <div style="width: 60%">
-                <ul>
-                    <li><strong>Isolation:</strong> Die Militärjunta schottete das Land ab.</li>
-                    <li><strong>Priorität:</strong> Fokus auf Machterhalt (Referendum) statt Schutz.</li>
-                    <li><strong>Blockade:</strong> Internationale Helfer wurden tagelang nicht ins Land gelassen.</li>
-                </ul>
-                <div style="background: #eee; padding: 15px; border-left: 4px solid #333; margin-top:20px;">
-                    <i>"Hilfe wurde als Bedrohung der Souveränität gesehen."</i>
-                </div>
-                 <div style="margin-top: 20px; text-align: center;">
-                    <button class="btn-outline" onclick="triggerDialog('expert', 'Das ist der zynischste Aspekt. In den ersten Tagen starben tausende an vermeidbaren Folgen, während Hilfsgüter festsaßen.')">Kommentar der Expertin</button>
-                </div>
-            </div>
-            <div style="width: 40%; text-align: center; font-size: 100px;">🔒</div>
-        </div>
-    </div>
-
-    <div class="slide" id="slide9">
-        <h2>Analyse B & C: Sozioökonomische Faktoren</h2>
-        <div class="scale-wrapper">
-            <div class="scale-base"></div>
-            <div class="scale-beam-pivot" id="scale-beam">
-                <div class="rope left"></div><div class="rope right"></div>
-                <div class="scale-plate plate-left">SCHUTZ</div>
-                <div class="scale-plate plate-right">GEFAHR</div>
-            </div>
-        </div>
-        <div style="text-align: center; display: flex; justify-content: center; gap: 20px;">
-            <button class="btn-outline" onclick="addWeight('poverty')">+ Faktor: Armut</button>
-            <button class="btn-outline" onclick="addWeight('env')">+ Faktor: Umwelt</button>
-        </div>
-    </div>
-
-    <div class="slide" id="slide10">
+    <div class="slide" id="slide11">
         <h2>Krisenmanager: Budget verteilen</h2>
-        <p>Sie haben <strong>10 Punkte</strong>.</p>
+        <p>Sie haben <strong>10 Punkte</strong> für die Zukunft.</p>
         <div class="budget-container">
             <div class="slider-row">
                 <label>Frühwarnsysteme</label>
@@ -287,7 +291,7 @@
                 <span class="points">0</span>
             </div>
             <div class="slider-row">
-                <label>Evakuierungswege</label>
+                <label>Infrastruktur / Evakuierung</label>
                 <input type="range" class="budget-input" value="0" max="10" oninput="updateBudget()">
                 <span class="points">0</span>
             </div>
@@ -300,15 +304,15 @@
         </div>
     </div>
 
-    <div class="slide" id="slide11">
+    <div class="slide" id="slide12">
         <h2>Fazit</h2>
         <div style="background: #fff0f0; border: 2px solid var(--myanmar-red); padding: 30px; border-radius: 8px;">
-            <h3 style="color: var(--myanmar-red);">Antwort:</h3>
+            <h3 style="color: var(--myanmar-red);">Antwort auf die Leitfrage:</h3>
             <p>Nargis war ein extremes <strong>Naturereignis</strong>.</p>
-            <p>Die Katastrophe war jedoch <strong>Staatsversagen</strong> (Isolation, Armut, fehlender Schutz).</p>
+            <p>Die Dimension der Katastrophe war jedoch eindeutig <strong>Staatsversagen</strong>, verstärkt durch Armut und Umweltzerstörung.</p>
         </div>
         <div style="text-align: center; margin-top: 30px;">
-            <button class="btn-outline" onclick="location.reload()">Neustart</button>
+            <button class="btn-outline" onclick="location.reload()">Präsentation Neustarten</button>
         </div>
     </div>
 
@@ -321,7 +325,7 @@
 
 <script>
     // --- SETUP & GLOBALS ---
-    let currentSlide = 1; const totalSlides = 11; 
+    let currentSlide = 1; const totalSlides = 12; // Jetzt 12 Slides
     let canvas, ctx, evacCanvas, evacCtx, histCanvas, histCtx, blockadeCanvas, blockadeCtx;
     let waterParticles = [], debrisParticles = [], mangroveRoots = [], villagers = [];
     let isFlooding = false, mangrovesActive = true, villageDestroyed = false, isEvacuating = false;
@@ -336,7 +340,7 @@
     let helpArrows = [];
     let isBlockadeAnimating = false;
 
-    // --- AVATAR CONFIG ---
+    // --- AVATAR CONFIG (Nur noch Expertin & General) ---
     const expertImages = ["./assets/avatars/expertin1.png", "./assets/avatars/expertin2.png", "./assets/avatars/expertin8.png"];
     const generalImages = ["./assets/avatars/general1.png", "./assets/avatars/general2.png", "./assets/avatars/general3.png"];
 
@@ -394,34 +398,29 @@
     function showSlide(n) {
         document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
         document.getElementById(`slide${n}`).classList.add('active');
-        ['expert', 'local', 'general'].forEach(c => document.getElementById(`char-${c}`).classList.remove('visible'));
+        // U Kyaw entfernt
+        ['expert', 'general'].forEach(c => document.getElementById(`char-${c}`).classList.remove('visible'));
         closeDialog();
 
-        // Expertin fast immer da, außer bei rein militärischen Themen
-        if(n !== 7) document.getElementById('char-expert').classList.add('visible');
+        // Expertin ist Standard, außer auf General-Slides
+        if(n !== 5) document.getElementById('char-expert').classList.add('visible');
 
-        // SLIDE 2: Historie (verschoben)
+        // SLIDE 2: Historie
         if(n === 2) {
              initHistCanvas();
-             // Kurze Verzögerung damit der Slide-Übergang fertig ist
-             setTimeout(() => triggerDialog('expert', 'Um Nargis zu verstehen, müssen wir zurückblicken. Jahrzehnte der Militärherrschaft haben den Staat ausgehöhlt.'), 800);
+             setTimeout(() => triggerDialog('expert', 'Jahrzehnte der Militärherrschaft haben den Staat ausgehöhlt und isoliert.'), 800);
         }
-
-        // SLIDE 3: Diagramm (neu)
-        if(n === 3) {
-            resetDiagram(); // Animation zurücksetzen beim Betreten
-            setSpeakerImage('expert', 0); // Neutraler Blick vor der Animation
-        }
+        // SLIDE 3: Diagramm
+        if(n === 3) { resetDiagram(); setSpeakerImage('expert', 0); }
         
-        // SLIDE 4: Nargis Timeline (verschoben)
+        // SLIDE 4: Nargis Timeline
         if(n === 4) { 
             document.getElementById('char-general').classList.add('visible');
-            document.getElementById('char-local').classList.add('visible');
             resetTimeline();
         }
 
-        // SLIDE 7: Blockade
-        if(n === 7) {
+        // SLIDE 5: Blockade (Nur General)
+        if(n === 5) {
              document.getElementById('char-expert').classList.remove('visible');
              document.getElementById('char-general').classList.add('visible');
              initBlockadeScene();
@@ -429,7 +428,28 @@
              setTimeout(() => triggerDialog('general', 'Unsere Souveränität ist unantastbar. Diese "Hilfe" ist nur ein Vorwand für ausländische Einmischung.'), 500);
         }
 
-        if(n === 10) { stopTalkingAnimation(); }
+        // SLIDE 6: Politische Analyse
+        if(n === 6) { setTimeout(() => triggerDialog('expert', 'Das war der zynischste Aspekt. Hilfe wurde als Bedrohung der eigenen Macht gesehen.'), 500); }
+
+        // SLIDE 7: Ökonomische Analyse (Animation)
+        if(n === 7) { 
+            // Reset und Start der Sequenz
+            document.querySelectorAll('.analysis-point').forEach(p => p.classList.remove('visible'));
+            setTimeout(() => { document.getElementById('eco-point-1').classList.add('visible'); triggerDialog('expert', 'Erstens: Extreme Armut. Die Menschen hatten keine Reserven.'); }, 1000);
+            setTimeout(() => { document.getElementById('eco-point-2').classList.add('visible'); triggerDialog('expert', 'Zweitens: Die instabilen Bambushütten boten null Schutz gegen die Flut.'); }, 4000);
+            setTimeout(() => { document.getElementById('eco-point-3').classList.add('visible'); triggerDialog('expert', 'Drittens: Ohne Boote oder Fahrzeuge gab es keine Chance zur Flucht.'); }, 7000);
+        }
+
+        // SLIDE 9: Umwelt Analyse (Animation)
+        if(n === 9) {
+            document.getElementById('env-point-1').classList.remove('visible');
+            setTimeout(() => {
+                 document.getElementById('env-point-1').classList.add('visible');
+                 triggerDialog('expert', 'Ein entscheidender Faktor war der Verlust der Mangrovenwälder durch Abholzung. Der natürliche Schutzschild fehlte.');
+            }, 1000);
+        }
+
+        if(n === 11) { stopTalkingAnimation(); }
     }
     function nextSlide() { if(currentSlide < totalSlides) showSlide(++currentSlide); }
     function prevSlide() { if(currentSlide > 1) showSlide(--currentSlide); }
@@ -439,7 +459,7 @@
         let displayName = '', bubbleClass = '';
         if(who === 'expert') { displayName = 'Dr. Thida'; bubbleClass = 'bubble-pos-expert'; }
         else if(who === 'general') { displayName = 'General Aung'; bubbleClass = 'bubble-pos-general'; }
-        else if(who === 'local') { displayName = 'U Kyaw'; bubbleClass = 'bubble-pos-local'; }
+        // U Kyaw entfernt
         
         document.getElementById('dialog-text').innerHTML = `<strong>${displayName}:</strong><br>"${text}"`;
         bubble.className = "speech-bubble " + bubbleClass;
@@ -454,20 +474,23 @@
         if(current === 'slide1') nextSlide();
     }
 
-    // --- NEUE FUNKTIONEN FÜR DIAGRAMM ANIMATION (Slide 3) ---
+    // --- FUNKTIONEN FÜR DIAGRAMM ANIMATION (Slide 3) ---
     function animateDiagram() {
-        // Mala schrumpfen
         document.getElementById('bar-mala').classList.add('mala-shrunk');
-        // Verzögerung, dann Nargis wachsen lassen
         setTimeout(() => {
-             document.getElementById('bar-nargis').classList.add('nargis-grown');
-             // Expertin staunen lassen (Index 2), wenn der Balken riesig wird
+             // Entferne Platzhalter-Klasse, füge Wachstums-Klasse hinzu
+             const nargisBar = document.getElementById('bar-nargis');
+             nargisBar.classList.remove('nargis-placeholder');
+             nargisBar.classList.add('nargis-grown');
              setSpeakerImage('expert', 2); 
         }, 1500);
     }
     function resetDiagram() {
         document.getElementById('bar-mala').classList.remove('mala-shrunk');
-        document.getElementById('bar-nargis').classList.remove('nargis-grown');
+        // Zurücksetzen auf Platzhalter-Status
+        const nargisBar = document.getElementById('bar-nargis');
+        nargisBar.classList.remove('nargis-grown');
+        nargisBar.classList.add('nargis-placeholder');
     }
 
     // ==========================================
@@ -488,15 +511,15 @@
             triggerDialog('expert', 'Indische Satellitendaten zeigten den Zyklon tagelang. Wir leiteten die Warnungen weiter, aber die Staatsmedien schwiegen.'); btn.innerText = "Weiter";
         } else if(timelineStep === 2) {
             document.getElementById('tl-ev-2').classList.add('active'); status.innerText = "Phase 2: Die Katastrophe trifft ein.";
-            triggerDialog('local', 'Der Wind kam in der Nacht. Es gab keine Sirenen, kein Radio. Das Wasser stieg einfach und riss unsere Hütten weg.');
+            triggerDialog('expert', 'Der Wind kam in der Nacht. Es gab keine Sirenen, kein Radio. Die Menschen wurden im Schlaf überrascht.');
         } else if(timelineStep === 3) {
             document.getElementById('tl-ev-3').classList.add('active'); status.innerText = "Phase 3: Politik über Menschenleben.";
-            triggerDialog('general', 'Das Referendum ist entscheidend für die Stabilität. Ausländische Hilfe bringt nur Unruhe. Die Lage ist unter Kontrolle.'); btn.innerText = "Zur Simulation";
+            triggerDialog('general', 'Das Referendum ist entscheidend für die Stabilität. Ausländische Hilfe bringt nur Unruhe. Die Lage ist unter Kontrolle.'); btn.innerText = "Zur Blockade";
         } else if(timelineStep > 3) { nextSlide(); }
     }
 
     // ==========================================
-    // --- HISTORISCHE TIMELINE ANIMATION (Jetzt Slide 2) ---
+    // --- HISTORISCHE TIMELINE ANIMATION (Slide 2) ---
     // ==========================================
     function initHistCanvas() {
         histStep = 0; histActorX = histCanvas.width * 0.1; histTargetX = histActorX;
@@ -512,9 +535,9 @@
             histActorX += 3; 
             if(histActorX >= histTargetX) {
                 histActorX = histTargetX;
-                if(histStep === 2) { histActorType = 'tank'; triggerDialog('general', 'Das Militär übernimmt Verantwortung.'); }
-                if(histStep === 3) { tankFiredTimer = 30; setTimeout(() => { uprisingEliminated = true; }, 500); triggerDialog('general', 'Ordnung muss wiederhergestellt werden.'); isHistAnimating = false; document.getElementById('hist-btn').innerText = "Weiter zu 2008"; }
-                if(histStep === 4) { histActorType = 'ballotbox'; triggerDialog('expert', '2008: Ein Staat, der sein Volk als Bedrohung sieht, ist nicht bereit für eine Naturkatastrophe.'); document.getElementById('hist-btn').innerText = "Zum politischen Kontext"; }
+                if(histStep === 2) { histActorType = 'tank'; triggerDialog('general', 'Das Militär übernimmt Verantwortung für die Stabilität.'); }
+                if(histStep === 3) { tankFiredTimer = 30; setTimeout(() => { uprisingEliminated = true; }, 500); triggerDialog('general', 'Ordnung muss um jeden Preis wiederhergestellt werden.'); isHistAnimating = false; document.getElementById('hist-btn').innerText = "Weiter zu 2008"; }
+                if(histStep === 4) { histActorType = 'ballotbox'; triggerDialog('expert', '2008: Ein isolierter Staat, der sein Volk als Bedrohung sieht, ist nicht bereit für eine Naturkatastrophe.'); document.getElementById('hist-btn').innerText = "Zum Vergleich"; }
             }
         }
     }
@@ -590,7 +613,7 @@
     }
 
     // ==========================================
-    // --- BLOCKADE ANIMATION (Slide 7) ---
+    // --- BLOCKADE ANIMATION (Slide 5) ---
     // ==========================================
     class HelpArrow {
         constructor(side) {
@@ -641,13 +664,13 @@
     function startBlockadeAnimation() {
         if(isBlockadeAnimating) return;
         isBlockadeAnimating = true;
-        triggerDialog('expert', 'Sehen Sie die roten Kreuze? Das sind Hilfslieferungen, die abgewiesen werden. Mitten in der Katastrophe.');
+        triggerDialog('general', 'Sehen Sie die roten Kreuze? Das sind Hilfslieferungen, die wir abweisen. Unsere Souveränität ist wichtiger.');
         animateBlockadeLoop();
     }
 
 
     // ==========================================
-    // --- SIMULATIONEN (Slides 5 & 6) ---
+    // --- SIMULATIONEN (Slides 8 & 10) ---
     // ==========================================
     class WaterParticle {
         constructor() { this.reset(); }
@@ -692,7 +715,8 @@
             ctx.fillStyle = '#558b2f'; ctx.beginPath(); ctx.arc(root.x + sway, root.y - 10, 12, 0, Math.PI*2); ctx.fill();
         });
         ctx.restore();
-        ctx.fillStyle = '#1b5e20'; ctx.font = "bold 16px Arial"; ctx.fillText("MANGROVEN SCHUTZ", canvas.width*0.28, canvas.height-110);
+        // Text nach oben verschoben (y=60)
+        ctx.fillStyle = '#1b5e20'; ctx.font = "bold 16px Arial"; ctx.fillText("MANGROVEN SCHUTZ", canvas.width*0.28, 60);
     }
     class DebrisParticle {
         constructor(x, y) {
@@ -789,14 +813,7 @@
         triggerDialog('expert', 'Das ist der Unterschied. Bei Mala wussten sie durch Radiowarnungen und Erfahrung, dass sie landeinwärts müssen. Bei Nargis kam die Warnung nie an.');
     }
 
-    // --- WAAGE & BUDGET ---
-    let rotation = 0;
-    function addWeight(type) {
-        if(type === 'poverty') { rotation += 15; triggerDialog('expert', 'Armut bedeutet: Keine stabilen Häuser, keine Radios. Man ist dem Schicksal ausgeliefert.'); }
-        if(type === 'env') { rotation += 15; triggerDialog('expert', 'Korrekt. Und die Umweltzerstörung nahm ihnen den letzten natürlichen Schutz.'); }
-        if(rotation > 40) rotation = 40;
-        document.getElementById('scale-beam').style.transform = `translateX(-50%) rotate(${rotation}deg)`;
-    }
+    // --- BUDGET ---
     function updateBudget() {
         let total = 0; document.querySelectorAll('.budget-input').forEach(i => { total += parseInt(i.value); i.nextElementSibling.innerText = i.value; });
         document.getElementById('total-points').innerText = total;
