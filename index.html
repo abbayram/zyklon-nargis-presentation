@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="./">
+    <title>Zyklon Nargis: Die Chronologie</title>
+    <style>
+        /* --- BASIS CSS --- */
+        :root {
+            --myanmar-red: #8B0000;
+            --myanmar-dark: #500000;
+            --military-green: #3A421B;
+            --text-main: #333;
+            --text-light: #666;
+            --bg-slide: #fcfcfc;
+            --interviewer-color: #555;
+        }
+        /* Body angepasst für Electron */
+        body { margin: 0; height: 100vh; background-color: #111; display: flex; justify-content: center; align-items: center; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; overflow: hidden; user-select: none; -webkit-user-select: none; }
+        #presentation-stage { width: 1280px; height: 720px; background-color: var(--bg-slide); position: relative; overflow: hidden; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 60px; box-sizing: border-box; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; background: white; z-index: 10; }
+        .slide.active { opacity: 1; pointer-events: auto; z-index: 20; }
+        .btn { background: var(--myanmar-red); color: white; border: none; padding: 12px 24px; font-size: 16px; cursor: pointer; border-radius: 4px; transition: background 0.2s; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); position: relative; z-index: 100; outline: none; }
+        .btn:hover { background: var(--myanmar-dark); transform: translateY(-1px); } .btn:active { transform: translateY(1px); }
+        .btn-outline { background: white; border: 2px solid var(--myanmar-red); color: var(--myanmar-red); padding: 10px 20px; font-size: 14px; cursor: pointer; font-weight: bold; z-index: 100; position: relative; outline: none; }
+        .btn-outline:hover { background: var(--myanmar-red); color: white; }
+        .btn-interviewer { border-color: var(--interviewer-color); color: var(--interviewer-color); } .btn-interviewer:hover { background: var(--interviewer-color); color: white; }
+        .nav-controls { position: absolute; bottom: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
+        h1 { font-size: 42px; color: var(--myanmar-red); margin: 0 0 10px 0; } h2 { font-size: 32px; color: var(--text-main); border-bottom: 4px solid var(--myanmar-red); padding-bottom: 15px; margin-bottom: 30px; } h3 { font-size: 24px; color: var(--text-light); margin: 0; } p, li { font-size: 20px; line-height: 1.6; color: var(--text-main); }
+        .source { font-size: 11px; color: #aaa; position: absolute; bottom: 15px; left: 40px; font-style: italic; z-index: 5; } .highlight { color: var(--myanmar-red); font-weight: bold; }
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; } .panel { background: #f4f4f4; padding: 25px; border-left: 6px solid #ccc; } .panel.danger { border-left-color: var(--myanmar-red); background: #fff5f5; }
+
+        /* --- CANVAS STYLES --- */
+        #flood-canvas, #evacuation-canvas { width: 100%; height: 350px; background: linear-gradient(to bottom, #e0e0e0 0%, #d7ccc8 80%, #a1887f 100%); border-bottom: 10px solid #5d4037; cursor: crosshair; display: block; }
+        #evacuation-canvas { background: #d7ccc8; border-bottom: 20px solid #5d4037; }
+        /* Blockade Canvas ist transparent und liegt über dem Bild */
+        #blockade-canvas { border: none; height: 100%; width: 100%; background: transparent; cursor: default; }
+
+        .sim-controls { display: flex; gap: 20px; justify-content: center; margin-top: 15px; z-index: 100; position: relative; }
+        .scale-wrapper { position: relative; width: 600px; height: 300px; margin: 40px auto; }
+        .scale-base { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 20px; height: 150px; background: #333; }
+        .scale-beam-pivot { position: absolute; top: 150px; left: 50%; transform: translateX(-50%); width: 400px; height: 10px; background: #444; border-radius: 5px; transition: transform 1s; transform-origin: center; }
+        .scale-plate { width: 100px; height: 80px; border: 2px solid #444; border-top: none; position: absolute; top: 10px; display: flex; justify-content: center; align-items: flex-end; font-weight: bold; }
+        .plate-left { left: 0; } .plate-right { right: 0; }
+        .rope { width: 2px; height: 60px; background: #888; position: absolute; top: 0; } .rope.left { left: 0; } .rope.right { right: 0; }
+        .budget-container { width: 80%; margin: 0 auto; background: #eee; padding: 30px; border-radius: 8px; }
+        .slider-row { display: flex; align-items: center; margin-bottom: 20px; } .slider-row label { width: 250px; font-weight: bold; }
+        input[type=range] { flex-grow: 1; accent-color: var(--myanmar-red); cursor: pointer; position: relative; z-index: 50; outline: none;}
+
+        /* --- AVATARE --- */
+        .char-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; display: grid; grid-template-columns: repeat(4, 1fr); align-items: end; padding: 0 20px; }
+        .character-container { position: relative; bottom: -450px; transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); width: 200px; text-align: center; margin: 0 auto; }
+        .character-container.visible { bottom: 0; }
+        .char-img { width: 100%; height: auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); transition: opacity 0.1s ease; -webkit-user-drag: none; }
+        .mirror-avatar { transform: scaleX(-1); }
+        .char-label { background: var(--myanmar-red); color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; display: inline-block; margin-top: -25px; position: relative; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        #char-interviewer .char-label { background: var(--interviewer-color); } #char-general .char-label { background: var(--military-green); }
+
+        /* --- SPRECHBLASEN --- */
+        .speech-bubble { position: absolute; background: white; border-radius: 20px; padding: 20px; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 2px solid #333; font-size: 18px; z-index: 2000; display: none; pointer-events: auto; animation-duration: 0.3s; animation-fill-mode: forwards; }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .speech-bubble:after { content: ''; position: absolute; bottom: -20px; border-width: 20px 20px 0; border-style: solid; display: block; width: 0; }
+        .speech-bubble:before { content: ''; position: absolute; bottom: -23px; border-width: 22px 22px 0; border-style: solid; border-color: #333 transparent; width: 0; z-index: -1; }
+        .bubble-pos-expert { left: 150px; bottom: 250px; animation-name: popIn; } .bubble-pos-expert:after { left: 40px; border-color: white transparent; } .bubble-pos-expert:before { left: 38px; }
+        .bubble-pos-general { left: 450px; bottom: 250px; animation-name: popIn; } .bubble-pos-general:after { left: 40px; border-color: white transparent; } .bubble-pos-general:before { left: 38px; }
+        .bubble-pos-local { right: 450px; bottom: 250px; animation-name: popIn; } .bubble-pos-local:after { right: 40px; border-color: white transparent; } .bubble-pos-local:before { right: 38px; }
+        .bubble-pos-interviewer { right: 150px; bottom: 250px; animation-name: popIn; } .bubble-pos-interviewer:after { right: 40px; border-color: white transparent; } .bubble-pos-interviewer:before { right: 38px; }
+
+        /* --- TIMELINE STYLES (Slide 3) --- */
+        .tl-container { position: relative; width: 90%; margin: 100px auto 0; height: 300px; }
+        .tl-line { position: absolute; top: 50%; left: 5%; width: 90%; height: 6px; background: #333; transform: translateY(-50%); z-index: 1; }
+        .tl-event-box { position: absolute; width: 240px; background: white; border: 3px solid var(--myanmar-red); border-radius: 8px; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); opacity: 0; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 5; }
+        .tl-event-box.active { opacity: 1; transform: translateY(0) scale(1) !important; }
+        .tl-event-box img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; -webkit-user-drag: none;}
+        .tl-date { font-weight: bold; color: var(--myanmar-red); display: block; margin-bottom: 5px; }
+        .tl-desc { font-size: 14px; color: #333; }
+        .tl-pos-1 { left: 10%; } .tl-pos-2 { left: 50%; transform: translateX(-50%); } .tl-pos-3 { right: 10%; }
+        .tl-top { bottom: 60%; transform: translateY(20px) scale(0.9); } .tl-bottom { top: 60%; transform: translateY(-20px) scale(0.9); }
+        .tl-connector { position: absolute; width: 3px; background: var(--myanmar-red); z-index: 2; height: 0; transition: height 0.6s 0.3s ease; }
+        .tl-event-box.active + .tl-connector { height: 60px; } .conn-top { bottom: 50%; } .conn-bottom { top: 50%; }
+
+        /* --- HISTORISCHE TIMELINE STYLES (Slide 6) --- */
+        .hist-tl-container { position: relative; width: 90%; margin: 80px auto 0; height: 400px; }
+        #hist-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .hist-labels-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+        .hist-tl-line-bg { position: absolute; top: 65%; left: 0; width: 100%; height: 6px; background: #8D6E63; border-radius: 3px; transform: translateY(-50%); z-index: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .hist-tl-point { position: absolute; top: 65%; transform: translate(-50%, -140%); text-align: center; width: 200px; pointer-events: auto; }
+        .hist-tl-year { font-weight: bold; font-size: 22px; margin: 10px 0 5px; color: var(--myanmar-red); text-shadow: 1px 1px 2px white; }
+        .hist-tl-desc { font-size: 15px; color: #333; background: rgba(255,255,255,0.9); padding: 8px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .hist-p1 { left: 10%; } .hist-p2 { left: 35%; } .hist-p3 { left: 60%; } .hist-p4 { left: 90%; }
+        .hist-controls { text-align: center; margin-top: 30px; position: relative; z-index: 10; }
+
+    </style>
+</head>
+<body>
+
+<div id="presentation-stage">
+
+    <div class="char-overlay">
+        <div class="character-container" id="char-expert">
+            <img id="expert-img" src="" class="char-img" alt="Expertin">
+            <div class="char-label">Dr. Thida (Expertin)</div>
+        </div>
+        <div class="character-container" id="char-general">
+            <img id="general-img" src="https://api.dicebear.com/7.x/micah/svg?seed=GeneralStereotype&baseColor=8d5524&hair=fonze&hairColor=222222&shirt=collared&shirtColor=4B5320&coat=suit&coatColor=3A421B&fabric=camouflage&fabricColor=2F3616&glasses=round&eyebrows=down" class="char-img" alt="General">
+            <div class="char-label">General Aung (Militär)</div>
+        </div>
+        <div class="character-container" id="char-local">
+            <img src="https://api.dicebear.com/7.x/micah/svg?seed=GrandpaKyawPermanent&baseColor=ac6651&hair=doug&hairColor=d3d3d3&facialHair=beard&facialHairColor=d3d3d3&mouth=sad&shirt=crew&shirtColor=795548&coat=none" class="char-img" alt="U Kyaw">
+            <div class="char-label">U Kyaw (Bewohner)</div>
+        </div>
+        <div class="character-container" id="char-interviewer">
+            <img id="interviewer-img" src="" class="char-img mirror-avatar" alt="Fragesteller">
+            <div class="char-label">Fragesteller</div>
+        </div>
+    </div>
+    
+    <div class="speech-bubble" id="dialog-bubble">
+        <p style="margin-top: 0; margin-bottom: 15px;" id="dialog-text">...</p>
+        <div style="text-align: right;">
+            <button class="btn" style="font-size:12px; padding: 5px 15px;" onclick="closeDialog()">OK</button>
+        </div>
+    </div>
+
+    <div class="slide active" id="slide1">
+        <div style="margin-top: 150px; text-align: center;">
+            <h3>Eine Analyse der sozialen Verwundbarkeit</h3>
+            <h1>Zyklon Nargis (2008):<br>Naturereignis oder Staatsversagen?</h1>
+            <div style="width: 100px; height: 4px; background: var(--myanmar-red); margin: 30px auto;"></div>
+            <button class="btn" onclick="triggerDialog('interviewer', 'Frau Doktor, wir blicken heute auf 2008 zurück. Ein Sturm wurde zur Tragödie. War das unvermeidbar?')">Präsentation Starten</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide2">
+        <h2>Ein Sturm, zwei Geschichten</h2>
+        <div class="comparison-grid">
+            <div class="panel">
+                <h3>Zyklon Mala (2006)</h3>
+                <p><strong>Ergebnis:</strong> 22 Todesopfer</p>
+                <p style="color: green">✔ Erfolgreiche Evakuierung</p>
+            </div>
+            <div class="panel danger">
+                <h3>Zyklon Nargis (2008)</h3>
+                <p><strong>Ergebnis:</strong> <span class="highlight">> 138.000 Tote</span></p>
+                <p style="color: var(--myanmar-red)">✘ Keine Evakuierung</p>
+            </div>
+        </div>
+        <div style="margin-top: 30px; text-align: center;">
+            <button class="btn-outline btn-interviewer" onclick="triggerDialog('interviewer', 'Die Zahlen sind schockierend. Frau Dr. Thida, die Stürme waren fast gleich stark. Wie erklären Sie diese Diskrepanz?')">Frage an Expertin stellen</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide3">
+        <h2>Die Chronologie des Versagens (April/Mai 2008)</h2>
+        <div class="tl-container">
+            <div class="tl-line"></div>
+            <div class="tl-event-box tl-top tl-pos-1" id="tl-ev-1">
+                <img src="https://images.unsplash.com/photo-1527482797697-8795b05a13fe?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" alt="Satellitenbild">
+                <span class="tl-date">22.-28. April: Die Warnung</span><span class="tl-desc">Indische Meteorologen warnen die Junta vor Zyklon-Bildung im Golf von Bengalen.</span>
+            </div><div class="tl-connector conn-top tl-pos-1"></div>
+            <div class="tl-event-box tl-bottom tl-pos-2" id="tl-ev-2">
+                <img src="https://images.unsplash.com/photo-1504716328655-4a9395664318?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" alt="Sturmflut">
+                <span class="tl-date">2. Mai: Landfall & Zerstörung</span><span class="tl-desc">Nargis trifft mit Kat. 4 auf das Delta. Keine Warnung für die Bevölkerung.</span>
+            </div><div class="tl-connector conn-bottom tl-pos-2"></div>
+            <div class="tl-event-box tl-top tl-pos-3" id="tl-ev-3">
+                <img src="https://api.dicebear.com/7.x/micah/svg?seed=GeneralStereotype&baseColor=8d5524&hair=fonze&hairColor=222222&shirt=collared&shirtColor=4B5320&coat=suit&coatColor=3A421B&fabric=camouflage&fabricColor=2F3616&glasses=round&mouth=smile&eyebrows=up" alt="Referendum/General" style="object-fit: contain; background: #eee;">
+                <span class="tl-date">3.-10. Mai: Das Referendum</span><span class="tl-desc">Die Junta führt das Verfassungsreferendum durch und blockiert internationale Hilfe.</span>
+            </div><div class="tl-connector conn-top tl-pos-3"></div>
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <p id="timeline-status" style="font-style: italic; margin-bottom: 20px;">Verfolgen Sie die Ereignisse.</p>
+            <button class="btn" id="timeline-btn" onclick="advanceTimeline()">Nächstes Ereignis</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide4">
+        <h2>Die Anatomie des Sturms (Simulation)</h2>
+        <p>Das Ayeyarwady-Delta liegt extrem tief. Eine 5-Meter-Sturmflut traf auf ungeschützte Küsten.</p>
+        <canvas id="flood-canvas"></canvas>
+        <div class="sim-controls">
+            <button class="btn" id="btn-mangroves" onclick="toggleMangroves()">Mangroven: INTAKT</button>
+            <button class="btn" onclick="startFlood()">Flut auslösen</button>
+            <button class="btn-outline" onclick="resetFlood()">Reset</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide5">
+        <h2>Der Faktor "Preparedness" (Vorbereitung)</h2>
+        <p>Zoom auf ein Dorf während Zyklon Mala (2006). Die Menschen wussten, was zu tun war.</p>
+        <canvas id="evacuation-canvas"></canvas>
+        <div style="text-align: center; margin-top: 20px;">
+             <button class="btn" onclick="startEvacuationDemo()">Evakuierung starten</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide6">
+        <h2>Myanmars Weg in die Isolation: Der politische Kontext</h2>
+        <div class="hist-tl-container">
+            <div class="hist-tl-line-bg"></div>
+            <canvas id="hist-canvas"></canvas>
+            <div class="hist-labels-layer">
+                <div class="hist-tl-point hist-p1"><div class="hist-tl-year">1948</div><div class="hist-tl-desc">Unabhängigkeit</div></div>
+                <div class="hist-tl-point hist-p2"><div class="hist-tl-year">1962</div><div class="hist-tl-desc">Militärputsch (Ne Win)</div></div>
+                <div class="hist-tl-point hist-p3"><div class="hist-tl-year">1988</div><div class="hist-tl-desc">"8888-Aufstand" & Niederschlagung</div></div>
+                <div class="hist-tl-point hist-p4"><div class="hist-tl-year">2008</div><div class="hist-tl-desc">Vor Nargis (Verfassungsreferendum)</div></div>
+            </div>
+        </div>
+        <div class="hist-controls">
+            <p id="hist-status" style="font-style: italic; margin-bottom: 10px;">Klicken Sie, um die Geschichte zu starten.</p>
+            <button class="btn" id="hist-btn" onclick="advanceHistory()">Geschichte starten</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide7">
+        <h2>Der Zynismus der Macht: Die Blockade der Hilfe</h2>
+        <p>In den Tagen nach dem Sturm warteten internationale Hilfsschiffe und Flugzeuge vergeblich auf eine Einreiseerlaubnis.</p>
+        
+        <div style="position: relative; width: 100%; height: 450px; margin-top: 30px;">
+            <img src="./assets/map_blockade.png" alt="Karte von Myanmar mit rotem Umriss und X" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; -webkit-user-drag: none;">
+            
+            <canvas id="blockade-canvas" style="position: absolute; top: 0; left: 0; z-index: 2;"></canvas>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn" onclick="startBlockadeAnimation()">Hilfslieferungen starten</button>
+        </div>
+    </div>
+
+
+    <div class="slide" id="slide8">
+        <h2>Analyse A: Politischer Kontext (Nargis 2008)</h2>
+        <div style="display: flex; align-items: center;">
+            <div style="width: 60%">
+                <ul>
+                    <li><strong>Isolation:</strong> Die Militärjunta schottete das Land ab.</li>
+                    <li><strong>Priorität:</strong> Fokus auf Machterhalt (Referendum) statt Schutz.</li>
+                    <li><strong>Blockade:</strong> Internationale Helfer wurden tagelang nicht ins Land gelassen.</li>
+                </ul>
+                <div style="background: #eee; padding: 15px; border-left: 4px solid #333; margin-top:20px;">
+                    <i>"Hilfe wurde als Bedrohung der Souveränität gesehen."</i>
+                </div>
+                 <div style="margin-top: 20px; text-align: center;">
+                    <button class="btn-outline btn-interviewer" onclick="triggerDialog('interviewer', 'Das klingt zynisch. Hat diese Blockade wirklich direkt Menschenleben gekostet?')">Kritische Nachfrage</button>
+                </div>
+            </div>
+            <div style="width: 40%; text-align: center; font-size: 100px;">🔒</div>
+        </div>
+    </div>
+
+    <div class="slide" id="slide9">
+        <h2>Analyse B & C: Sozioökonomische Faktoren</h2>
+        <div class="scale-wrapper">
+            <div class="scale-base"></div>
+            <div class="scale-beam-pivot" id="scale-beam">
+                <div class="rope left"></div><div class="rope right"></div>
+                <div class="scale-plate plate-left">SCHUTZ</div>
+                <div class="scale-plate plate-right">GEFAHR</div>
+            </div>
+        </div>
+        <div style="text-align: center; display: flex; justify-content: center; gap: 20px;">
+            <button class="btn-outline" onclick="addWeight('poverty')">+ Faktor: Armut</button>
+            <button class="btn-outline" onclick="addWeight('env')">+ Faktor: Umwelt</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide10">
+        <h2>Krisenmanager: Budget verteilen</h2>
+        <p>Sie haben <strong>10 Punkte</strong>.</p>
+        <div class="budget-container">
+            <div class="slider-row">
+                <label>Frühwarnsysteme</label>
+                <input type="range" class="budget-input" value="0" max="10" oninput="updateBudget()">
+                <span class="points">0</span>
+            </div>
+            <div class="slider-row">
+                <label>Schutzbauten / Mangroven</label>
+                <input type="range" class="budget-input" value="0" max="10" oninput="updateBudget()">
+                <span class="points">0</span>
+            </div>
+            <div class="slider-row">
+                <label>Evakuierungswege</label>
+                <input type="range" class="budget-input" value="0" max="10" oninput="updateBudget()">
+                <span class="points">0</span>
+            </div>
+            <div style="text-align: right; border-top: 1px solid #ccc; padding-top: 10px;">
+                Verbraucht: <span id="total-points" style="font-weight: bold;">0</span> / 10
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn" onclick="checkBudget()">Prüfen</button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide11">
+        <h2>Fazit</h2>
+        <div style="background: #fff0f0; border: 2px solid var(--myanmar-red); padding: 30px; border-radius: 8px;">
+            <h3 style="color: var(--myanmar-red);">Antwort:</h3>
+            <p>Nargis war ein extremes <strong>Naturereignis</strong>.</p>
+            <p>Die Katastrophe war jedoch <strong>Staatsversagen</strong> (Isolation, Armut, fehlender Schutz).</p>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-outline" onclick="location.reload()">Neustart</button>
+        </div>
+    </div>
+
+    <div class="nav-controls">
+        <button class="btn" onclick="prevSlide()">❮ Zurück</button>
+        <button class="btn" onclick="nextSlide()">Weiter ❯</button>
+    </div>
+
+</div>
+
+<script>
+    // --- SETUP & GLOBALS ---
+    let currentSlide = 1; const totalSlides = 11; 
+    let canvas, ctx, evacCanvas, evacCtx, histCanvas, histCtx, blockadeCanvas, blockadeCtx;
+    let waterParticles = [], debrisParticles = [], mangroveRoots = [], villagers = [];
+    let isFlooding = false, mangrovesActive = true, villageDestroyed = false, isEvacuating = false;
+    let time = 0; let timelineStep = 0;
+    
+    // Globals für Historische Timeline
+    let histStep = 0; let histActorX = 0; let histTargetX = 0; let isHistAnimating = false;
+    let histActorType = 'people'; let showUprising = false; let uprisingEliminated = false;
+    let tankFiredTimer = 0; let chainBroken = false;
+
+    // GLOBALS FÜR BLOCKADE ANIMATION
+    let helpArrows = [];
+    let isBlockadeAnimating = false;
+
+    // --- AVATAR CONFIG (Online Links bleiben vorerst) ---
+    const expertBase = "https://api.dicebear.com/7.x/micah/svg?seed=ExpertSarah&baseColor=f9c9b6&hair=pixie&hairColor=333333&shirt=collared&shirtColor=ffffff&coat=blazer&coatColor=8B0000&glasses=round";
+    const interviewerBase = "https://api.dicebear.com/7.x/micah/svg?seed=InterviewerTom&baseColor=ac6651&hair=fonze&hairColor=362c47&shirt=collared&shirtColor=ffffff&coat=suit&coatColor=2a3b5c";
+    const generalBase = "https://api.dicebear.com/7.x/micah/svg?seed=GeneralStereotype&baseColor=8d5524&hair=fonze&hairColor=222222&shirt=collared&shirtColor=4B5320&coat=suit&coatColor=3A421B&fabric=camouflage&fabricColor=2F3616&glasses=round&eyebrows=down";
+
+    let talkingInterval = null; let isMouthOpen = false;
+
+    // --- FUNKTIONEN (AVATARE & DIALOG) ---
+    function setSpeakerImage(who, params) {
+        let imgId = ''; let baseUrl = '';
+        if(who === 'expert') { imgId = 'expert-img'; baseUrl = expertBase; }
+        else if(who === 'interviewer') { imgId = 'interviewer-img'; baseUrl = interviewerBase; }
+        else if(who === 'general') { imgId = 'general-img'; baseUrl = generalBase; }
+        const img = document.getElementById(imgId);
+        if(img && baseUrl) img.src = baseUrl + params;
+    }
+    function startTalkingAnimation(who) {
+        if(talkingInterval) clearInterval(talkingInterval);
+        if(['expert','interviewer','general'].indexOf(who) === -1) return;
+        talkingInterval = setInterval(() => {
+            isMouthOpen = !isMouthOpen;
+            setSpeakerImage(who, isMouthOpen ? "&mouth=laughing" : "&mouth=smile");
+        }, 200);
+    }
+    function stopTalkingAnimation(isWorried = false) {
+        if(talkingInterval) clearInterval(talkingInterval);
+        talkingInterval = null;
+        setSpeakerImage('expert', isWorried ? "&mouth=sad&eyebrows=down" : "&mouth=smile");
+        setSpeakerImage('interviewer', "&mouth=smile");
+        setSpeakerImage('general', "&mouth=frown");
+    }
+
+    window.onload = function() {
+        canvas = document.getElementById('flood-canvas'); ctx = canvas.getContext('2d');
+        evacCanvas = document.getElementById('evacuation-canvas'); evacCtx = evacCanvas.getContext('2d');
+        histCanvas = document.getElementById('hist-canvas'); histCtx = histCanvas.getContext('2d');
+        blockadeCanvas = document.getElementById('blockade-canvas'); blockadeCtx = blockadeCanvas.getContext('2d');
+        resizeAllCanvases();
+        initSimulationEnhanced(); animateFloodLoopEnhanced(); initEvacuationScene();
+        initHistCanvas(); 
+        
+        document.getElementById('dialog-bubble').style.display = 'none';
+        stopTalkingAnimation(false);
+        document.getElementById('char-interviewer').classList.add('visible');
+    };
+    window.onresize = resizeAllCanvases;
+    function resizeAllCanvases() {
+         if(canvas) { canvas.width = canvas.parentElement.offsetWidth; canvas.height = 350; }
+         if(evacCanvas) { evacCanvas.width = evacCanvas.parentElement.offsetWidth; evacCanvas.height = 350; initEvacuationScene(); }
+         if(histCanvas) { histCanvas.width = histCanvas.parentElement.offsetWidth; histCanvas.height = 400; initHistCanvas(); }
+         if(blockadeCanvas) { blockadeCanvas.width = blockadeCanvas.parentElement.offsetWidth; blockadeCanvas.height = 450; initBlockadeScene(); }
+    }
+
+    // --- NAVIGATION ---
+    function showSlide(n) {
+        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+        document.getElementById(`slide${n}`).classList.add('active');
+        ['expert', 'interviewer', 'local', 'general'].forEach(c => document.getElementById(`char-${c}`).classList.remove('visible'));
+        closeDialog();
+        
+        if(n === 1) document.getElementById('char-interviewer').classList.add('visible'); 
+        if(n === 2) { document.getElementById('char-interviewer').classList.add('visible'); document.getElementById('char-expert').classList.add('visible'); stopTalkingAnimation(false); }
+        if(n === 3) { 
+            document.getElementById('char-expert').classList.add('visible'); 
+            document.getElementById('char-general').classList.add('visible');
+            document.getElementById('char-local').classList.add('visible');
+            resetTimeline();
+        }
+        if(n === 4) { document.getElementById('char-interviewer').classList.add('visible'); document.getElementById('char-expert').classList.add('visible'); }
+        if(n === 5) { document.getElementById('char-interviewer').classList.add('visible'); document.getElementById('char-expert').classList.add('visible'); }
+        if(n === 6) { 
+            document.getElementById('char-expert').classList.add('visible'); 
+            initHistCanvas(); 
+            setTimeout(() => triggerDialog('expert', 'Um Nargis zu verstehen, müssen wir zurückblicken. Jahrzehnte der Militärherrschaft haben den Staat ausgehöhlt.'), 500);
+        }
+        // SLIDE 7 (Blockade)
+        if(n === 7) {
+             document.getElementById('char-general').classList.add('visible');
+             initBlockadeScene();
+             setTimeout(() => triggerDialog('general', 'Unsere Souveränität ist unantastbar. Diese "Hilfe" ist nur ein Vorwand für ausländische Einmischung.'), 500);
+        }
+        if(n === 8) { document.getElementById('char-interviewer').classList.add('visible'); document.getElementById('char-expert').classList.add('visible'); }
+        if(n === 9) { document.getElementById('char-interviewer').classList.add('visible'); document.getElementById('char-expert').classList.add('visible');} 
+        if(n === 10) { document.getElementById('char-expert').classList.add('visible'); document.getElementById('char-interviewer').classList.add('visible'); stopTalkingAnimation(true); }
+    }
+    function nextSlide() { if(currentSlide < totalSlides) showSlide(++currentSlide); }
+    function prevSlide() { if(currentSlide > 1) showSlide(--currentSlide); }
+
+    function triggerDialog(who, text) {
+        const bubble = document.getElementById('dialog-bubble');
+        let displayName = '', bubbleClass = '';
+        if(who === 'expert') { displayName = 'Dr. Thida'; bubbleClass = 'bubble-pos-expert'; }
+        else if(who === 'interviewer') { displayName = 'Fragesteller'; bubbleClass = 'bubble-pos-interviewer'; }
+        else if(who === 'general') { displayName = 'General Aung'; bubbleClass = 'bubble-pos-general'; }
+        else if(who === 'local') { displayName = 'U Kyaw'; bubbleClass = 'bubble-pos-local'; }
+        document.getElementById('dialog-text').innerHTML = `<strong>${displayName}:</strong><br>"${text}"`;
+        bubble.className = "speech-bubble " + bubbleClass;
+        bubble.style.display = 'block';
+        document.getElementById(`char-${who}`).classList.add('visible');
+        startTalkingAnimation(who);
+    }
+    function closeDialog() { 
+        document.getElementById('dialog-bubble').style.display = 'none'; 
+        const current = document.querySelector('.slide.active').id;
+        const worriedContext = (current === 'slide4' && isFlooding) || current === 'slide10';
+        stopTalkingAnimation(worriedContext);
+        if(current === 'slide1') nextSlide();
+        if(current === 'slide2' && document.getElementById('dialog-text').innerHTML.includes('Fragesteller')) { setTimeout(() => { triggerDialog('expert', 'Meteorologisch war Nargis nicht stärker. Aber: Es gab keine Warnung, keine Bunker und politische Isolation. Das machte den Unterschied.'); }, 500); }
+        if(current === 'slide8' && document.getElementById('dialog-text').innerHTML.includes('Fragesteller')) { setTimeout(() => { triggerDialog('expert', 'Absolut. In den ersten Tagen starben tausende an unbehandelten Verletzungen und verseuchtem Wasser, während Hilfsgüter am Flughafen festsaßen.'); }, 500); }
+    }
+
+    // ==========================================
+    // --- TIMELINE LOGIK (Slide 3 - Nargis) ---
+    // ==========================================
+    function resetTimeline() {
+        timelineStep = 0;
+        ['tl-ev-1', 'tl-ev-2', 'tl-ev-3'].forEach(id => document.getElementById(id).classList.remove('active'));
+        document.getElementById('timeline-status').innerText = "Verfolgen Sie die Ereignisse.";
+        document.getElementById('timeline-btn').innerText = "Ereignis starten";
+    }
+    function advanceTimeline() {
+        timelineStep++;
+        const status = document.getElementById('timeline-status');
+        const btn = document.getElementById('timeline-btn');
+        if(timelineStep === 1) {
+            document.getElementById('tl-ev-1').classList.add('active'); status.innerText = "Phase 1: Die ignorierte Warnung.";
+            triggerDialog('expert', 'Indische Satellitendaten zeigten den Zyklon tagelang. Wir leiteten die Warnungen weiter, aber die Staatsmedien schwiegen.'); btn.innerText = "Weiter";
+        } else if(timelineStep === 2) {
+            document.getElementById('tl-ev-2').classList.add('active'); status.innerText = "Phase 2: Die Katastrophe trifft ein.";
+            triggerDialog('local', 'Der Wind kam in der Nacht. Es gab keine Sirenen, kein Radio. Das Wasser stieg einfach und riss unsere Hütten weg.');
+        } else if(timelineStep === 3) {
+            document.getElementById('tl-ev-3').classList.add('active'); status.innerText = "Phase 3: Politik über Menschenleben.";
+            triggerDialog('general', 'Das Referendum ist entscheidend für die Stabilität. Ausländische Hilfe bringt nur Unruhe. Die Lage ist unter Kontrolle.'); btn.innerText = "Zur Simulation";
+        } else if(timelineStep > 3) { nextSlide(); }
+    }
+
+    // ==========================================
+    // --- HISTORISCHE TIMELINE ANIMATION (Slide 6) ---
+    // ==========================================
+    function initHistCanvas() {
+        histStep = 0; histActorX = histCanvas.width * 0.1; histTargetX = histActorX;
+        isHistAnimating = false; histActorType = 'people'; showUprising = false; uprisingEliminated = false;
+        tankFiredTimer = 0; chainBroken = false;
+        drawHistFrame();
+        document.getElementById('hist-btn').innerText = "Geschichte starten";
+        document.getElementById('hist-status').innerText = "Klicken Sie, um die Geschichte zu starten.";
+    }
+    function updateHistAnimation() {
+        if(tankFiredTimer > 0) tankFiredTimer--;
+        if(histActorX < histTargetX) {
+            histActorX += 3; 
+            if(histActorX >= histTargetX) {
+                histActorX = histTargetX;
+                if(histStep === 2) { histActorType = 'tank'; triggerDialog('general', 'Das Militär übernimmt Verantwortung.'); }
+                if(histStep === 3) { tankFiredTimer = 30; setTimeout(() => { uprisingEliminated = true; }, 500); triggerDialog('general', 'Ordnung muss wiederhergestellt werden.'); isHistAnimating = false; document.getElementById('hist-btn').innerText = "Weiter zu 2008"; }
+                if(histStep === 4) { histActorType = 'ballotbox'; triggerDialog('expert', '2008: Ein Staat, der sein Volk als Bedrohung sieht, ist nicht bereit für eine Naturkatastrophe.'); document.getElementById('hist-btn').innerText = "Zum politischen Kontext"; }
+            }
+        }
+    }
+    // (Zeichenfunktionen für HistTimeline hier einfügen - der Kürze halber weggelassen, sind im vorherigen Code)
+    function drawChain(x, y, broken) {
+        histCtx.strokeStyle = '#555'; histCtx.lineWidth = 4;
+        for(let i=0; i<5; i++) {
+            let offsetX = 0; let offsetY = 0; let rotation = 0;
+            if(broken) { offsetX = (i-2) * 15 * (Math.sin(time*0.05)+1); offsetY = Math.abs(i-2) * 10 * (Math.cos(time*0.05)+1); rotation = (i-2) * 0.5 * time*0.05; }
+            histCtx.save(); histCtx.translate(x + i*15 + offsetX, y + offsetY); histCtx.rotate(rotation);
+            histCtx.beginPath(); histCtx.ellipse(0, 0, 8, 4, 0, 0, Math.PI*2); histCtx.stroke(); histCtx.restore();
+        }
+    }
+    function drawBalloons(x, y) {
+        const colors = ['#FF5722', '#2196F3', '#FFC107', '#4CAF50'];
+        for(let i=0; i<5; i++) {
+            let rise = (time*0.5 + i*20) % 100; let wobble = Math.sin(time*0.1 + i);
+            histCtx.fillStyle = colors[i%colors.length]; histCtx.beginPath(); histCtx.arc(x - 30 + i*15 + wobble, y - 50 - rise, 8, 0, Math.PI*2); histCtx.fill();
+            histCtx.strokeStyle = '#ccc'; histCtx.lineWidth=1; histCtx.beginPath(); histCtx.moveTo(x - 30 + i*15 + wobble, y - 42 - rise); histCtx.lineTo(x - 30 + i*15 + wobble, y - 20 - rise); histCtx.stroke();
+        }
+    }
+    function drawPeopleGroup(x, y, color, isJumping, isDead) {
+        histCtx.fillStyle = isDead ? '#888' : color; histCtx.strokeStyle = isDead ? '#888' : color; histCtx.lineWidth = 2;
+        for(let i=0; i<3; i++) {
+            let jump = isJumping ? Math.sin(time*0.3 + i)*5 : 0; let scale = isDead ? 0.7 : 1; 
+            histCtx.save(); histCtx.translate(x + i*20, y); histCtx.scale(scale, scale); histCtx.translate(-(x + i*20), -y);
+            histCtx.beginPath(); histCtx.arc(x + i*20, y - 25 - jump, 6, 0, Math.PI*2); histCtx.fill();
+            histCtx.beginPath(); histCtx.moveTo(x+i*20, y-20-jump); histCtx.lineTo(x+i*20, y-5-jump);
+            histCtx.moveTo(x+i*20-5, y-15-jump); histCtx.lineTo(x+i*20+5, y-15-jump);
+            histCtx.moveTo(x+i*20, y-5-jump); histCtx.lineTo(x+i*20-5, y-jump);
+            histCtx.moveTo(x+i*20, y-5-jump); histCtx.lineTo(x+i*20+5, y-jump);
+            histCtx.stroke(); histCtx.restore();
+        }
+    }
+    function drawTankShape(x, y) {
+        histCtx.fillStyle = '#3A421B'; histCtx.fillRect(x-30, y-25, 60, 20); histCtx.fillRect(x-15, y-35, 30, 10); histCtx.fillRect(x+10, y-32, 25, 4); 
+        histCtx.fillStyle = '#1b1b1b'; histCtx.fillRect(x-35, y-5, 70, 8); histCtx.fillStyle = '#555'; for(let i=0;i<3;i++) { histCtx.beginPath(); histCtx.arc(x-20+i*20, y-1, 4,0,Math.PI*2); histCtx.fill();}
+    }
+    function drawTankFire(x, y) {
+        if(tankFiredTimer > 0) { histCtx.fillStyle = 'orange'; histCtx.beginPath(); histCtx.arc(x+35, y-30, 15 + Math.random()*5, 0, Math.PI*2); histCtx.fill(); histCtx.fillStyle = 'yellow'; histCtx.beginPath(); histCtx.arc(x+35, y-30, 8 + Math.random()*3, 0, Math.PI*2); histCtx.fill(); }
+    }
+    function drawBallotBox(x, y) {
+        histCtx.fillStyle = '#8B4513'; histCtx.fillRect(x-25, y-40, 50, 40); histCtx.fillStyle = '#222'; histCtx.fillRect(x-15, y-45, 30, 5); histCtx.fillStyle = '#fff'; histCtx.fillRect(x-10, y-35, 20, 20); 
+        histCtx.strokeStyle = 'var(--myanmar-red)'; histCtx.lineWidth=3; histCtx.beginPath(); histCtx.moveTo(x-5,y-25); histCtx.lineTo(x,y-20); histCtx.lineTo(x+10,y-30); histCtx.stroke(); 
+    }
+    function drawConfetti(x, y) {
+         histCtx.fillStyle = '#FFD700'; for(let i=0;i<15;i++) histCtx.fillRect(x-30+Math.random()*60, y-50+Math.random()*40, 4, 4);
+         histCtx.fillStyle = '#FF5722'; for(let i=0;i<10;i++) histCtx.fillRect(x-30+Math.random()*60, y-50+Math.random()*40, 3, 3);
+    }
+    function drawCycloneShape(x, y) {
+        histCtx.strokeStyle = 'rgba(50,50,50,0.6)'; histCtx.lineWidth = 4; histCtx.beginPath();
+        for(let i=0; i<4; i++) { histCtx.arc(x, y-40, 10+i*8, time*0.1+i, time*0.1+i+Math.PI*1.5); }
+        histCtx.stroke();
+    }
+    function drawHistFrame() {
+        histCtx.clearRect(0, 0, histCanvas.width, histCanvas.height); let groundY = histCanvas.height * 0.65;
+        if(histStep >= 1) drawChain(histCanvas.width * 0.1, groundY - 60, chainBroken);
+        if(histStep >= 1 && chainBroken && histActorType === 'people') { drawConfetti(histCanvas.width * 0.1, groundY); drawBalloons(histCanvas.width * 0.1, groundY - 20); }
+        if(histStep >= 3 && showUprising) drawPeopleGroup(histCanvas.width * 0.6, groundY, '#D32F2F', !uprisingEliminated, uprisingEliminated);
+        if(histStep === 4 && histActorType === 'ballotbox') drawCycloneShape(histCanvas.width * 0.9, groundY);
+        if(histActorType === 'people') { drawPeopleGroup(histActorX, groundY, '#4CAF50', isHistAnimating && histActorX < histTargetX, false); } 
+        else if (histActorType === 'tank') { drawTankShape(histActorX, groundY); drawTankFire(histActorX, groundY); } 
+        else if (histActorType === 'ballotbox') { drawBallotBox(histActorX, groundY); }
+    }
+    function animateHistLoop() { updateHistAnimation(); drawHistFrame(); if(currentSlide === 6) requestAnimationFrame(animateHistLoop); }
+    function advanceHistory() {
+        histStep++; const status = document.getElementById('hist-status'); const btn = document.getElementById('hist-btn');
+        if(histStep === 1) { chainBroken = true; isHistAnimating = true; animateHistLoop(); status.innerText = "1948: Unabhängigkeit! Doch die Freude währt kurz."; btn.innerText = "Aufbruch nach 1962"; triggerDialog('expert', 'Die Unabhängigkeit 1948 war ein Moment der Hoffnung.'); } 
+        else if(histStep === 2) { histTargetX = histCanvas.width * 0.35; isHistAnimating = true; status.innerText = "1962: Der Putsch beendet die Demokratie."; btn.innerText = "Weiter zum Aufstand (1988)"; } 
+        else if(histStep === 3) { histTargetX = histCanvas.width * 0.6; showUprising = true; isHistAnimating = true; status.innerText = "1988: Volksaufstand wird niedergeschlagen."; } 
+        else if(histStep === 4) { histTargetX = histCanvas.width * 0.9; isHistAnimating = true; status.innerText = "2008: Eine isolierte Militärdiktatur trifft auf einen Zyklon."; } 
+        else if(histStep > 4) { nextSlide(); }
+    }
+
+    // ==========================================
+    // --- BLOCKADE ANIMATION (Slide 7 - IMAGE BACKDROP) ---
+    // ==========================================
+    class HelpArrow {
+        constructor(side) {
+            this.side = side; // 'left', 'bottom', 'right'
+            this.reset();
+        }
+        reset() {
+            this.speed = Math.random() * 2 + 2;
+            this.blocked = false; this.blockedTimer = 0;
+            if(this.side === 'left') { this.x = -50; this.y = Math.random() * blockadeCanvas.height; this.vx = this.speed; this.vy = (blockadeCanvas.height/2 - this.y) * 0.01; }
+            if(this.side === 'bottom') { this.x = Math.random() * blockadeCanvas.width; this.y = blockadeCanvas.height + 50; this.vx = (blockadeCanvas.width/2 - this.x) * 0.01; this.vy = -this.speed; }
+            if(this.side === 'right') { this.x = blockadeCanvas.width + 50; this.y = Math.random() * blockadeCanvas.height; this.vx = -this.speed; this.vy = (blockadeCanvas.height/2 - this.y) * 0.01; }
+        }
+        update() {
+            if(this.blocked) { this.blockedTimer++; if(this.blockedTimer > 20) this.reset(); return; }
+            this.x += this.vx; this.y += this.vy;
+            // Einfache Kollision mit "Küste" (Rechteck in der Mitte) - angepasst für das neue Bild
+            let centerX = blockadeCanvas.width/2; let centerY = blockadeCanvas.height/2;
+            if(this.x > centerX - 80 && this.x < centerX + 80 && this.y > centerY - 150 && this.y < centerY + 150) {
+                this.blocked = true;
+            }
+        }
+        draw() {
+            blockadeCtx.fillStyle = this.blocked ? 'red' : '#2196F3';
+            blockadeCtx.save(); blockadeCtx.translate(this.x, this.y); blockadeCtx.rotate(Math.atan2(this.vy, this.vx));
+            blockadeCtx.beginPath(); blockadeCtx.moveTo(-10, -5); blockadeCtx.lineTo(0, -5); blockadeCtx.lineTo(0, -10); blockadeCtx.lineTo(15, 0); blockadeCtx.lineTo(0, 10); blockadeCtx.lineTo(0, 5); blockadeCtx.lineTo(-10, 5); blockadeCtx.fill();
+            blockadeCtx.restore();
+            if(this.blocked) { blockadeCtx.strokeStyle = 'red'; blockadeCtx.lineWidth = 3; blockadeCtx.beginPath(); blockadeCtx.moveTo(this.x-10, this.y-10); blockadeCtx.lineTo(this.x+10, this.y+10); blockadeCtx.moveTo(this.x+10, this.y-10); blockadeCtx.lineTo(this.x-10, this.y+10); blockadeCtx.stroke(); }
+        }
+    }
+
+    function initBlockadeScene() {
+        isBlockadeAnimating = false; helpArrows = [];
+        for(let i=0; i<5; i++) helpArrows.push(new HelpArrow('left'));
+        for(let i=0; i<5; i++) helpArrows.push(new HelpArrow('bottom'));
+        for(let i=0; i<5; i++) helpArrows.push(new HelpArrow('right'));
+        drawBlockadeFrame();
+    }
+    function drawBlockadeFrame() {
+        // WICHTIG: Canvas ist transparent, nur löschen, damit das Bild sichtbar bleibt.
+        blockadeCtx.clearRect(0, 0, blockadeCanvas.width, blockadeCanvas.height);
+        helpArrows.forEach(a => a.draw());
+    }
+    function animateBlockadeLoop() {
+        if(!isBlockadeAnimating) return;
+        helpArrows.forEach(a => a.update());
+        drawBlockadeFrame();
+        requestAnimationFrame(animateBlockadeLoop);
+    }
+    function startBlockadeAnimation() {
+        if(isBlockadeAnimating) return;
+        isBlockadeAnimating = true;
+        triggerDialog('interviewer', 'Aber General, die Menschen sterben! Warum lassen Sie die Schiffe und Flugzeuge nicht landen?');
+        animateBlockadeLoop();
+    }
+
+
+    // ==========================================
+    // --- SIMULATIONEN (Slides 4 & 5) ---
+    // ==========================================
+    class WaterParticle {
+        constructor() { this.reset(); }
+        reset() {
+            this.x = Math.random() * -150; this.yBase = Math.random() * (canvas.height - 60) + 30;
+            this.y = this.yBase; this.vx = Math.random() * 4 + 3; this.size = Math.random() * 8 + 5; 
+            this.waveOffset = Math.random() * Math.PI * 2; this.isMuddy = false;
+        }
+        update() {
+            this.y = this.yBase + Math.sin(time * 0.05 + this.waveOffset) * 5;
+            if (mangrovesActive && this.x > canvas.width*0.28 && this.x < canvas.width*0.45) this.vx *= 0.9;
+            this.x += this.vx;
+            if(!mangrovesActive && this.x > canvas.width*0.25) {
+                this.isMuddy = true;
+                if(this.x > canvas.width * 0.62 && !villageDestroyed) destroyVillage();
+            }
+            if(this.x > canvas.width + 50) this.reset();
+        }
+        draw() {
+            const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+            if(this.isMuddy) { grad.addColorStop(0, 'rgba(121, 85, 72, 0.8)'); grad.addColorStop(1, 'rgba(93, 64, 55, 0.1)'); } 
+            else { grad.addColorStop(0, 'rgba(79, 195, 247, 0.8)'); grad.addColorStop(1, 'rgba(2, 136, 209, 0.1)'); }
+            ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+        }
+    }
+    function initMangroves() {
+        mangroveRoots = [];
+        for(let i=0; i<25; i++) {
+           let startX = canvas.width * 0.3 + (i * 10); let startY = canvas.height - 80;
+           let path = new Path2D(); path.moveTo(startX, startY);
+           path.bezierCurveTo(startX - 10, startY + 30, startX + 15, startY + 50, startX + 5, canvas.height - 10);
+           mangroveRoots.push({ path: path, x: startX, y: startY, offset: Math.random() });
+        }
+    }
+    function drawRealisticMangroves() {
+        if (!mangrovesActive) return;
+        ctx.save(); ctx.strokeStyle = '#33691e'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+        const sway = Math.sin(time * 0.02) * 3; 
+        mangroveRoots.forEach(root => {
+            ctx.save(); ctx.translate(root.x, root.y); ctx.rotate((sway + root.offset) * 0.02 * Math.PI); 
+            ctx.translate(-root.x, -root.y); ctx.stroke(root.path); ctx.restore();
+            ctx.fillStyle = '#558b2f'; ctx.beginPath(); ctx.arc(root.x + sway, root.y - 10, 12, 0, Math.PI*2); ctx.fill();
+        });
+        ctx.restore();
+        ctx.fillStyle = '#1b5e20'; ctx.font = "bold 16px Arial"; ctx.fillText("MANGROVEN SCHUTZ", canvas.width*0.28, canvas.height-110);
+    }
+    class DebrisParticle {
+        constructor(x, y) {
+            this.x = x; this.y = y; this.vx = (Math.random() - 0.5) * 10; this.vy = Math.random() * -15;
+            this.gravity = 0.8; this.rotation = Math.random() * Math.PI; this.rSpeed = (Math.random() - 0.5) * 0.2;
+            this.width = Math.random() * 20 + 10; this.height = Math.random() * 8 + 4;
+            this.color = Math.random() > 0.5 ? '#8D6E63' : '#5D4037';
+        }
+        update() {
+            this.vy += this.gravity; this.x += this.vx; this.y += this.vy; this.rotation += this.rSpeed;
+            if(this.y > canvas.height - 20) { this.y = canvas.height - 20; this.vy *= -0.3; this.vx *= 0.8; }
+        }
+        draw() { ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation); ctx.fillStyle = this.color; ctx.fillRect(-this.width/2, -this.height/2, this.width, this.height); ctx.restore(); }
+    }
+    function destroyVillage() {
+        villageDestroyed = true;
+        const villageX = canvas.width * 0.65; const groundY = canvas.height - 10;
+        for(let i=0; i<3; i++) { let hx = villageX + (i * 70) + 20; let hy = groundY - 30; for(let k=0; k<15; k++) debrisParticles.push(new DebrisParticle(hx, hy)); }
+    }
+    function drawEnhancedVillage() {
+        const villageX = canvas.width * 0.65; const groundY = canvas.height - 10;
+        if(!villageDestroyed) {
+            for(let i=0; i<3; i++) {
+                let hx = villageX + (i * 70); let hy = groundY - 50;
+                ctx.fillStyle = '#a1887f'; ctx.fillRect(hx, hy, 50, 50); ctx.fillStyle = '#4e342e'; ctx.fillRect(hx+15, hy+25, 20, 25);
+                ctx.beginPath(); ctx.moveTo(hx-10, hy); ctx.lineTo(hx+25, hy-35); ctx.lineTo(hx+60, hy); ctx.fillStyle = '#795548'; ctx.fill();
+            }
+             ctx.fillStyle = '#333'; ctx.font = "bold 14px Arial"; ctx.fillText("Dorf (Ungeschützt)", villageX, groundY - 80);
+        } else { ctx.fillStyle = '#8B0000'; ctx.font = "bold 14px Arial"; ctx.fillText("DORF ZERSTÖRT", villageX, groundY - 80); }
+    }
+    function initSimulationEnhanced() { waterParticles = []; debrisParticles = []; for(let i=0; i<250; i++) waterParticles.push(new WaterParticle()); initMangroves(); }
+    function animateFloodLoopEnhanced() {
+        ctx.clearRect(0,0,canvas.width,canvas.height); time++; 
+        drawRealisticMangroves(); drawEnhancedVillage();
+        if(villageDestroyed) debrisParticles.forEach(d => { d.update(); d.draw(); });
+        if(isFlooding) { ctx.globalCompositeOperation = 'lighter'; waterParticles.forEach(p => { p.update(); p.draw(); }); ctx.globalCompositeOperation = 'source-over'; }
+        requestAnimationFrame(animateFloodLoopEnhanced);
+    }
+    function toggleMangroves() {
+        mangrovesActive = !mangrovesActive;
+        const btn = document.getElementById('btn-mangroves');
+        btn.innerText = mangrovesActive ? "Mangroven: INTAKT" : "Mangroven: ZERSTÖRT";
+        btn.style.background = mangrovesActive ? "#2e7d32" : "#8B0000";
+    }
+    function startFlood() { 
+        isFlooding = true; stopTalkingAnimation(true); 
+        if(!mangrovesActive) triggerDialog('expert', 'Ohne Schutz trifft die Flut hart. Aber schauen Sie auf den nächsten Slide - es gab einen weiteren Faktor.'); 
+        else triggerDialog('expert', 'Die Mangroven schützen. Aber das war 2008 nicht mehr der Fall.'); 
+    }
+    function resetFlood() { isFlooding = false; villageDestroyed = false; initSimulationEnhanced(); stopTalkingAnimation(false); }
+
+    // Evacuation Sim
+    class Villager {
+        constructor(x, y) {
+            this.x = x; this.y = y; this.targetX = evacCanvas.width + 50; this.speed = Math.random() * 2 + 1.5;
+            this.color = Math.random() > 0.5 ? '#333' : '#555';
+        }
+        update() { if(isEvacuating) this.x += this.speed; }
+        draw() {
+            evacCtx.fillStyle = this.color; evacCtx.strokeStyle = this.color; evacCtx.lineWidth = 2;
+            evacCtx.beginPath(); evacCtx.arc(this.x, this.y - 20, 5, 0, Math.PI*2); evacCtx.fill();
+            evacCtx.beginPath(); evacCtx.moveTo(this.x, this.y - 15); evacCtx.lineTo(this.x, this.y - 5);
+            evacCtx.moveTo(this.x, this.y-5); evacCtx.lineTo(this.x-5 + Math.sin(time*0.2)*5, this.y);
+            evacCtx.moveTo(this.x, this.y-5); evacCtx.lineTo(this.x+5 - Math.sin(time*0.2)*5, this.y);
+            evacCtx.stroke();
+        }
+    }
+    function initEvacuationScene() {
+        villagers = []; isEvacuating = false;
+        const startX = 100; const groundY = evacCanvas.height - 20;
+        for(let i=0; i<5; i++) {
+            let hx = startX + (i * 150);
+            for(let k=0; k<3; k++) villagers.push(new Villager(hx + Math.random()*40, groundY));
+        }
+    }
+    function drawEvacuationBg() {
+        const startX = 100; const groundY = evacCanvas.height - 20;
+        for(let i=0; i<5; i++) {
+            let hx = startX + (i * 150); let hy = groundY - 60;
+            evacCtx.fillStyle = '#795548'; evacCtx.fillRect(hx, hy, 60, 60);
+            evacCtx.beginPath(); evacCtx.moveTo(hx-10, hy); evacCtx.lineTo(hx+30, hy-40); evacCtx.lineTo(hx+70, hy); evacCtx.fillStyle = '#5D4037'; evacCtx.fill();
+        }
+        evacCtx.fillStyle = 'rgba(46, 125, 50, 0.3)'; evacCtx.fillRect(evacCanvas.width - 100, 0, 100, evacCanvas.height);
+        evacCtx.fillStyle = '#1b5e20'; evacCtx.font = "bold 16px Arial"; evacCtx.fillText("SICHERE ZONE", evacCanvas.width - 90, 50);
+    }
+    function animateEvacuationLoop() {
+        evacCtx.clearRect(0,0,evacCanvas.width,evacCanvas.height);
+        drawEvacuationBg();
+        villagers.forEach(v => { v.update(); v.draw(); });
+        if(isEvacuating) requestAnimationFrame(animateEvacuationLoop);
+    }
+    function startEvacuationDemo() {
+        if(isEvacuating) return; initEvacuationScene(); isEvacuating = true; animateEvacuationLoop();
+        triggerDialog('expert', 'Das ist der Unterschied. Bei Mala wussten sie durch Radiowarnungen und Erfahrung, dass sie landeinwärts müssen. Bei Nargis kam die Warnung nie an.');
+    }
+
+    // --- WAAGE & BUDGET ---
+    let rotation = 0;
+    function addWeight(type) {
+        if(type === 'poverty') { rotation += 15; triggerDialog('interviewer', 'Armut bedeutet also: Keine stabilen Häuser, keine Radios. Man ist dem Schicksal ausgeliefert?'); }
+        if(type === 'env') { rotation += 15; triggerDialog('expert', 'Korrekt. Und die Umweltzerstörung nahm ihnen den letzten natürlichen Schutz.'); }
+        if(rotation > 40) rotation = 40;
+        document.getElementById('scale-beam').style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+    }
+    function updateBudget() {
+        let total = 0; document.querySelectorAll('.budget-input').forEach(i => { total += parseInt(i.value); i.nextElementSibling.innerText = i.value; });
+        document.getElementById('total-points').innerText = total;
+        document.getElementById('total-points').style.color = total > 10 ? "red" : "black";
+    }
+    function checkBudget() {
+        let total = parseInt(document.getElementById('total-points').innerText);
+        if(total > 10) { alert("Budget überschritten!"); } 
+        else if (total < 6) { alert("Zu wenig investiert! Risiko bleibt hoch."); } 
+        else { alert("Gute Verteilung! Sie haben Leben gerettet."); nextSlide(); }
+    }
+</script>
+</body>
+</html>
