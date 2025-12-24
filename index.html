@@ -21,40 +21,88 @@
         #presentation-stage { width: 1280px; height: 720px; background-color: var(--bg-slide); position: relative; overflow: hidden; }
         .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 60px; box-sizing: border-box; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; background: white; z-index: 10; }
         .slide.active { opacity: 1; pointer-events: auto; z-index: 20; }
+        
         .btn { background: var(--myanmar-red); color: white; border: none; padding: 12px 24px; font-size: 16px; cursor: pointer; border-radius: 4px; transition: background 0.2s; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); position: relative; z-index: 100; outline: none; }
         .btn:hover { background: var(--myanmar-dark); transform: translateY(-1px); } .btn:active { transform: translateY(1px); }
         .btn-outline { background: white; border: 2px solid var(--myanmar-red); color: var(--myanmar-red); padding: 10px 20px; font-size: 14px; cursor: pointer; font-weight: bold; z-index: 100; position: relative; outline: none; }
         .btn-outline:hover { background: var(--myanmar-red); color: white; }
         .nav-controls { position: absolute; bottom: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
-        h1 { font-size: 42px; color: var(--myanmar-red); margin: 0 0 10px 0; } h2 { font-size: 32px; color: var(--text-main); border-bottom: 4px solid var(--myanmar-red); padding-bottom: 15px; margin-bottom: 30px; } h3 { font-size: 24px; color: var(--text-light); margin: 0; } p, li { font-size: 20px; line-height: 1.6; color: var(--text-main); }
+        
+        h1 { font-size: 42px; color: var(--myanmar-red); margin: 0 0 10px 0; } 
+        h2 { font-size: 32px; color: var(--text-main); border-bottom: 4px solid var(--myanmar-red); padding-bottom: 15px; margin-bottom: 30px; } 
+        h3 { font-size: 24px; color: var(--text-light); margin: 0; } 
+        p, li { font-size: 20px; line-height: 1.6; color: var(--text-main); }
 
-        /* --- NEU: CSS FÜR SLIDE 12 (Häuser Zerstörung - Zentriert & Skaliert) --- */
+        /* --- LEITFRAGE BOX (Slide 3) --- */
+        .leitfrage-box {
+            position: absolute;
+            top: 25%;
+            right: 8%;
+            width: 450px;
+            background: #f4f4f4;
+            border-left: 8px solid var(--myanmar-red);
+            padding: 25px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 50;
+        }
+        .leitfrage-box.visible { opacity: 1; transform: translateX(0); }
+        .leitfrage-header { font-weight: bold; font-size: 20px; color: var(--text-main); margin-bottom: 10px; display: block; }
+        .leitfrage-text { font-size: 22px; font-style: italic; line-height: 1.4; color: #333; }
+
+        /* --- TIMELINE BILDER POPUPS (Slide 2 - NEU) --- */
+        .hist-popup-img {
+            position: absolute;
+            bottom: 60px; /* Über dem Text */
+            left: 50%;
+            transform: translateX(-50%) scale(0.5);
+            width: 220px; /* Bildgröße */
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            z-index: 100;
+        }
+        .hist-popup-img.visible {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+        .hist-popup-img img {
+            width: 100%;
+            height: auto;
+            border: 4px solid white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            border-radius: 4px;
+            background: #fff;
+        }
+
+
+        /* --- CSS FÜR SLIDE 12 (Häuser Zerstörung) --- */
         .house-grid-container {
             display: flex;
-            flex-direction: column; /* Untereinander anordnen */
-            align-items: center; /* Horizontal zentrieren */
-            justify-content: center; /* Vertikal zentrieren */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             gap: 30px;
             margin-top: 20px;
-            height: 70%; /* Höhe geben für vertikale Zentrierung */
+            height: 70%;
         }
         .house-grid {
             display: grid;
             grid-template-columns: repeat(10, 1fr);
-            gap: 8px;
-            width: 50%; /* Skaliert: Nur 50% der Breite */
+            gap: 6px;
+            width: 38%;
         }
         .house-cell { width: 100%; aspect-ratio: 1/1; display: flex; justify-content: center; align-items: center; transition: all 0.5s ease; }
         .house-svg { width: 90%; height: 90%; display: block; }
-        /* Zustand zerstört */
         .house-cell.is-destroyed .house-svg {
             filter: sepia(1) saturate(3) hue-rotate(-50deg) brightness(0.6);
             transform: rotate(15deg) scale(0.9);
             transition: transform 0.5s ease, filter 0.5s ease;
         }
-
-        .destruction-arrow { font-size: 50px; color: var(--myanmar-red); transform: rotate(90deg); /* Pfeil nach unten */ }
-        .destruction-text { font-size: 40px; font-weight: bold; color: var(--myanmar-red); line-height: 1.2; text-align: center; }
+        .destruction-arrow { font-size: 50px; color: var(--myanmar-red); transform: rotate(90deg); }
+        .destruction-text { font-size: 36px; font-weight: bold; color: var(--myanmar-red); line-height: 1.2; text-align: center; }
 
         /* --- STYLES FÜR "DAS URTEIL" SLIDE (Slide 13) --- */
         .urteil-container { display: flex; flex-direction: column; height: 85%; }
@@ -64,25 +112,16 @@
         .diagram-box ul { padding: 15px 20px 15px 40px; margin: 0; }
         .diagram-box li { font-size: 16px; margin-bottom: 8px; }
         
-        /* Kreis Position */
         .diagram-center { position: absolute; top: 140px; left: 50%; transform: translateX(-50%); z-index: 1; text-align: center; }
         .central-circle { width: 220px; height: 220px; background: var(--dark-green-circle); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 24px; text-align: center; line-height: 1.2; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; z-index: 5;}
         
         .diagram-bottom-row { display: flex; justify-content: center; margin-top: 60px; position: relative; }
         .diagram-box-bottom { width: 40%; z-index: 2; }
 
-        /* Dicke Pfeile für das Diagramm */
         .big-arrow { position: absolute; z-index: 0; }
-        /* Pfeile oben */
         .arrow-left-to-center { top: 70px; left: 28%; width: 180px; height: 60px; background: var(--brown-box); clip-path: polygon(0 20%, 60% 20%, 60% 0, 100% 50%, 60% 100%, 60% 80%, 0 80%); transform: rotate(20deg); }
         .arrow-right-to-center { top: 70px; right: 28%; width: 180px; height: 60px; background: var(--brown-box); clip-path: polygon(0 20%, 60% 20%, 60% 0, 100% 50%, 60% 100%, 60% 80%, 0 80%); transform: rotate(160deg); }
-        
-        /* PFEIL VON UNTEN NACH OBEN */
-        .arrow-connecting-up {
-            width: 100px; height: 100px; background: var(--brown-box);
-            clip-path: polygon(50% 0, 100% 40%, 75% 40%, 75% 100%, 25% 100%, 25% 40%, 0 40%);
-            bottom: 95%; left: 50%; transform: translateX(-50%);
-        }
+        .arrow-connecting-up { width: 100px; height: 100px; background: var(--brown-box); clip-path: polygon(50% 0, 100% 40%, 75% 40%, 75% 100%, 25% 100%, 25% 40%, 0 40%); bottom: 95%; left: 50%; transform: translateX(-50%); }
 
         .diagram-summary-text { text-align: center; font-size: 18px; margin: 30px auto 20px; max-width: 90%; }
         .final-answer-box { border: 4px solid #333; padding: 20px; background: #f0f0f0; font-weight: bold; font-size: 20px; text-align: center; }
@@ -99,7 +138,7 @@
         .source-ref { font-size: 14px; color: #888; }
 
         /* --- DIAGRAM STYLES (Slide 3) --- */
-        .chart-container { margin-top: 50px; padding: 20px; position: relative; }
+        .chart-container { margin-top: 50px; padding: 20px; position: relative; width: 60%; }
         .bar-group { margin-bottom: 40px; position: relative; }
         .bar-label { font-weight: bold; font-size: 20px; display: block; margin-bottom: 10px; color: var(--text-main); }
         .bar { height: 60px; background: var(--myanmar-red); transition: width 2.5s cubic-bezier(0.25, 1, 0.5, 1), background 0.5s; display: flex; align-items: center; justify-content: end; padding-right: 15px; color: white; font-weight: bold; font-size: 24px; white-space: nowrap; overflow: visible; border-radius: 4px;box-shadow: 2px 2px 5px rgba(0,0,0,0.2);}
@@ -110,7 +149,7 @@
         .bar-value-outside { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 20px; color: var(--myanmar-red); font-weight: bold; font-size: 36px; opacity: 0; transition: opacity 1s 1s; }
         .nargis-grown + .bar-value-outside { opacity: 1; }
 
-        /* --- ANALYSE PUNKTE STYLES (Slide 8 & 10) --- */
+        /* --- ANALYSE PUNKTE STYLES --- */
         .analysis-point { background: #f4f4f4; border-left: 5px solid var(--myanmar-red); padding: 20px; margin-bottom: 20px; opacity: 0; transform: translateX(-20px); transition: all 0.8s ease; }
         .analysis-point.visible { opacity: 1; transform: translateX(0); }
         .analysis-point h3 { color: var(--myanmar-red); margin-bottom: 10px; }
@@ -119,28 +158,33 @@
         #flood-canvas, #evacuation-canvas { width: 100%; height: 350px; background: linear-gradient(to bottom, #e0e0e0 0%, #d7ccc8 80%, #a1887f 100%); border-bottom: 10px solid #5d4037; cursor: crosshair; display: block; }
         #evacuation-canvas { background: #d7ccc8; border-bottom: 20px solid #5d4037; }
         #blockade-canvas { border: none; height: 100%; width: 100%; background: transparent; cursor: default; }
-
         .sim-controls { display: flex; gap: 20px; justify-content: center; margin-top: 15px; z-index: 100; position: relative; }
         
-        /* --- BUDGET STYLES (Neutralisiert) --- */
+        /* --- BUDGET STYLES --- */
         .budget-container { width: 85%; margin: 0 auto; background: #eee; padding: 30px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .slider-row { display: flex; align-items: center; margin-bottom: 15px; padding: 15px; border-radius: 4px; background: #fff; border: 1px solid #ccc; }
-        /* Keine farbliche Markierung mehr für good/bad options */
         .slider-row label { width: 280px; font-weight: bold; font-size: 18px;}
-        input[type=range] { flex-grow: 1; cursor: pointer; position: relative; z-index: 50; outline: none; margin: 0 15px; accent-color: var(--myanmar-red); /* Einheitliche Farbe */ }
+        input[type=range] { flex-grow: 1; cursor: pointer; position: relative; z-index: 50; outline: none; margin: 0 15px; accent-color: var(--myanmar-red); }
         .points { font-weight: bold; font-size: 20px; width: 40px; text-align: right; }
         .budget-summary { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 15px; border-top: 2px solid #ccc; font-size: 18px; }
 
 
         /* --- AVATARE (Ganz links positioniert) --- */
-        .char-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; display: grid; grid-template-columns: 1fr 1fr; align-items: end; padding: 0 20px; justify-items: start; }
-        .character-container { position: relative; bottom: -450px; transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); width: 300px; text-align: left; margin: 0; }
+        .char-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; display: grid; grid-template-columns: 1fr; align-items: end; justify-items: start; }
+        
+        .character-container { 
+            position: relative; 
+            bottom: -450px; 
+            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            width: 300px; 
+            text-align: left; 
+            margin: 0;
+            left: -30px; /* GANZ LINKS rangezogen */
+        }
         .character-container.visible { bottom: 0; }
         .char-img { width: 100%; height: auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); transition: opacity 0.1s ease; -webkit-user-drag: none; }
-        .char-label { background: var(--myanmar-red); color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; display: inline-block; margin-top: -25px; position: relative; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.3); margin-left: 20px; }
+        .char-label { background: var(--myanmar-red); color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; display: inline-block; margin-top: -25px; position: relative; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.3); margin-left: 40px; }
         #char-general .char-label { background: var(--military-green); }
-        /* Spezielle Positionierung für Blockade Slide - nicht mehr nötig da eh links */
-        /* .slide-blockade #char-general { margin-left: 0; } */
 
         /* --- SPRECHBLASEN (Angepasst an linke Position) --- */
         .speech-bubble { position: absolute; background: white; border-radius: 20px; padding: 20px; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 2px solid #333; font-size: 18px; z-index: 2000; display: none; pointer-events: auto; animation-duration: 0.3s; animation-fill-mode: forwards; }
@@ -148,16 +192,18 @@
         .speech-bubble:after { content: ''; position: absolute; bottom: -20px; border-width: 20px 20px 0; border-style: solid; display: block; width: 0; }
         .speech-bubble:before { content: ''; position: absolute; bottom: -23px; border-width: 22px 22px 0; border-style: solid; border-color: #333 transparent; width: 0; z-index: -1; }
         
-        /* Expertin & General Blase: Links positioniert */
-        .bubble-pos-expert { left: 30px; bottom: 400px; animation-name: popIn; } .bubble-pos-expert:after { left: 40px; border-color: white transparent; } .bubble-pos-expert:before { left: 38px; }
-        .bubble-pos-general { left: 30px; bottom: 400px; animation-name: popIn; } .bubble-pos-general:after { left: 40px; border-color: white transparent; } .bubble-pos-general:before { left: 38px; }
+        /* Blasenpositionen links */
+        .bubble-pos-expert { left: 50px; bottom: 400px; animation-name: popIn; } .bubble-pos-expert:after { left: 40px; border-color: white transparent; } .bubble-pos-expert:before { left: 38px; }
+        .bubble-pos-general { left: 50px; bottom: 400px; animation-name: popIn; } .bubble-pos-general:after { left: 40px; border-color: white transparent; } .bubble-pos-general:before { left: 38px; }
 
         /* --- TIMELINE STYLES --- */
         .tl-container { position: relative; width: 90%; margin: 60px auto 0; height: 300px; }
         .tl-line { position: absolute; top: 50%; left: 5%; width: 90%; height: 6px; background: #333; transform: translateY(-50%); z-index: 1; }
         .tl-event-box { position: absolute; width: 240px; background: white; border: 3px solid var(--myanmar-red); border-radius: 8px; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); opacity: 0; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 5; }
         .tl-event-box.active { opacity: 1; transform: translateY(0) scale(1) !important; }
-        .tl-event-box img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; -webkit-user-drag: none;}
+        
+        .tl-event-box img { width: 100%; height: 160px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; -webkit-user-drag: none;}
+        
         .tl-date { font-weight: bold; color: var(--myanmar-red); display: block; margin-bottom: 5px; }
         .tl-desc { font-size: 14px; color: #333; }
         .tl-pos-1 { left: 10%; } .tl-pos-2 { left: 50%; transform: translateX(-50%); } .tl-pos-3 { right: 10%; }
@@ -215,10 +261,26 @@
             <div class="hist-tl-line-bg"></div>
             <canvas id="hist-canvas"></canvas>
             <div class="hist-labels-layer">
-                <div class="hist-tl-point hist-p1"><div class="hist-tl-year">1948</div><div class="hist-tl-desc">Unabhängigkeit</div></div>
-                <div class="hist-tl-point hist-p2"><div class="hist-tl-year">1962</div><div class="hist-tl-desc">Militärputsch (Ne Win)</div></div>
-                <div class="hist-tl-point hist-p3"><div class="hist-tl-year">1988</div><div class="hist-tl-desc">"8888-Aufstand" & Niederschlagung</div></div>
-                <div class="hist-tl-point hist-p4"><div class="hist-tl-year">2008</div><div class="hist-tl-desc">Vor Nargis (Verfassungsreferendum)</div></div>
+                <div class="hist-tl-point hist-p1">
+                    <div class="hist-popup-img" id="img-1948"><img src="./assets/1948.png" alt="1948"></div>
+                    <div class="hist-tl-year">1948</div>
+                    <div class="hist-tl-desc">Unabhängigkeit</div>
+                </div>
+                <div class="hist-tl-point hist-p2">
+                    <div class="hist-popup-img" id="img-1962"><img src="./assets/1962.png" alt="1962"></div>
+                    <div class="hist-tl-year">1962</div>
+                    <div class="hist-tl-desc">Militärputsch</div>
+                </div>
+                <div class="hist-tl-point hist-p3">
+                    <div class="hist-popup-img" id="img-1988"><img src="./assets/1988.png" alt="1988"></div>
+                    <div class="hist-tl-year">1988</div>
+                    <div class="hist-tl-desc">8888-Aufstand</div>
+                </div>
+                <div class="hist-tl-point hist-p4">
+                    <div class="hist-popup-img" id="img-2008"><img src="./assets/2008.png" alt="2008"></div>
+                    <div class="hist-tl-year">2008</div>
+                    <div class="hist-tl-desc">Vor Nargis</div>
+                </div>
             </div>
         </div>
         <div class="hist-controls">
@@ -229,6 +291,14 @@
 
     <div class="slide" id="slide3">
         <h2>Zwei Stürme, verschiedene Ausmaße</h2>
+        
+        <div class="leitfrage-box" id="leitfrage-popup">
+            <span class="leitfrage-header">Leitfrage der Untersuchung:</span>
+            <div class="leitfrage-text">
+                "Welche sozialen, ökonomischen und politischen Gegebenheiten führten dazu, dass die Bewohner des Irrawaddy-Deltas in Myanmar durch den Zyklon Nargis von 2008 so extrem geschädigt wurden?"
+            </div>
+        </div>
+
         <div class="chart-container">
             <div class="bar-group">
                 <span class="bar-label">Zyklon Mala (2006) - Ähnliche Stärke</span>
@@ -240,8 +310,8 @@
                 <span class="bar-value-outside" id="val-nargis">> 138.000 Tote</span>
             </div>
         </div>
-        <div style="margin-top: 50px; text-align: center;">
-            <button class="btn-outline" onclick="animateDiagram(); triggerDialog('expert', 'Die Zahlen sind unfassbar. Meteorologisch waren beide Stürme ähnlich stark. Doch 2008 gab es keine Warnung, keine Bunker – das machte den tödlichen Unterschied.')">Analyse der Expertin (Animation starten)</button>
+        <div style="margin-top: 50px; text-align: left; padding-left: 50px;">
+            <button class="btn-outline" onclick="animateDiagram()">Analyse & Vergleich starten</button>
         </div>
     </div>
 
@@ -292,8 +362,8 @@
     <div class="slide" id="slide6">
         <h2>Analyse A: Politische Verwundbarkeit</h2>
         <h3>Ein Staat, der auf Kontrolle, nicht auf Schutz ausgerichtet ist</h3>
-        <div class="analysis-col-container">
-            <div class="analysis-col">
+        <div style="display: flex; gap: 40px; margin-top: 30px;">
+            <div style="width: 50%;">
                 <ul>
                     <li><strong>Die Tatmadaw (Militär):</strong> Zentrale Ordnungsfunktion im Inneren.</li>
                     <li>Selbstverständnis als „Bewahrer der Nation“, nicht als Dienstleister.</li>
@@ -302,7 +372,7 @@
                     <i>"Fokus auf Sicherheit und Machterhalt, nicht auf öffentliche Dienstleistungen wie Schutz."</i>
                 </div>
             </div>
-            <div class="analysis-col">
+            <div style="width: 50%;">
                 <ul>
                     <li><strong>Schwache Zivilinstitutionen:</strong> Zivile Staatsstrukturen nach 1988 gezielt geschwächt.</li>
                     <li>Geringe administrative Kapazität, fehlende Rechenschaftspflicht.</li>
@@ -487,7 +557,7 @@
 
 <script>
     // --- SETUP & GLOBALS ---
-    let currentSlide = 1; const totalSlides = 15; // Jetzt 15 Slides
+    let currentSlide = 1; const totalSlides = 15;
     let canvas, ctx, evacCanvas, evacCtx, histCanvas, histCtx, blockadeCanvas, blockadeCtx;
     let waterParticles = [], debrisParticles = [], mangroveRoots = [], villagers = [];
     let isFlooding = false, mangrovesActive = true, villageDestroyed = false, isEvacuating = false;
@@ -508,7 +578,7 @@
 
     let expertMouthOpen = false; let generalMouthOpen = false; let talkingInterval = null;
 
-    // SVG Strings für Häuser (zuverlässiger als externe Bilder)
+    // SVG Strings für Häuser
     const houseIntactSVG = `<svg viewBox="0 0 100 100" class="house-svg"><path d="M50 0 L100 40 L90 40 L90 100 L10 100 L10 40 L0 40 Z" fill="#8D6E63"/><rect x="35" y="60" width="30" height="40" fill="#5D4037"/></svg>`;
     const houseDestroyedSVG = `<svg viewBox="0 0 100 100" class="house-svg"><path d="M10 90 L30 70 L50 85 L70 60 L90 95 Z" fill="#5D4037"/><path d="M0 100 L20 80 L40 95 L60 70 L80 100 Z" fill="#3E2723" opacity="0.7"/></svg>`;
 
@@ -551,7 +621,6 @@
         document.getElementById('dialog-bubble').style.display = 'none';
         stopTalkingAnimation();
         setSpeakerImage('expert', 0); setSpeakerImage('general', 0);
-        // Expertin NICHT mehr standardmäßig sichtbar machen
     };
     window.onresize = resizeAllCanvases;
     function resizeAllCanvases() {
@@ -565,20 +634,23 @@
     function showSlide(n) {
         document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
         document.getElementById(`slide${n}`).classList.add('active');
+        
+        // Generelles Ausblenden der Avatare
         ['expert', 'general'].forEach(c => document.getElementById(`char-${c}`).classList.remove('visible'));
         closeDialog();
-
-        // Grundregel: Keine Avatare, außer spezifisch aktiviert
 
         // SLIDE 2: Historie (Expertin erscheint)
         if(n === 2) {
              initHistCanvas();
+             document.getElementById('char-expert').classList.add('visible'); // Expertin hier sichtbar
              setTimeout(() => triggerDialog('expert', 'Willkommen. Um das Ausmaß von Nargis zu verstehen, müssen wir zuerst die Geschichte Myanmars kennen.'), 500);
         }
-        // SLIDE 3: Diagramm (Expertin erscheint)
+        
+        // SLIDE 3: Diagramm (KEINE EXPERTIN MEHR)
         if(n === 3) { 
-            document.getElementById('char-expert').classList.add('visible');
-            resetDiagram(); setSpeakerImage('expert', 0); 
+            // Expertin wird NICHT angezeigt (gemäß Anweisung)
+            resetDiagram(); 
+            document.getElementById('leitfrage-popup').classList.remove('visible'); // Popup reset
         }
         
         // SLIDE 4: Nargis Timeline (Nur General)
@@ -588,7 +660,10 @@
         }
 
         // SLIDE 6: Politische Analyse (Expertin erscheint)
-        if(n === 6) { setTimeout(() => triggerDialog('expert', 'Der Staat war auf Kontrolle ausgerichtet, nicht auf den Schutz seiner Bürger.'), 500); }
+        if(n === 6) { 
+            document.getElementById('char-expert').classList.add('visible');
+            setTimeout(() => triggerDialog('expert', 'Der Staat war auf Kontrolle ausgerichtet, nicht auf den Schutz seiner Bürger.'), 500); 
+        }
 
         // SLIDE 7: Blockade (Nur General)
         if(n === 7) {
@@ -598,23 +673,22 @@
              setTimeout(() => triggerDialog('general', 'Unsere Souveränität ist unantastbar. Diese "Hilfe" ist nur ein Vorwand für ausländische Einmischung.'), 500);
         }
 
-        // SLIDE 8: Ökonomische Analyse (Keine Avatare, nur Popups)
+        // SLIDE 8 & 10 (Keine Avatare)
         if(n === 8) { 
             document.querySelectorAll('.analysis-point').forEach(p => p.classList.remove('visible'));
             setTimeout(() => { document.getElementById('eco-point-1').classList.add('visible'); }, 1000);
             setTimeout(() => { document.getElementById('eco-point-2').classList.add('visible'); }, 3000);
             setTimeout(() => { document.getElementById('eco-point-3').classList.add('visible'); }, 5000);
         }
-
-        // SLIDE 10: Umwelt Analyse (Keine Avatare, nur Popup)
         if(n === 10) {
             document.getElementById('env-point-1').classList.remove('visible');
             setTimeout(() => { document.getElementById('env-point-1').classList.add('visible'); }, 1000);
         }
         
-        // NEU: SLIDE 12: Zerstörungs-Statistik (Expertin erscheint)
+        // SLIDE 12: Zerstörung (Expertin erscheint)
         if(n === 12) {
             initHouseGrid();
+            document.getElementById('char-expert').classList.add('visible');
         }
 
         if(n === 15) { stopTalkingAnimation(); }
@@ -638,9 +712,8 @@
         document.getElementById('dialog-bubble').style.display = 'none'; 
         const current = document.querySelector('.slide.active').id;
         stopTalkingAnimation();
-        // Wenn wir auf Slide 1 sind, gehe beim Schließen des Dialogs weiter
+        // Weiterleitungslogik
         if(current === 'slide1') nextSlide(); 
-        // Wenn wir auf Slide 2 sind und der erste Dialog geschlossen wird, starte den zweiten
         if(current === 'slide2' && histStep === 0) { setTimeout(() => triggerDialog('expert', 'Jahrzehnte der Militärherrschaft haben den Staat ausgehöhlt und isoliert.'), 500); histStep = -1; }
     }
 
@@ -651,7 +724,12 @@
              const nargisBar = document.getElementById('bar-nargis');
              nargisBar.classList.remove('nargis-placeholder');
              nargisBar.classList.add('nargis-grown');
-             setSpeakerImage('expert', 2); 
+             
+             // NEU: Statt Expertin, zeige das Popup mit der Leitfrage
+             setTimeout(() => {
+                 document.getElementById('leitfrage-popup').classList.add('visible');
+             }, 1000);
+
         }, 1500);
     }
     function resetDiagram() {
@@ -676,11 +754,9 @@
         const btn = document.getElementById('timeline-btn');
         if(timelineStep === 1) {
             document.getElementById('tl-ev-1').classList.add('active'); status.innerText = "Phase 1: Die ignorierte Warnung.";
-            // KEIN Dialog mehr von der Expertin hier
              btn.innerText = "Weiter";
         } else if(timelineStep === 2) {
             document.getElementById('tl-ev-2').classList.add('active'); status.innerText = "Phase 2: Die Katastrophe trifft ein.";
-            // KEIN Dialog mehr von der Expertin hier
         } else if(timelineStep === 3) {
             document.getElementById('tl-ev-3').classList.add('active'); status.innerText = "Phase 3: Politik über Menschenleben.";
             triggerDialog('general', 'Das Referendum ist entscheidend für die Stabilität. Ausländische Hilfe bringt nur Unruhe. Die Lage ist unter Kontrolle.'); btn.innerText = "Zu den Fakten";
@@ -695,6 +771,8 @@
         isHistAnimating = false; histActorType = 'people'; showUprising = false; uprisingEliminated = false;
         tankFiredTimer = 0; chainBroken = false;
         drawHistFrame();
+        // Reset Bilder
+        ['img-1948', 'img-1962', 'img-1988', 'img-2008'].forEach(id => document.getElementById(id).classList.remove('visible'));
         document.getElementById('hist-btn').innerText = "Geschichte starten";
         document.getElementById('hist-status').innerText = "Klicken Sie, um die Geschichte zu starten.";
     }
@@ -773,10 +851,27 @@
     function animateHistLoop() { updateHistAnimation(); drawHistFrame(); if(currentSlide === 2) requestAnimationFrame(animateHistLoop); }
     function advanceHistory() {
         histStep++; const status = document.getElementById('hist-status'); const btn = document.getElementById('hist-btn');
-        if(histStep === 1) { chainBroken = true; isHistAnimating = true; animateHistLoop(); status.innerText = "1948: Unabhängigkeit! Doch die Freude währt kurz."; btn.innerText = "Aufbruch nach 1962"; triggerDialog('expert', 'Die Unabhängigkeit 1948 war ein Moment der Hoffnung.'); } 
-        else if(histStep === 2) { histTargetX = histCanvas.width * 0.35; isHistAnimating = true; status.innerText = "1962: Der Putsch beendet die Demokratie."; btn.innerText = "Weiter zum Aufstand (1988)"; } 
-        else if(histStep === 3) { histTargetX = histCanvas.width * 0.6; showUprising = true; isHistAnimating = true; status.innerText = "1988: Volksaufstand wird niedergeschlagen."; } 
-        else if(histStep === 4) { histTargetX = histCanvas.width * 0.9; isHistAnimating = true; status.innerText = "2008: Eine isolierte Militärdiktatur trifft auf einen Zyklon."; } 
+        if(histStep === 1) { 
+            chainBroken = true; isHistAnimating = true; animateHistLoop(); 
+            status.innerText = "1948: Unabhängigkeit! Doch die Freude währt kurz."; btn.innerText = "Aufbruch nach 1962"; 
+            document.getElementById('img-1948').classList.add('visible'); // BILD POPUP
+            triggerDialog('expert', 'Die Unabhängigkeit 1948 war ein Moment der Hoffnung.'); 
+        } 
+        else if(histStep === 2) { 
+            histTargetX = histCanvas.width * 0.35; isHistAnimating = true; 
+            status.innerText = "1962: Der Putsch beendet die Demokratie."; btn.innerText = "Weiter zum Aufstand (1988)"; 
+            document.getElementById('img-1962').classList.add('visible'); // BILD POPUP
+        } 
+        else if(histStep === 3) { 
+            histTargetX = histCanvas.width * 0.6; showUprising = true; isHistAnimating = true; 
+            status.innerText = "1988: Volksaufstand wird niedergeschlagen."; 
+            document.getElementById('img-1988').classList.add('visible'); // BILD POPUP
+        } 
+        else if(histStep === 4) { 
+            histTargetX = histCanvas.width * 0.9; isHistAnimating = true; 
+            status.innerText = "2008: Eine isolierte Militärdiktatur trifft auf einen Zyklon."; 
+            document.getElementById('img-2008').classList.add('visible'); // BILD POPUP
+        } 
         else if(histStep > 4) { nextSlide(); }
     }
 
@@ -930,7 +1025,6 @@
     }
     function startFlood() { 
         isFlooding = true; stopTalkingAnimation(); 
-        // KEIN Dialog mehr von der Expertin hier
     }
     function resetFlood() { isFlooding = false; villageDestroyed = false; initSimulationEnhanced(); stopTalkingAnimation(); }
 
@@ -976,7 +1070,6 @@
     }
     function startEvacuationDemo() {
         if(isEvacuating) return; initEvacuationScene(); isEvacuating = true; animateEvacuationLoop();
-        // KEIN Dialog mehr von der Expertin hier
     }
 
     // --- NEU: FUNKTIONEN FÜR HOUSE GRID ANIMATION (Slide 12) ---
