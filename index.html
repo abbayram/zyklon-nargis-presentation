@@ -217,7 +217,7 @@
         <p>In den Tagen nach dem Sturm warteten internationale Hilfsschiffe und Flugzeuge vergeblich auf eine Einreiseerlaubnis.</p>
         
         <div style="position: relative; width: 100%; height: 450px; margin-top: 30px;">
-            <img src="./assets/map_blockade.png" alt="Karte von Myanmar mit rotem Umriss und X" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; -webkit-user-drag: none;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Burma_%28Myanmar%29_relief_location_map.jpg/800px-Burma_%28Myanmar%29_relief_location_map.jpg" alt="Karte von Myanmar" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; -webkit-user-drag: none; opacity: 0.7;">
             
             <canvas id="blockade-canvas" style="position: absolute; top: 0; left: 0; z-index: 2;"></canvas>
         </div>
@@ -328,34 +328,77 @@
     let helpArrows = [];
     let isBlockadeAnimating = false;
 
-    // --- AVATAR CONFIG (Online Links bleiben vorerst) ---
-    const expertBase = "https://api.dicebear.com/7.x/micah/svg?seed=ExpertSarah&baseColor=f9c9b6&hair=pixie&hairColor=333333&shirt=collared&shirtColor=ffffff&coat=blazer&coatColor=8B0000&glasses=round";
+    // --- AVATAR CONFIG ---
+    // NEU: Array für die lokalen Expertinnen-Bilder (Mund zu = Index 0, Mund leicht offen = Index 1)
+    // HINWEIS: Pfade müssen relativ zur HTML-Datei sein.
+    const expertImages = [
+        "./assets/avatars/expertin1.jpg", // Index 0: Neutral/Geschlossen
+        "./assets/avatars/expertin2.jpg", // Index 1: Leicht geöffnet (für Animation)
+        // Weitere Bilder (expertin3.jpg etc.) könnten hier hinzugefügt werden,
+        // werden aber für die einfache Sprech-Animation noch nicht genutzt.
+    ];
+
+    // Die anderen bleiben (vorerst) Cartoon-Avatare über API:
     const interviewerBase = "https://api.dicebear.com/7.x/micah/svg?seed=InterviewerTom&baseColor=ac6651&hair=fonze&hairColor=362c47&shirt=collared&shirtColor=ffffff&coat=suit&coatColor=2a3b5c";
     const generalBase = "https://api.dicebear.com/7.x/micah/svg?seed=GeneralStereotype&baseColor=8d5524&hair=fonze&hairColor=222222&shirt=collared&shirtColor=4B5320&coat=suit&coatColor=3A421B&fabric=camouflage&fabricColor=2F3616&glasses=round&eyebrows=down";
 
     let talkingInterval = null; let isMouthOpen = false;
 
     // --- FUNKTIONEN (AVATARE & DIALOG) ---
-    function setSpeakerImage(who, params) {
+    // NEU: Diese Funktion wurde angepasst, um lokale Bilder für die Expertin zu behandeln.
+    function setSpeakerImage(who, paramsOrIndex) {
         let imgId = ''; let baseUrl = '';
-        if(who === 'expert') { imgId = 'expert-img'; baseUrl = expertBase; }
+        
+        // SPECIAL CASE FÜR DIE EXPERTIN (Lokale JPGs)
+        if(who === 'expert') {
+            imgId = 'expert-img';
+            const img = document.getElementById(imgId);
+            // Wenn paramsOrIndex eine Zahl ist (z.B. 0 oder 1), nutze sie als Index für das Array
+            if(img && typeof paramsOrIndex === 'number' && expertImages[paramsOrIndex]) {
+                 img.src = expertImages[paramsOrIndex];
+            }
+            // Falls nichts übergeben wird, Standardbild (Index 0, Mund zu) laden
+            else if (img && paramsOrIndex === undefined) {
+                 img.src = expertImages[0];
+            }
+            return; // WICHTIG: Hier die Funktion verlassen, damit der Rest nicht ausgeführt wird.
+        }
+        // LOGIK FÜR DIE ANDEREN (Cartoon API)
         else if(who === 'interviewer') { imgId = 'interviewer-img'; baseUrl = interviewerBase; }
         else if(who === 'general') { imgId = 'general-img'; baseUrl = generalBase; }
+        
         const img = document.getElementById(imgId);
-        if(img && baseUrl) img.src = baseUrl + params;
+        // Für API-Avatare erwarten wir einen String als params (z.B. "&mouth=smile")
+        if(img && baseUrl && typeof paramsOrIndex === 'string') img.src = baseUrl + paramsOrIndex;
     }
+
+    // NEU: Angepasst, um zwischen Bild-Indizes zu wechseln statt URL-Parametern
     function startTalkingAnimation(who) {
         if(talkingInterval) clearInterval(talkingInterval);
         if(['expert','interviewer','general'].indexOf(who) === -1) return;
+
         talkingInterval = setInterval(() => {
             isMouthOpen = !isMouthOpen;
-            setSpeakerImage(who, isMouthOpen ? "&mouth=laughing" : "&mouth=smile");
-        }, 200);
+            
+            if (who === 'expert') {
+                // Umschalten zwischen Bild 0 (zu) und 1 (offen)
+                setSpeakerImage('expert', isMouthOpen ? 1 : 0);
+            } else {
+                // Alte Logik für die Cartoons
+                setSpeakerImage(who, isMouthOpen ? "&mouth=laughing" : "&mouth=smile");
+            }
+        }, 200); // Geschwindigkeit der Animation
     }
+
+    // NEU: Angepasst, um die Expertin auf das neutrale Bild zurückzusetzen
     function stopTalkingAnimation(isWorried = false) {
         if(talkingInterval) clearInterval(talkingInterval);
         talkingInterval = null;
-        setSpeakerImage('expert', isWorried ? "&mouth=sad&eyebrows=down" : "&mouth=smile");
+
+        // Expertin auf neutrales Bild (Index 0) zurücksetzen
+        setSpeakerImage('expert', 0);
+
+        // Alte Logik für die anderen
         setSpeakerImage('interviewer', "&mouth=smile");
         setSpeakerImage('general', "&mouth=frown");
     }
@@ -371,6 +414,9 @@
         
         document.getElementById('dialog-bubble').style.display = 'none';
         stopTalkingAnimation(false);
+        
+        // NEU: Initiales Bild der Expertin laden (Index 0)
+        setSpeakerImage('expert', 0);
         document.getElementById('char-interviewer').classList.add('visible');
     };
     window.onresize = resizeAllCanvases;
