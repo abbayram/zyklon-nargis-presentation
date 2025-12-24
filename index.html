@@ -28,38 +28,33 @@
         .nav-controls { position: absolute; bottom: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
         h1 { font-size: 42px; color: var(--myanmar-red); margin: 0 0 10px 0; } h2 { font-size: 32px; color: var(--text-main); border-bottom: 4px solid var(--myanmar-red); padding-bottom: 15px; margin-bottom: 30px; } h3 { font-size: 24px; color: var(--text-light); margin: 0; } p, li { font-size: 20px; line-height: 1.6; color: var(--text-main); }
 
-        /* --- CSS FÜR SLIDE 12 (Häuser Zerstörung - Kleiner und Zentriert) --- */
+        /* --- NEU: CSS FÜR SLIDE 12 (Häuser Zerstörung - Zentriert & Skaliert) --- */
         .house-grid-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 10px;
-            height: 75%;
+            flex-direction: column; /* Untereinander anordnen */
+            align-items: center; /* Horizontal zentrieren */
+            justify-content: center; /* Vertikal zentrieren */
+            gap: 30px;
+            margin-top: 20px;
+            height: 70%; /* Höhe geben für vertikale Zentrierung */
         }
         .house-grid {
             display: grid;
             grid-template-columns: repeat(10, 1fr);
-            gap: 4px; /* Kleinerer Abstand */
-            width: 40%; /* Schmaleres Raster für kleinere Häuser */
+            gap: 8px;
+            width: 50%; /* Skaliert: Nur 50% der Breite */
         }
         .house-cell { width: 100%; aspect-ratio: 1/1; display: flex; justify-content: center; align-items: center; transition: all 0.5s ease; }
-        .house-svg { width: 80%; height: 80%; display: block; } /* Kleinere SVGs */
+        .house-svg { width: 90%; height: 90%; display: block; }
         /* Zustand zerstört */
         .house-cell.is-destroyed .house-svg {
             filter: sepia(1) saturate(3) hue-rotate(-50deg) brightness(0.6);
             transform: rotate(15deg) scale(0.9);
             transition: transform 0.5s ease, filter 0.5s ease;
         }
-        .house-cell.survivor .house-svg {
-            /* Keine Zerstörungseffekte für den Überlebenden */
-            transform: scale(1.1); /* Leicht hervorheben */
-            transition: transform 0.5s ease;
-        }
 
-        .destruction-arrow { font-size: 40px; color: var(--myanmar-red); transform: rotate(90deg); }
-        .destruction-text { font-size: 32px; font-weight: bold; color: var(--myanmar-red); line-height: 1.2; text-align: center; }
+        .destruction-arrow { font-size: 50px; color: var(--myanmar-red); transform: rotate(90deg); /* Pfeil nach unten */ }
+        .destruction-text { font-size: 40px; font-weight: bold; color: var(--myanmar-red); line-height: 1.2; text-align: center; }
 
         /* --- STYLES FÜR "DAS URTEIL" SLIDE (Slide 13) --- */
         .urteil-container { display: flex; flex-direction: column; height: 85%; }
@@ -127,13 +122,14 @@
 
         .sim-controls { display: flex; gap: 20px; justify-content: center; margin-top: 15px; z-index: 100; position: relative; }
         
-        /* --- BUDGET STYLES (Kompakter) --- */
-        .budget-container { width: 80%; margin: 0 auto; background: #eee; padding: 20px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .slider-row { display: flex; align-items: center; margin-bottom: 10px; padding: 10px; border-radius: 4px; background: #fff; border: 1px solid #ccc; }
-        .slider-row label { width: 280px; font-weight: bold; font-size: 16px;}
-        input[type=range] { flex-grow: 1; cursor: pointer; position: relative; z-index: 50; outline: none; margin: 0 15px; accent-color: var(--myanmar-red); }
-        .points { font-weight: bold; font-size: 18px; width: 40px; text-align: right; }
-        .budget-summary { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 10px; border-top: 2px solid #ccc; font-size: 16px; }
+        /* --- BUDGET STYLES (Neutralisiert) --- */
+        .budget-container { width: 85%; margin: 0 auto; background: #eee; padding: 30px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .slider-row { display: flex; align-items: center; margin-bottom: 15px; padding: 15px; border-radius: 4px; background: #fff; border: 1px solid #ccc; }
+        /* Keine farbliche Markierung mehr für good/bad options */
+        .slider-row label { width: 280px; font-weight: bold; font-size: 18px;}
+        input[type=range] { flex-grow: 1; cursor: pointer; position: relative; z-index: 50; outline: none; margin: 0 15px; accent-color: var(--myanmar-red); /* Einheitliche Farbe */ }
+        .points { font-weight: bold; font-size: 20px; width: 40px; text-align: right; }
+        .budget-summary { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 15px; border-top: 2px solid #ccc; font-size: 18px; }
 
 
         /* --- AVATARE (Ganz links positioniert) --- */
@@ -143,6 +139,8 @@
         .char-img { width: 100%; height: auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); transition: opacity 0.1s ease; -webkit-user-drag: none; }
         .char-label { background: var(--myanmar-red); color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; display: inline-block; margin-top: -25px; position: relative; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.3); margin-left: 20px; }
         #char-general .char-label { background: var(--military-green); }
+        /* Spezielle Positionierung für Blockade Slide - nicht mehr nötig da eh links */
+        /* .slide-blockade #char-general { margin-left: 0; } */
 
         /* --- SPRECHBLASEN (Angepasst an linke Position) --- */
         .speech-bubble { position: absolute; background: white; border-radius: 20px; padding: 20px; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 2px solid #333; font-size: 18px; z-index: 2000; display: none; pointer-events: auto; animation-duration: 0.3s; animation-fill-mode: forwards; }
@@ -204,10 +202,6 @@
 
     <div class="slide active" id="slide1">
         <div style="margin-top: 150px; text-align: center;">
-            <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 20px;">
-                <img src="./assets/ausbruch.png" alt="Zyklon" style="height: 150px; border-radius: 8px;">
-                <img src="./assets/flagge.png" alt="Flagge Myanmar" style="height: 150px; border-radius: 8px;">
-            </div>
             <h3>Eine Analyse der sozialen Verwundbarkeit</h3>
             <h1>Zyklon Nargis (2008):<br>Naturereignis oder Staatsversagen?</h1>
             <div style="width: 100px; height: 4px; background: var(--myanmar-red); margin: 30px auto;"></div>
@@ -301,7 +295,7 @@
         <div class="analysis-col-container">
             <div class="analysis-col">
                 <ul>
-                    <li><strong>Die Tatmadaw (Militär):</strong> Zentrale Ordnungsfunktion im Inneren (Croissant 2015, S. 318).</li>
+                    <li><strong>Die Tatmadaw (Militär):</strong> Zentrale Ordnungsfunktion im Inneren.</li>
                     <li>Selbstverständnis als „Bewahrer der Nation“, nicht als Dienstleister.</li>
                 </ul>
                 <div style="background: #eee; padding: 15px; border-left: 4px solid var(--myanmar-red); margin-top:20px;">
@@ -310,9 +304,9 @@
             </div>
             <div class="analysis-col">
                 <ul>
-                    <li><strong>Schwache Zivilinstitutionen:</strong> Zivile Staatsstrukturen nach 1988 gezielt geschwächt (Croissant 2015, S. 317).</li>
-                    <li>Geringe administrative Kapazität, fehlende Rechenschaftspflicht (Croissant 2015, S. 317).</li>
-                    <li><strong>Ressourcenlogik:</strong> Militär beansprucht Großteil der ökonomischen Ressourcen (Croissant 2015, S. 317).</li>
+                    <li><strong>Schwache Zivilinstitutionen:</strong> Zivile Staatsstrukturen nach 1988 gezielt geschwächt.</li>
+                    <li>Geringe administrative Kapazität, fehlende Rechenschaftspflicht.</li>
+                    <li><strong>Ressourcenlogik:</strong> Militär beansprucht Großteil der ökonomischen Ressourcen.</li>
                 </ul>
             </div>
         </div>
