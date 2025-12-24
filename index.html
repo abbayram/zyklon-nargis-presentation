@@ -16,7 +16,7 @@
             --bg-slide: #fcfcfc;
             --interviewer-color: #555;
         }
-        /* Body angepasst für Electron */
+        /* Body angepasst für Electron/Vollbild */
         body { margin: 0; height: 100vh; background-color: #111; display: flex; justify-content: center; align-items: center; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; overflow: hidden; user-select: none; -webkit-user-select: none; }
         #presentation-stage { width: 1280px; height: 720px; background-color: var(--bg-slide); position: relative; overflow: hidden; }
         .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 60px; box-sizing: border-box; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; background: white; z-index: 10; }
@@ -329,13 +329,16 @@
     let isBlockadeAnimating = false;
 
     // --- AVATAR CONFIG ---
-    // NEU: Array für die lokalen Expertinnen-Bilder (Mund zu = Index 0, Mund leicht offen = Index 1)
-    // HINWEIS: Pfade müssen relativ zur HTML-Datei sein.
+    // NEU: Array für ALLE 8 lokalen Expertinnen-Bilder (PNG)
     const expertImages = [
-        "./assets/avatars/expertin1.png", // Index 0: Neutral/Geschlossen
-        "./assets/avatars/expertin2.png", // Index 1: Leicht geöffnet (für Animation)
-        // Weitere Bilder (expertin3.png etc.) könnten hier hinzugefügt werden,
-        // werden aber für die einfache Sprech-Animation noch nicht genutzt.
+        "./assets/avatars/expertin1.png", // Index 0: Neutral (Mund zu)
+        "./assets/avatars/expertin2.png", // Index 1: Leicht geöffnet
+        "./assets/avatars/expertin3.png", // Index 2: Weit geöffnet (A/I)
+        "./assets/avatars/expertin4.png", // Index 3: Rund (O/U)
+        "./assets/avatars/expertin5.png", // Index 4: Lippenbiss (F/V)
+        "./assets/avatars/expertin6.png", // Index 5: Zunge (L)
+        "./assets/avatars/expertin7.png", // Index 6: Breites Lächeln (E)
+        "./assets/avatars/expertin8.png", // Index 7: Schmollmund (R/W)
     ];
 
     // Die anderen bleiben (vorerst) Cartoon-Avatare über API:
@@ -345,15 +348,14 @@
     let talkingInterval = null; let isMouthOpen = false;
 
     // --- FUNKTIONEN (AVATARE & DIALOG) ---
-    // NEU: Diese Funktion wurde angepasst, um lokale Bilder für die Expertin zu behandeln.
     function setSpeakerImage(who, paramsOrIndex) {
         let imgId = ''; let baseUrl = '';
         
-        // SPECIAL CASE FÜR DIE EXPERTIN (Lokale JPGs)
+        // SPECIAL CASE FÜR DIE EXPERTIN (Lokale PNGs)
         if(who === 'expert') {
             imgId = 'expert-img';
             const img = document.getElementById(imgId);
-            // Wenn paramsOrIndex eine Zahl ist (z.B. 0 oder 1), nutze sie als Index für das Array
+            // Wenn paramsOrIndex eine gültige Zahl für das Array ist
             if(img && typeof paramsOrIndex === 'number' && expertImages[paramsOrIndex]) {
                  img.src = expertImages[paramsOrIndex];
             }
@@ -361,41 +363,40 @@
             else if (img && paramsOrIndex === undefined) {
                  img.src = expertImages[0];
             }
-            return; // WICHTIG: Hier die Funktion verlassen, damit der Rest nicht ausgeführt wird.
+            return; // WICHTIG: Hier die Funktion verlassen.
         }
         // LOGIK FÜR DIE ANDEREN (Cartoon API)
         else if(who === 'interviewer') { imgId = 'interviewer-img'; baseUrl = interviewerBase; }
         else if(who === 'general') { imgId = 'general-img'; baseUrl = generalBase; }
         
         const img = document.getElementById(imgId);
-        // Für API-Avatare erwarten wir einen String als params (z.B. "&mouth=smile")
         if(img && baseUrl && typeof paramsOrIndex === 'string') img.src = baseUrl + paramsOrIndex;
     }
 
-    // NEU: Angepasst, um zwischen Bild-Indizes zu wechseln statt URL-Parametern
+    // NEU: Angepasst für zufällige Mundbewegungen bei der Expertin
     function startTalkingAnimation(who) {
         if(talkingInterval) clearInterval(talkingInterval);
         if(['expert','interviewer','general'].indexOf(who) === -1) return;
 
+        // Geschwindigkeit etwas erhöht (150ms) für flüssigere Animation mit vielen Bildern
         talkingInterval = setInterval(() => {
-            isMouthOpen = !isMouthOpen;
-            
             if (who === 'expert') {
-                // Umschalten zwischen Bild 0 (zu) und 1 (offen)
-                setSpeakerImage('expert', isMouthOpen ? 1 : 0);
+                // Zufälligen Mund-Ausdruck wählen (von Index 1 bis 7), solange sie spricht
+                const randomIndex = Math.floor(Math.random() * 7) + 1;
+                setSpeakerImage('expert', randomIndex);
             } else {
-                // Alte Logik für die Cartoons
+                // Alte Logik für die Cartoons (einfaches Auf/Zu)
+                isMouthOpen = !isMouthOpen;
                 setSpeakerImage(who, isMouthOpen ? "&mouth=laughing" : "&mouth=smile");
             }
-        }, 200); // Geschwindigkeit der Animation
+        }, 150); 
     }
 
-    // NEU: Angepasst, um die Expertin auf das neutrale Bild zurückzusetzen
     function stopTalkingAnimation(isWorried = false) {
         if(talkingInterval) clearInterval(talkingInterval);
         talkingInterval = null;
 
-        // Expertin auf neutrales Bild (Index 0) zurücksetzen
+        // Expertin auf neutrales Bild (Index 0, Mund zu) zurücksetzen
         setSpeakerImage('expert', 0);
 
         // Alte Logik für die anderen
