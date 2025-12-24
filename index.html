@@ -329,17 +329,24 @@
     let isBlockadeAnimating = false;
 
     // --- AVATAR CONFIG ---
-    // NEU: Array für ALLE 8 lokalen Expertinnen-Bilder (PNG)
+    // NEU: Array angepasst an deinen Wunsch.
+    // Index 0 = Neutral (expertin1.png)
+    // Index 1 = Reden (expertin2.png)
+    // Index 2 = Staunen (expertin8.png - von dir als "3" bezeichnet)
     const expertImages = [
-        "./assets/avatars/expertin1.png", // Index 0: Neutral (Mund zu)
-        "./assets/avatars/expertin2.png", // Index 1: Leicht geöffnet
-        "./assets/avatars/expertin3.png", // Index 2: Weit geöffnet (A/I)
-        "./assets/avatars/expertin4.png", // Index 3: Rund (O/U)
-        "./assets/avatars/expertin5.png", // Index 4: Lippenbiss (F/V)
-        "./assets/avatars/expertin6.png", // Index 5: Zunge (L)
-        "./assets/avatars/expertin7.png", // Index 6: Breites Lächeln (E)
-        "./assets/avatars/expertin8.png", // Index 7: Schmollmund (R/W)
+        "./assets/avatars/expertin1.png", // Index 0: Neutral
+        "./assets/avatars/expertin2.png", // Index 1: Reden
+        "./assets/avatars/expertin8.png", // Index 2: Staunen
+        // Die anderen sind erstmal nicht in Benutzung:
+        // "./assets/avatars/expertin3.png",
+        // "./assets/avatars/expertin4.png",
+        // "./assets/avatars/expertin5.png",
+        // "./assets/avatars/expertin6.png",
+        // "./assets/avatars/expertin7.png",
     ];
+
+    // Global variable for expert mouth state
+    let expertMouthOpen = false;
 
     // Die anderen bleiben (vorerst) Cartoon-Avatare über API:
     const interviewerBase = "https://api.dicebear.com/7.x/micah/svg?seed=InterviewerTom&baseColor=ac6651&hair=fonze&hairColor=362c47&shirt=collared&shirtColor=ffffff&coat=suit&coatColor=2a3b5c";
@@ -373,31 +380,31 @@
         if(img && baseUrl && typeof paramsOrIndex === 'string') img.src = baseUrl + paramsOrIndex;
     }
 
-    // NEU: Angepasst für zufällige Mundbewegungen bei der Expertin
+    // NEU: Angepasst für einfaches Auf/Zu (Index 0 und 1) bei der Expertin
     function startTalkingAnimation(who) {
         if(talkingInterval) clearInterval(talkingInterval);
         if(['expert','interviewer','general'].indexOf(who) === -1) return;
 
-        // Geschwindigkeit etwas erhöht (150ms) für flüssigere Animation mit vielen Bildern
         talkingInterval = setInterval(() => {
             if (who === 'expert') {
-                // Zufälligen Mund-Ausdruck wählen (von Index 1 bis 7), solange sie spricht
-                const randomIndex = Math.floor(Math.random() * 7) + 1;
-                setSpeakerImage('expert', randomIndex);
+                // Umschalten zwischen Index 0 und 1
+                expertMouthOpen = !expertMouthOpen;
+                setSpeakerImage('expert', expertMouthOpen ? 1 : 0);
             } else {
                 // Alte Logik für die Cartoons (einfaches Auf/Zu)
                 isMouthOpen = !isMouthOpen;
                 setSpeakerImage(who, isMouthOpen ? "&mouth=laughing" : "&mouth=smile");
             }
-        }, 150); 
+        }, 200); // Geschwindigkeit auf 200ms zurückgesetzt, passt besser für 2 Bilder
     }
 
     function stopTalkingAnimation(isWorried = false) {
         if(talkingInterval) clearInterval(talkingInterval);
         talkingInterval = null;
 
-        // Expertin auf neutrales Bild (Index 0, Mund zu) zurücksetzen
+        // Expertin auf neutrales Bild (Index 0, Mund zu) zurücksetzen und Status resetten
         setSpeakerImage('expert', 0);
+        expertMouthOpen = false;
 
         // Alte Logik für die anderen
         setSpeakerImage('interviewer', "&mouth=smile");
