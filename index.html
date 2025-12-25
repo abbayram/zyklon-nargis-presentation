@@ -16,6 +16,7 @@
             --bg-slide: #fcfcfc;
             --brown-box: #8D6E63;
             --dark-green-circle: #1B5E20;
+            --terminal-green: #33ff33; /* NEU FÜR STORYTELLING */
         }
         body { margin: 0; height: 100vh; background-color: #111; display: flex; justify-content: center; align-items: center; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; overflow: hidden; user-select: none; -webkit-user-select: none; }
         #presentation-stage { width: 1280px; height: 720px; background-color: var(--bg-slide); position: relative; overflow: hidden; }
@@ -38,6 +39,34 @@
         .source-bottom-left { position: absolute; bottom: 20px; left: 60px; font-size: 14px; color: #666; font-style: italic; z-index: 50; }
         .source-bottom-center { position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%); font-size: 14px; color: #666; font-style: italic; text-align: center; width: auto; z-index: 50; white-space: nowrap; }
         .author-names { margin-top: 30px; font-size: 20px; color: var(--text-main); font-weight: bold;}
+
+        /* --- NEU: STORYTELLING TYPEWRITER STYLES (Slide 14) --- */
+        .story-slide {
+            background-color: #000; /* Schwarzer Hintergrund für Dramatik */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding-left: 100px; /* Mehr Abstand links */
+        }
+        .typewriter-container {
+            font-family: 'Courier New', Courier, monospace; /* Echter Typewriter-Look */
+            color: var(--terminal-green); /* Terminal-Grün oder Weiß */
+            font-size: 28px;
+            line-height: 1.5;
+            white-space: pre-wrap; /* Erlaubt Zeilenumbrüche */
+            margin-bottom: 30px;
+            min-height: 1em; /* Platzhalterhöhe */
+        }
+        /* Blinkender Cursor */
+        .cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        #story-btn-container { opacity: 0; transition: opacity 1s ease; margin-top: 50px; }
+        #story-btn-container.visible { opacity: 1; }
+
 
         /* --- CSS FÜR SLIDE 1 (Titel & Bilder) --- */
         .title-slide-container {
@@ -564,7 +593,19 @@
         </div>
     </div>
 
-    <div class="slide" id="slide14">
+    <div class="slide story-slide" id="slide14">
+        <div class="typewriter-container" id="story-text-1"></div>
+        <div class="typewriter-container" id="story-text-2"></div>
+        <div class="typewriter-container" id="story-text-3"></div>
+        <div class="typewriter-container" id="story-text-4"></div>
+        <div class="typewriter-container" id="story-text-5" style="margin-top: 40px; font-weight: bold; color: white;"></div>
+        
+        <div id="story-btn-container">
+             <button class="btn" onclick="nextSlide()" style="font-family: 'Courier New', monospace; font-size: 24px; background: #333; border: 2px solid var(--terminal-green); color: var(--terminal-green);">MISSION STARTEN >></button>
+        </div>
+    </div>
+
+    <div class="slide" id="slide15">
         <h2>Krisenmanager: Budget verteilen</h2>
         <p>Sie haben <strong>10 Punkte</strong>. Verteilen Sie diese weise. Achten Sie auf die Art der Investition!</p>
         <div class="budget-container">
@@ -605,7 +646,7 @@
         </div>
     </div>
 
-    <div class="slide" id="slide15">
+    <div class="slide" id="slide16">
         <h2>Abschluss</h2>
         <div style="text-align: center; margin-top: 150px;">
             <h1>Vielen Dank für Ihre Aufmerksamkeit.</h1>
@@ -624,7 +665,7 @@
 
 <script>
     // --- SETUP & GLOBALS ---
-    let currentSlide = 1; const totalSlides = 15;
+    let currentSlide = 1; const totalSlides = 16; // Jetzt 16 Folien
     let canvas, ctx, evacCanvas, evacCtx, histCanvas, histCtx, blockadeCanvas, blockadeCtx;
     let waterParticles = [], debrisParticles = [], mangroveRoots = [], villagers = [];
     let isFlooding = false, mangrovesActive = true, villageDestroyed = false, isEvacuating = false;
@@ -757,7 +798,12 @@
             document.getElementById('char-expert').classList.add('visible');
         }
 
-        if(n === 15) { stopTalkingAnimation(); }
+        // SLIDE 14: STORYTELLING STARTEN
+        if(n === 14) {
+             startStorySequence();
+        }
+
+        if(n === 16) { stopTalkingAnimation(); }
     }
     function nextSlide() { if(currentSlide < totalSlides) showSlide(++currentSlide); }
     function prevSlide() { if(currentSlide > 1) showSlide(--currentSlide); }
@@ -1219,6 +1265,61 @@
             alert("Gute Verteilung! Sie haben den Fokus auf Schutz und Vorsorge gelegt und die Prioritäten der Junta ignoriert. Sie haben viele Leben gerettet.");
             nextSlide();
         }
+    }
+
+    // --- TYPEWRITER STORYTELLING FUNKTIONEN (Slide 14) ---
+    let storyHasPlayed = false;
+
+    function typeWriter(text, elementId, speed, callback) {
+        let i = 0;
+        let container = document.getElementById(elementId);
+        container.innerHTML = "";
+        container.classList.add('cursor');
+        function typing() {
+            if (i < text.length) {
+                container.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typing, speed);
+            } else {
+                 container.classList.remove('cursor');
+                if(callback) callback();
+            }
+        }
+        typing();
+    }
+
+    function startStorySequence() {
+        if(storyHasPlayed) return;
+        storyHasPlayed = true;
+        
+        document.getElementById('story-text-1').innerHTML = "";
+        document.getElementById('story-text-2').innerHTML = "";
+        document.getElementById('story-text-3').innerHTML = "";
+        document.getElementById('story-text-4').innerHTML = "";
+        document.getElementById('story-text-5').innerHTML = "";
+        document.getElementById('story-btn-container').classList.remove('visible');
+
+        setTimeout(() => {
+            typeWriter("Jahr 2008. Die Katastrophe ist eingetreten. Das Ausmaß der Zerstörung ist unvorstellbar.", 'story-text-1', 50, () => {
+                setTimeout(() => {
+                    typeWriter("Das Militärregime ist überfordert – oder unwillig. Das Schicksal von Millionen liegt nun in *Ihren* Händen.", 'story-text-2', 50, () => {
+                        setTimeout(() => {
+                             typeWriter("Ihre Mission: Bilden Sie drei Krisenstäbe. Sie haben begrenzte Mittel. 10 Einheiten. Nicht mehr.", 'story-text-3', 50, () => {
+                                 setTimeout(() => {
+                                     typeWriter("Entscheiden Sie weise. Investieren Sie in Rettung... oder in Kontrolle? Die Geschichte wird über Sie urteilen.", 'story-text-4', 50, () => {
+                                         setTimeout(() => {
+                                             typeWriter("Sind Sie bereit?", 'story-text-5', 100, () => {
+                                                 document.getElementById('story-btn-container').classList.add('visible');
+                                             });
+                                         }, 1000);
+                                     });
+                                 }, 1000);
+                             });
+                        }, 1000);
+                    });
+                }, 1000);
+            });
+        }, 500);
     }
 </script>
 </body>
