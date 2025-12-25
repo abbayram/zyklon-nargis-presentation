@@ -33,21 +33,18 @@
         h3 { font-size: 24px; color: var(--text-light); margin: 0; } 
         p, li { font-size: 20px; line-height: 1.6; color: var(--text-main); }
 
-        /* --- NEU: IMAGE CAPTION STYLE --- */
-        .image-caption {
-            font-size: 12px;
-            color: #666;
-            text-align: center;
-            margin-top: 5px;
-            font-style: italic;
-        }
+        /* --- NEU: QUELLEN & NAMEN STYLES --- */
+        .image-caption { font-size: 12px; color: #666; text-align: center; margin-top: 5px; font-style: italic; }
+        .source-bottom-left { position: absolute; bottom: 20px; left: 60px; font-size: 14px; color: #666; font-style: italic; z-index: 50; }
+        .source-bottom-center { position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%); font-size: 14px; color: #666; font-style: italic; text-align: center; width: auto; z-index: 50; white-space: nowrap; }
+        .author-names { margin-top: 30px; font-size: 20px; color: var(--text-main); font-weight: bold;}
 
         /* --- CSS FÜR SLIDE 1 (Titel & Bilder) --- */
         .title-slide-container {
             display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;
         }
         .title-images-row {
-            display: flex; justify-content: center; gap: 60px; margin: 40px 0; width: 85%;
+            display: flex; justify-content: center; gap: 60px; margin: 30px 0; width: 85%;
         }
         .title-image-box {
             text-align: center; width: 45%; position: relative;
@@ -295,6 +292,8 @@
                     <div class="image-caption">Abb. 2</div>
                 </div>
             </div>
+            
+            <p class="author-names">Präsentation von Laura Stein, Marcel Köcher und A. Bülent Bayram</p>
 
             <button class="btn" onclick="nextSlide()" style="margin-top: 20px; font-size: 20px; padding: 15px 40px;">Präsentation Starten</button>
         </div>
@@ -344,6 +343,7 @@
             <p id="hist-status" style="font-style: italic; margin-bottom: 10px;">Klicken Sie, um die Geschichte zu starten.</p>
             <button class="btn" id="hist-btn" onclick="advanceHistory()">Geschichte starten</button>
         </div>
+        <div class="source-bottom-left">Quelle: Wilson et al. 2010, S. 134-139</div>
     </div>
 
     <div class="slide" id="slide3">
@@ -370,6 +370,7 @@
         <div style="margin-top: 50px; text-align: left; padding-left: 50px;">
             <button class="btn-outline" onclick="animateDiagram()">Analyse & Vergleich starten</button>
         </div>
+        <div class="source-bottom-left">Quelle: Fritz et. al 2009</div>
     </div>
 
     <div class="slide" id="slide4">
@@ -379,7 +380,7 @@
             <div class="tl-event-box tl-top tl-pos-1" id="tl-ev-1">
                 <img src="./assets/telefon.png" alt="Altes Telefon">
                 <div class="image-caption">Abb. 7</div>
-                <span class="tl-date">22.-28. April: Die Warnung</span><span class="tl-desc">Indische Meteorologen warnen die Junta vor Zyklon-Bildung im Golf von Bengalen.</span>
+                <span class="tl-date">Vor dem Sturm: Die Warnung</span><span class="tl-desc">Warnungen wurden ignoriert und notwendige Maßnahmen nicht getroffen.</span>
             </div><div class="tl-connector conn-top tl-pos-1"></div>
             <div class="tl-event-box tl-bottom tl-pos-2" id="tl-ev-2">
                  <img src="./assets/ausbruch.png" alt="Zyklon Nargis Ausbruch" style="height: 100px; object-fit: cover;">
@@ -396,6 +397,7 @@
             <p id="timeline-status" style="font-style: italic; margin-bottom: 20px;">Verfolgen Sie die Ereignisse.</p>
             <button class="btn" id="timeline-btn" onclick="advanceTimeline()">Nächstes Ereignis</button>
         </div>
+        <div class="source-bottom-center" style="bottom: 90px;">Quellen: Croissant 2015 S. 295f.; Fritz et. al 2009</div>
     </div>
 
     <div class="slide" id="slide5">
@@ -417,6 +419,7 @@
          <div style="text-align: center; margin-top: 30px;">
             <button class="btn-outline" onclick="nextSlide()">Überleitung zur Analyse</button>
         </div>
+        <div class="source-bottom-left">Quelle: Fritz et. al 2009</div>
     </div>
 
     <div class="slide" id="slide6">
@@ -440,6 +443,7 @@
                 </ul>
             </div>
         </div>
+        <div class="source-bottom-left">Quelle: Croissant 2015, S. 317f.</div>
     </div>
 
     <div class="slide slide-blockade" id="slide7">
@@ -453,6 +457,7 @@
         <div style="text-align: center; margin-top: 20px;">
             <button class="btn" onclick="startBlockadeAnimation()">Hilfslieferungen starten</button>
         </div>
+        <div class="source-bottom-center" style="bottom: 80px;">Quellen: Wilson et al. 2010, S. 136 u. 145; Hassfeldt 2018, S. 502</div>
     </div>
 
     <div class="slide" id="slide8">
