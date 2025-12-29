@@ -3,1343 +3,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <base href="./">
-    <title>Zyklon Nargis: Die Chronologie</title>
+    <title>Nargis Crisis Simulator</title>
     <style>
-        /* --- BASIS CSS --- */
         :root {
-            --myanmar-red: #8B0000;
-            --myanmar-dark: #500000;
-            --military-green: #3A421B;
-            --text-main: #333;
-            --text-light: #666;
-            --bg-slide: #fcfcfc;
-            --brown-box: #8D6E63;
-            --dark-green-circle: #1B5E20;
+            --bg-color: #111;
             --terminal-green: #33ff33;
+            --alert-red: #ff3333;
+            --ui-gray: #333;
+            --text-white: #f0f0f0;
+            --highlight: #00bcd4;
         }
-        body { margin: 0; height: 100vh; background-color: #111; display: flex; justify-content: center; align-items: center; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; overflow: hidden; user-select: none; -webkit-user-select: none; }
-        #presentation-stage { width: 1280px; height: 720px; background-color: var(--bg-slide); position: relative; overflow: hidden; }
-        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 60px; box-sizing: border-box; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; background: white; z-index: 10; }
-        .slide.active { opacity: 1; pointer-events: auto; z-index: 20; }
-        
-        .btn { background: var(--myanmar-red); color: white; border: none; padding: 12px 24px; font-size: 16px; cursor: pointer; border-radius: 4px; transition: background 0.2s; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); position: relative; z-index: 100; outline: none; }
-        .btn:hover { background: var(--myanmar-dark); transform: translateY(-1px); } .btn:active { transform: translateY(1px); }
-        .btn-outline { background: white; border: 2px solid var(--myanmar-red); color: var(--myanmar-red); padding: 10px 20px; font-size: 14px; cursor: pointer; font-weight: bold; z-index: 100; position: relative; outline: none; }
-        .btn-outline:hover { background: var(--myanmar-red); color: white; }
-        .nav-controls { position: absolute; bottom: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px; }
-        
-        h1 { font-size: 42px; color: var(--myanmar-red); margin: 0 0 10px 0; } 
-        h2 { font-size: 32px; color: var(--text-main); border-bottom: 4px solid var(--myanmar-red); padding-bottom: 15px; margin-bottom: 30px; } 
-        h3 { font-size: 24px; color: var(--text-light); margin: 0; } 
-        p, li { font-size: 20px; line-height: 1.6; color: var(--text-main); }
 
-        /* --- HOME SCREEN STYLES --- */
-        .home-container {
-            display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            user-select: none;
         }
-        .home-btn-row {
-            display: flex; gap: 40px; margin-top: 60px;
-        }
-        .btn-home-start {
-            padding: 25px 50px; font-size: 24px; border-radius: 8px; background: var(--myanmar-red);
-        }
-        .btn-home-game {
-             padding: 25px 50px; font-size: 24px; border-radius: 8px; border: 4px solid var(--myanmar-red); color: var(--myanmar-red); background: white;
-        }
-        .btn-home-game:hover { background: var(--myanmar-red); color: white; }
 
-
-        /* --- QUELLEN & NAMEN STYLES --- */
-        .image-caption { font-size: 12px; color: #666; text-align: center; margin-top: 5px; font-style: italic; }
-        .source-bottom-left { position: absolute; bottom: 20px; left: 60px; font-size: 14px; color: #666; font-style: italic; z-index: 50; }
-        .source-bottom-center { position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%); font-size: 14px; color: #666; font-style: italic; text-align: center; width: auto; z-index: 50; white-space: nowrap; }
-        .author-names { margin-top: 30px; font-size: 20px; color: var(--text-main); font-weight: bold;}
-
-        /* --- STORYTELLING TYPEWRITER STYLES (Slide 14) --- */
-        .story-slide {
-            background-color: #000;
+        #game-stage {
+            width: 1000px;
+            height: 700px;
+            background: #1a1a1a;
+            border: 2px solid var(--ui-gray);
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            padding-left: 100px;
-        }
-        .typewriter-container {
-            font-family: 'Courier New', Courier, monospace;
-            color: var(--terminal-green);
-            font-size: 28px;
-            line-height: 1.5;
-            white-space: pre-wrap;
-            margin-bottom: 30px;
-            min-height: 1em;
-        }
-        .cursor::after {
-            content: '|';
-            animation: blink 1s step-end infinite;
-        }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        #story-btn-container { opacity: 0; transition: opacity 1s ease; margin-top: 50px; }
-        #story-btn-container.visible { opacity: 1; }
-
-
-        /* --- CSS FÜR SLIDE 1 (Titel & Bilder) --- */
-        .title-slide-container {
-            display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;
-        }
-        .title-images-row {
-            display: flex; justify-content: center; gap: 60px; margin: 30px 0; width: 85%;
-        }
-        .title-image-box {
-            text-align: center; width: 45%; position: relative;
-        }
-        .title-image-box img {
-            width: 100%; height: 280px; object-fit: cover; border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); border: 4px solid white; transition: transform 0.3s;
-        }
-        .title-image-box:hover img { transform: scale(1.02); }
-        .title-image-label {
-            margin-top: 20px; font-weight: bold; font-size: 28px; color: var(--myanmar-red); text-transform: uppercase; letter-spacing: 1px;
+            overflow: hidden;
         }
 
-        /* --- LEITFRAGE BOX (Slide 3) --- */
-        .leitfrage-box {
+        /* --- ALLGEMEINE UI --- */
+        .slide {
             position: absolute;
-            top: 25%;
-            right: 8%;
-            width: 450px;
-            background: #f4f4f4;
-            border-left: 8px solid var(--myanmar-red);
-            padding: 25px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-            opacity: 0;
-            transform: translateX(50px);
-            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-            z-index: 50;
-        }
-        .leitfrage-box.visible { opacity: 1; transform: translateX(0); }
-        .leitfrage-header { font-weight: bold; font-size: 20px; color: var(--text-main); margin-bottom: 10px; display: block; }
-        .leitfrage-text { font-size: 22px; font-style: italic; line-height: 1.4; color: #333; }
-
-        /* --- TIMELINE BILDER POPUPS (Slide 2) --- */
-        .hist-popup-img {
-            position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%) scale(0.5);
-            width: 220px;
-            opacity: 0;
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
-            z-index: 100;
-        }
-        .hist-popup-img.visible {
-            opacity: 1;
-            transform: translateX(-50%) scale(1);
-        }
-        .hist-popup-img img {
-            width: 100%;
-            height: auto;
-            border: 4px solid white;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            border-radius: 4px;
-            background: #fff;
-        }
-
-        /* --- CSS FÜR SLIDE 12 (Häuser Zerstörung) --- */
-        .house-grid-container {
-            display: flex;
+            top: 0; left: 0; width: 100%; height: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 30px;
-            margin-top: 20px;
-            height: 70%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
-        .house-grid {
-            display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            gap: 6px;
-            width: 38%;
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            z-index: 10;
         }
-        .house-cell { width: 100%; aspect-ratio: 1/1; display: flex; justify-content: center; align-items: center; transition: all 0.5s ease; }
-        .house-svg { width: 90%; height: 90%; display: block; }
-        .house-cell.is-destroyed .house-svg {
-            filter: sepia(1) saturate(3) hue-rotate(-50deg) brightness(0.6);
-            transform: rotate(15deg) scale(0.9);
-            transition: transform 0.5s ease, filter 0.5s ease;
+
+        h1, h2 { text-transform: uppercase; letter-spacing: 2px; text-align: center; }
+        h1 { color: var(--terminal-green); text-shadow: 0 0 10px rgba(51, 255, 51, 0.5); margin-bottom: 40px;}
+        h2 { color: var(--text-white); border-bottom: 1px solid var(--ui-gray); padding-bottom: 10px; width: 80%; }
+        p { font-size: 18px; line-height: 1.5; max-width: 800px; text-align: center; }
+
+        .btn {
+            background: transparent;
+            border: 2px solid var(--terminal-green);
+            color: var(--terminal-green);
+            padding: 15px 30px;
+            font-size: 20px;
+            font-family: inherit;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            font-weight: bold;
         }
-        .destruction-arrow { font-size: 50px; color: var(--myanmar-red); transform: rotate(90deg); }
-        .destruction-text { font-size: 36px; font-weight: bold; color: var(--myanmar-red); line-height: 1.2; text-align: center; }
+        .btn:hover { background: var(--terminal-green); color: black; box-shadow: 0 0 15px var(--terminal-green); }
 
-        /* --- STYLES FÜR "DAS URTEIL" SLIDE (Slide 13) --- */
-        .urteil-container { display: flex; flex-direction: column; height: 85%; }
-        .diagram-top-row { display: flex; justify-content: space-between; align-items: flex-start; position: relative; margin-bottom: 20px; }
-        .diagram-box { border: 3px solid var(--brown-box); background: #fff; width: 30%; position: relative; z-index: 2; }
-        .diagram-box-header { background: var(--brown-box); color: white; font-weight: bold; padding: 10px; text-align: center; font-size: 20px; }
-        .diagram-box ul { padding: 15px 20px 15px 40px; margin: 0; }
-        .diagram-box li { font-size: 16px; margin-bottom: 8px; }
-        
-        .diagram-center { position: absolute; top: 140px; left: 50%; transform: translateX(-50%); z-index: 1; text-align: center; }
-        .central-circle { width: 220px; height: 220px; background: var(--dark-green-circle); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 24px; text-align: center; line-height: 1.2; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; z-index: 5;}
-        
-        .diagram-bottom-row { display: flex; justify-content: center; margin-top: 60px; position: relative; }
-        .diagram-box-bottom { width: 40%; z-index: 2; }
-
-        .big-arrow { position: absolute; z-index: 0; }
-        .arrow-left-to-center { top: 70px; left: 28%; width: 180px; height: 60px; background: var(--brown-box); clip-path: polygon(0 20%, 60% 20%, 60% 0, 100% 50%, 60% 100%, 60% 80%, 0 80%); transform: rotate(20deg); }
-        .arrow-right-to-center { top: 70px; right: 28%; width: 180px; height: 60px; background: var(--brown-box); clip-path: polygon(0 20%, 60% 20%, 60% 0, 100% 50%, 60% 100%, 60% 80%, 0 80%); transform: rotate(160deg); }
-        .arrow-connecting-up { width: 100px; height: 100px; background: var(--brown-box); clip-path: polygon(50% 0, 100% 40%, 75% 40%, 75% 100%, 25% 100%, 25% 40%, 0 40%); bottom: 95%; left: 50%; transform: translateX(-50%); }
-
-        .diagram-summary-text { text-align: center; font-size: 18px; margin: 30px auto 20px; max-width: 90%; }
-        .final-answer-box { border: 4px solid #333; padding: 20px; background: #f0f0f0; font-weight: bold; font-size: 20px; text-align: center; }
-
-        /* --- STYLES FÜR NARGIS FAKTEN SLIDE (Slide 5) --- */
-        .facts-container { display: flex; gap: 40px; align-items: flex-start; margin-top: 30px; }
-        .facts-map { width: 50%; flex-shrink: 0; }
-        .facts-map img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .facts-map-caption { font-size: 12px; color: #666; margin-top: 10px; font-style: italic; }
-        .facts-list { width: 50%; }
-        .fact-item { display: flex; align-items: flex-start; margin-bottom: 25px; }
-        .fact-icon { font-size: 32px; margin-right: 15px; color: var(--myanmar-red); width: 40px; text-align: center; flex-shrink: 0; }
-        .fact-text strong { display: block; font-size: 22px; color: var(--myanmar-red); margin-bottom: 5px; }
-        .source-ref { font-size: 14px; color: #888; }
-
-        /* --- DIAGRAM STYLES (Slide 3) --- */
-        .chart-container { margin-top: 50px; padding: 20px; position: relative; width: 60%; }
-        .bar-group { margin-bottom: 40px; position: relative; }
-        .bar-label { font-weight: bold; font-size: 20px; display: block; margin-bottom: 10px; color: var(--text-main); }
-        .bar { height: 60px; background: var(--myanmar-red); transition: width 2.5s cubic-bezier(0.25, 1, 0.5, 1), background 0.5s; display: flex; align-items: center; justify-content: end; padding-right: 15px; color: white; font-weight: bold; font-size: 24px; white-space: nowrap; overflow: visible; border-radius: 4px;box-shadow: 2px 2px 5px rgba(0,0,0,0.2);}
-        .bar.mala-initial { width: 70%; background: #777; } 
-        .bar.mala-shrunk { width: 1.5% !important; background: #777; justify-content: start; padding-left: 5px; overflow: hidden;} .bar.mala-shrunk span { display: none; }
-        .bar.nargis-placeholder { width: 2%; background: #eee; box-shadow: none; }
-        .bar.nargis-grown { width: 100% !important; background: var(--myanmar-red); }
-        .bar-value-outside { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 20px; color: var(--myanmar-red); font-weight: bold; font-size: 36px; opacity: 0; transition: opacity 1s 1s; }
-        .nargis-grown + .bar-value-outside { opacity: 1; }
-
-        /* --- ANALYSE PUNKTE STYLES --- */
-        .analysis-point { background: #f4f4f4; border-left: 5px solid var(--myanmar-red); padding: 20px; margin-bottom: 20px; opacity: 0; transform: translateX(-20px); transition: all 0.8s ease; }
-        .analysis-point.visible { opacity: 1; transform: translateX(0); }
-        .analysis-point h3 { color: var(--myanmar-red); margin-bottom: 10px; }
-
-        /* --- CANVAS STYLES --- */
-        #flood-canvas, #evacuation-canvas { width: 100%; height: 350px; background: linear-gradient(to bottom, #e0e0e0 0%, #d7ccc8 80%, #a1887f 100%); border-bottom: 10px solid #5d4037; cursor: crosshair; display: block; }
-        #evacuation-canvas { background: #d7ccc8; border-bottom: 20px solid #5d4037; }
-        #blockade-canvas { border: none; height: 100%; width: 100%; background: transparent; cursor: default; }
-        .sim-controls { display: flex; gap: 20px; justify-content: center; margin-top: 15px; z-index: 100; position: relative; }
-        
-        /* --- BUDGET STYLES --- */
-        .budget-container { width: 85%; margin: 0 auto; background: #eee; padding: 30px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .slider-row { display: flex; align-items: center; margin-bottom: 15px; padding: 15px; border-radius: 4px; background: #fff; border: 1px solid #ccc; }
-        .slider-row label { width: 280px; font-weight: bold; font-size: 18px;}
-        input[type=range] { flex-grow: 1; cursor: pointer; position: relative; z-index: 50; outline: none; margin: 0 15px; accent-color: var(--myanmar-red); }
-        .points { font-weight: bold; font-size: 20px; width: 40px; text-align: right; }
-        .budget-summary { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 15px; border-top: 2px solid #ccc; font-size: 18px; }
-
-
-        /* --- AVATARE (Verbesserte Ausblendung) --- */
-        .char-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; z-index: 50; pointer-events: none; display: grid; grid-template-columns: 1fr; align-items: end; justify-items: start; }
-        
-        .character-container { 
-            position: absolute; 
-            bottom: 0; 
-            left: -20px; 
-            transform: translateY(105%); 
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            width: 300px; 
-            text-align: left; 
-            z-index: 60;
+        /* --- TYPEWRITER (INTRO) --- */
+        .typewriter-text {
+            color: var(--terminal-green);
+            font-size: 24px;
+            text-align: left;
+            white-space: pre-wrap;
+            min-height: 200px;
+            width: 80%;
         }
-        .character-container.visible { 
-            transform: translateY(0); 
+        .cursor::after { content: '█'; animation: blink 0.8s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* --- ROLE SELECTION --- */
+        .role-container { display: flex; gap: 20px; width: 100%; justify-content: center; margin-top: 20px; }
+        .role-card {
+            background: #222;
+            border: 1px solid #444;
+            padding: 20px;
+            width: 280px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            text-align: left;
         }
-        .char-img { width: 100%; height: auto; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); transition: opacity 0.1s ease; -webkit-user-drag: none; }
-        
-        /* Namen vereinfacht */
-        .char-label { background: var(--myanmar-red); color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; display: inline-block; margin-top: -25px; position: relative; z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.3); margin-left: 40px; }
-        #char-general .char-label { background: var(--military-green); }
+        .role-card:hover { transform: translateY(-5px); border-color: var(--highlight); background: #2a2a2a; }
+        .role-title { font-size: 22px; color: var(--highlight); font-weight: bold; margin-bottom: 10px; display: block; }
+        .role-desc { font-size: 14px; color: #aaa; }
+        .role-focus { font-size: 12px; margin-top: 15px; color: var(--terminal-green); display: block; }
 
-        /* --- SPRECHBLASEN --- */
-        .speech-bubble { position: absolute; background: white; border-radius: 20px; padding: 20px; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 2px solid #333; font-size: 18px; z-index: 2000; display: none; pointer-events: auto; animation-duration: 0.3s; animation-fill-mode: forwards; }
-        @keyframes popIn { from { opacity: 0; transform: scale(0.8) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        .speech-bubble:after { content: ''; position: absolute; bottom: -20px; border-width: 20px 20px 0; border-style: solid; display: block; width: 0; }
-        .speech-bubble:before { content: ''; position: absolute; bottom: -23px; border-width: 22px 22px 0; border-style: solid; border-color: #333 transparent; width: 0; z-index: -1; }
-        
-        /* Blasenpositionen links */
-        .bubble-pos-expert { left: 50px; bottom: 400px; animation-name: popIn; } .bubble-pos-expert:after { left: 40px; border-color: white transparent; } .bubble-pos-expert:before { left: 38px; }
-        .bubble-pos-general { left: 50px; bottom: 400px; animation-name: popIn; } .bubble-pos-general:after { left: 40px; border-color: white transparent; } .bubble-pos-general:before { left: 38px; }
+        /* --- MISSION BRIEFING --- */
+        .briefing-box {
+            border: 2px dashed var(--highlight);
+            padding: 30px;
+            background: rgba(0, 188, 212, 0.05);
+            margin-bottom: 20px;
+            width: 80%;
+        }
 
-        /* --- TIMELINE STYLES --- */
-        .tl-container { position: relative; width: 90%; margin: 60px auto 0; height: 300px; }
-        .tl-line { position: absolute; top: 50%; left: 5%; width: 90%; height: 6px; background: #333; transform: translateY(-50%); z-index: 1; }
-        .tl-event-box { position: absolute; width: 240px; background: white; border: 3px solid var(--myanmar-red); border-radius: 8px; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); opacity: 0; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 5; }
-        .tl-event-box.active { opacity: 1; transform: translateY(0) scale(1) !important; }
+        /* --- GAME SLIDERS --- */
+        .budget-ui { width: 80%; background: #222; padding: 20px; border-radius: 4px; border: 1px solid #444; }
+        .slider-row { display: flex; align-items: center; margin-bottom: 15px; }
+        .slider-label { width: 250px; text-align: left; font-size: 16px; }
+        input[type=range] { flex-grow: 1; margin: 0 15px; cursor: pointer; accent-color: var(--terminal-green); }
+        .slider-val { width: 30px; text-align: right; font-weight: bold; color: var(--highlight); }
         
-        .tl-event-box img { width: 100%; height: 160px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; -webkit-user-drag: none;}
-        
-        .tl-date { font-weight: bold; color: var(--myanmar-red); display: block; margin-bottom: 5px; }
-        .tl-desc { font-size: 14px; color: #333; }
-        .tl-pos-1 { left: 10%; } .tl-pos-2 { left: 50%; transform: translateX(-50%); } .tl-pos-3 { right: 10%; }
-        .tl-top { bottom: 60%; transform: translateY(20px) scale(0.9); } .tl-bottom { top: 60%; transform: translateY(-20px) scale(0.9); }
-        .tl-connector { position: absolute; width: 3px; background: var(--myanmar-red); z-index: 2; height: 0; transition: height 0.6s 0.3s ease; }
-        .tl-event-box.active + .tl-connector { height: 60px; } .conn-top { bottom: 50%; } .conn-bottom { top: 50%; }
+        .points-display { 
+            font-size: 24px; margin-bottom: 20px; color: var(--terminal-green); font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 10px; width: 100%; text-align: center;
+        }
+        .points-display.error { color: var(--alert-red); animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
-        /* --- HISTORISCHE TIMELINE STYLES (Slide 2) --- */
-        .hist-tl-container { position: relative; width: 90%; margin: 80px auto 0; height: 400px; }
-        #hist-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
-        .hist-labels-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
-        .hist-tl-line-bg { position: absolute; top: 65%; left: 0; width: 100%; height: 6px; background: #8D6E63; border-radius: 3px; transform: translateY(-50%); z-index: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .hist-tl-point { position: absolute; top: 65%; transform: translate(-50%, -140%); text-align: center; width: 200px; pointer-events: auto; }
-        .hist-tl-year { font-weight: bold; font-size: 22px; margin: 10px 0 5px; color: var(--myanmar-red); text-shadow: 1px 1px 2px white; }
-        .hist-tl-desc { font-size: 15px; color: #333; background: rgba(255,255,255,0.9); padding: 8px; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .hist-p1 { left: 10%; } .hist-p2 { left: 35%; } .hist-p3 { left: 60%; } .hist-p4 { left: 90%; }
-        .hist-controls { text-align: center; margin-top: 30px; position: relative; z-index: 10; }
+        /* --- OUTCOME --- */
+        .outcome-box {
+            border-left: 5px solid;
+            padding: 20px;
+            background: #222;
+            width: 80%;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .outcome-title { font-size: 28px; margin-bottom: 15px; display: block; font-weight: bold; }
+        .outcome-text { font-size: 18px; line-height: 1.6; }
+        
+        .res-catastrophe { border-color: var(--alert-red); }
+        .res-catastrophe .outcome-title { color: var(--alert-red); }
+        
+        .res-mixed { border-color: #ff9800; }
+        .res-mixed .outcome-title { color: #ff9800; }
+        
+        .res-success { border-color: var(--terminal-green); }
+        .res-success .outcome-title { color: var(--terminal-green); }
 
     </style>
 </head>
 <body>
 
-<div id="presentation-stage">
-
-    <div class="char-overlay">
-        <div class="character-container" id="char-expert">
-            <img id="expert-img" src="" class="char-img" alt="Expertin">
-            <div class="char-label">Expertin</div>
-        </div>
-        <div class="character-container" id="char-general">
-            <img id="general-img" src="" class="char-img" alt="General">
-            <div class="char-label">General</div>
-        </div>
-    </div>
+<div id="game-stage">
     
-    <div class="speech-bubble" id="dialog-bubble">
-        <p style="margin-top: 0; margin-bottom: 15px;" id="dialog-text">...</p>
-        <div style="text-align: right;">
-            <button class="btn" style="font-size:12px; padding: 5px 15px;" onclick="closeDialog()">OK</button>
-        </div>
+    <div class="slide active" id="slide-intro">
+        <div class="typewriter-text" id="intro-text"></div>
+        <button class="btn" id="intro-btn" onclick="goToRoles()" style="opacity:0; pointer-events: none;">Verbindung herstellen >></button>
     </div>
 
-    <div class="slide active" id="slide-home">
-        <div class="home-container">
-            <h1>Zyklon Nargis: Die Analyse</h1>
-            <h3>Naturkatastrophe oder Staatsversagen?</h3>
-            <div style="margin-top: 40px; font-style: italic; color: #555;">
-                Präsentation von Laura Stein, Marcel Köcher und A. Bülent Bayram
-            </div>
-            
-            <div class="home-btn-row">
-                <button class="btn btn-home-start" onclick="startFromBeginning()">
-                    ▶ Präsentation ansehen
-                </button>
-                <button class="btn btn-home-game" onclick="jumpToGame()">
-                    ⚡ Direkt zur Diskussion/Simulation
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div class="slide" id="slide1">
-        <div class="title-slide-container">
-            <h3 style="margin-bottom: 10px;">Eine Analyse der sozialen Verwundbarkeit</h3>
-            <h1 style="margin-bottom: 20px;">Zyklon Nargis (2008):<br>Naturereignis oder Staatsversagen?</h1>
-            
-            <div class="title-images-row">
-                <div class="title-image-box">
-                    <img src="./assets/ausbruch.png" alt="Zyklon Nargis Sturmflut">
-                    <div class="title-image-label">Naturereignis?</div>
-                    <div class="image-caption">Abb. 1</div>
-                </div>
-                
-                <div class="title-image-box">
-                    <img src="./assets/flagge.png" alt="Myanmar Flagge">
-                    <div class="title-image-label" style="color: var(--military-green);">Staatsversagen?</div>
-                    <div class="image-caption">Abb. 2</div>
-                </div>
-            </div>
-            
-            <button class="btn" onclick="nextSlide()" style="margin-top: 20px; font-size: 20px; padding: 15px 40px;">Beginnen</button>
-        </div>
-    </div>
-
-    <div class="slide" id="slide2">
-        <h2>Myanmars Weg in die Isolation: Der politische Kontext</h2>
-        <div class="hist-tl-container">
-            <div class="hist-tl-line-bg"></div>
-            <canvas id="hist-canvas"></canvas>
-            <div class="hist-labels-layer">
-                <div class="hist-tl-point hist-p1">
-                    <div class="hist-popup-img" id="img-1948">
-                        <img src="./assets/1948.png" alt="1948">
-                        <div class="image-caption">Abb. 3</div>
-                    </div>
-                    <div class="hist-tl-year">1948</div>
-                    <div class="hist-tl-desc">Unabhängigkeit</div>
-                </div>
-                <div class="hist-tl-point hist-p2">
-                    <div class="hist-popup-img" id="img-1962">
-                        <img src="./assets/1962.png" alt="1962">
-                        <div class="image-caption">Abb. 4</div>
-                    </div>
-                    <div class="hist-tl-year">1962</div>
-                    <div class="hist-tl-desc">Militärputsch</div>
-                </div>
-                <div class="hist-tl-point hist-p3">
-                    <div class="hist-popup-img" id="img-1988">
-                        <img src="./assets/1988.png" alt="1988">
-                        <div class="image-caption">Abb. 5</div>
-                    </div>
-                    <div class="hist-tl-year">1988</div>
-                    <div class="hist-tl-desc">8888-Aufstand</div>
-                </div>
-                <div class="hist-tl-point hist-p4">
-                    <div class="hist-popup-img" id="img-2008">
-                        <img src="./assets/2008.png" alt="2008">
-                        <div class="image-caption">Abb. 6</div>
-                    </div>
-                    <div class="hist-tl-year">2008</div>
-                    <div class="hist-tl-desc">Vor Nargis</div>
-                </div>
-            </div>
-        </div>
-        <div class="hist-controls">
-            <p id="hist-status" style="font-style: italic; margin-bottom: 10px;">Klicken Sie, um die Geschichte zu starten.</p>
-            <button class="btn" id="hist-btn" onclick="advanceHistory()">Geschichte starten</button>
-        </div>
-        <div class="source-bottom-left">Quelle: Wilson et al. 2010, S. 134-139</div>
-    </div>
-
-    <div class="slide" id="slide3">
-        <h2>Zwei Stürme, verschiedene Ausmaße</h2>
+    <div class="slide" id="slide-roles">
+        <h1>Identität Wählen</h1>
+        <p>Wer sind Sie in dieser Krise? Ihre Wahl bestimmt Ihre Mission.</p>
         
-        <div class="leitfrage-box" id="leitfrage-popup">
-            <span class="leitfrage-header">Leitfrage der Untersuchung:</span>
-            <div class="leitfrage-text">
-                "Welche sozialen, ökonomischen und politischen Gegebenheiten führten dazu, dass die Bewohner des Irrawaddy-Deltas in Myanmar durch den Zyklon Nargis von 2008 so extrem geschädigt wurden?"
+        <div class="role-container">
+            <div class="role-card" onclick="selectRole('junta')">
+                <span class="role-title">Die Militärjunta</span>
+                <span class="role-desc">Sie sind der General. Das Land gehört Ihnen. Ausländer sind Spione. Das Referendum muss stattfinden.</span>
+                <span class="role-focus">Ziele: Kontrolle, Stabilität, Souveränität.</span>
             </div>
-        </div>
 
-        <div class="chart-container">
-            <div class="bar-group">
-                <span class="bar-label">Zyklon Mala (2006) - Ähnliche Stärke</span>
-                <div class="bar mala-initial" id="bar-mala"><span>22 Tote</span></div>
+            <div class="role-card" onclick="selectRole('un')">
+                <span class="role-title">Die UN / NGOs</span>
+                <span class="role-desc">Sie sind der Krisenmanager. Sie haben Ressourcen, aber keinen Zugang. Sie wollen Leben retten, egal wie.</span>
+                <span class="role-focus">Ziele: Zugang, Rettung, Logistik.</span>
             </div>
-            <div class="bar-group" style="margin-top: 80px;">
-                <span class="bar-label">Zyklon Nargis (2008)</span>
-                <div class="bar nargis-placeholder" id="bar-nargis"></div>
-                <span class="bar-value-outside" id="val-nargis">> 138.000 Tote</span>
-            </div>
-        </div>
-        <div style="margin-top: 50px; text-align: left; padding-left: 50px;">
-            <button class="btn-outline" onclick="animateDiagram()">Analyse & Vergleich starten</button>
-        </div>
-        <div class="source-bottom-left">Quelle: Fritz et. al 2009</div>
-    </div>
 
-    <div class="slide" id="slide4">
-        <h2>Die Chronologie des Versagens (April/Mai 2008)</h2>
-        <div class="tl-container">
-            <div class="tl-line"></div>
-            <div class="tl-event-box tl-top tl-pos-1" id="tl-ev-1">
-                <img src="./assets/telefon.png" alt="Altes Telefon">
-                <div class="image-caption">Abb. 7</div>
-                <span class="tl-date">Vor dem Sturm: Die Warnung</span><span class="tl-desc">Warnungen wurden ignoriert und notwendige Maßnahmen nicht getroffen.</span>
-            </div><div class="tl-connector conn-top tl-pos-1"></div>
-            <div class="tl-event-box tl-bottom tl-pos-2" id="tl-ev-2">
-                 <img src="./assets/ausbruch.png" alt="Zyklon Nargis Ausbruch" style="height: 100px; object-fit: cover;">
-                <div class="image-caption">Abb. 1</div>
-                <span class="tl-date">2. Mai: Landfall & Zerstörung</span><span class="tl-desc">Nargis trifft mit Kat. 4 auf das Delta. Keine Warnung für die Bevölkerung.</span>
-            </div><div class="tl-connector conn-bottom tl-pos-2"></div>
-            <div class="tl-event-box tl-top tl-pos-3" id="tl-ev-3">
-                 <img src="./assets/referendum.png" alt="Referendum">
-                <div class="image-caption">Abb. 8</div>
-                <span class="tl-date">3.-10. Mai: Das Referendum</span><span class="tl-desc">Die Junta führt das Verfassungsreferendum durch und blockiert internationale Hilfe.</span>
-            </div><div class="tl-connector conn-top tl-pos-3"></div>
-        </div>
-        <div style="text-align: center; margin-top: 50px;">
-            <p id="timeline-status" style="font-style: italic; margin-bottom: 20px;">Verfolgen Sie die Ereignisse.</p>
-            <button class="btn" id="timeline-btn" onclick="advanceTimeline()">Nächstes Ereignis</button>
-        </div>
-        <div class="source-bottom-center" style="bottom: 90px;">Quellen: Croissant 2015 S. 295f.; Fritz et. al 2009</div>
-    </div>
-
-    <div class="slide" id="slide5">
-        <h2>Das Ereignis: Zyklon Nargis trifft das Irawadi-Delta</h2>
-        <div class="facts-container">
-            <div class="facts-map">
-                <img src="./assets/KarteUberflutungsgebiet.png" alt="Karte des Überflutungsgebiets von Nargis">
-                <p class="facts-map-caption">Abb. 9: Überflutungsgebiet des Zyklons Nargis</p>
-            </div>
-            <div class="facts-list">
-                <div class="fact-item"><div class="fact-icon">📅</div><div class="fact-text"><strong>Datum: 2. Mai 2008</strong></div></div>
-                <div class="fact-item"><div class="fact-icon">🌀</div><div class="fact-text"><strong>Stärke: Kategorie 4</strong><span>beim Auftreffen auf Land</span></div></div>
-                <div class="fact-item"><div class="fact-icon">💨</div><div class="fact-text"><strong>Wind: >210 km/h</strong><span>anhaltend</span></div></div>
-                <div class="fact-item"><div class="fact-icon">🌊</div><div class="fact-text"><strong>Sturmflut: Bis zu 5 Meter hoch</strong></div></div>
-                <div class="fact-item"><div class="fact-icon">🏘️</div><div class="fact-text"><strong>Überflutung: Bis zu 50 km landeinwärts</strong></div></div>
-                 <div class="fact-item"><div class="fact-icon">💲</div><div class="fact-text"><strong>Schaden: >10 Mrd. US-Dollar</strong><span>tödlichster Zyklon im Indischen Ozean seit 1970</span></div></div>
-            </div>
-        </div>
-         <div style="text-align: center; margin-top: 30px;">
-            <button class="btn-outline" onclick="nextSlide()">Überleitung zur Analyse</button>
-        </div>
-        <div class="source-bottom-left">Quelle: Fritz et. al 2009</div>
-    </div>
-
-    <div class="slide" id="slide6">
-        <h2>Analyse A: Politische Verwundbarkeit</h2>
-        <h3>Ein Staat, der auf Kontrolle, nicht auf Schutz ausgerichtet ist</h3>
-        <div style="display: flex; gap: 40px; margin-top: 30px;">
-            <div style="width: 50%;">
-                <ul>
-                    <li><strong>Die Tatmadaw (Militär):</strong> Zentrale Ordnungsfunktion im Inneren.</li>
-                    <li>Selbstverständnis als „Bewahrer der Nation“, nicht als Dienstleister.</li>
-                </ul>
-                <div style="background: #eee; padding: 15px; border-left: 4px solid var(--myanmar-red); margin-top:20px;">
-                    <i>"Fokus auf Sicherheit und Machterhalt, nicht auf öffentliche Dienstleistungen wie Schutz."</i>
-                </div>
-            </div>
-            <div style="width: 50%;">
-                <ul>
-                    <li><strong>Schwache Zivilinstitutionen:</strong> Zivile Staatsstrukturen nach 1988 gezielt geschwächt.</li>
-                    <li>Geringe administrative Kapazität, fehlende Rechenschaftspflicht.</li>
-                    <li><strong>Ressourcenlogik:</strong> Militär beansprucht Großteil der ökonomischen Ressourcen.</li>
-                </ul>
-            </div>
-        </div>
-        <div class="source-bottom-left">Quelle: Croissant 2015, S. 317f.</div>
-    </div>
-
-    <div class="slide slide-blockade" id="slide7">
-        <h2>Der Zynismus der Macht: Die Blockade der Hilfe</h2>
-        <p>In den Tagen nach dem Sturm warteten internationale Hilfsschiffe und Flugzeuge vergeblich auf eine Einreiseerlaubnis.</p>
-        <div style="position: relative; width: 100%; height: 400px; margin-top: 30px;">
-            <img src="./assets/map_blockade.png" alt="Karte von Myanmar mit Blockade" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; -webkit-user-drag: none;">
-            <canvas id="blockade-canvas" style="position: absolute; top: 0; left: 0; z-index: 2;"></canvas>
-        </div>
-        <div class="image-caption">Abb. 10</div>
-        <div style="text-align: center; margin-top: 20px;">
-            <button class="btn" onclick="startBlockadeAnimation()">Hilfslieferungen starten</button>
-        </div>
-        <div class="source-bottom-center" style="bottom: 80px;">Quellen: Wilson et al. 2010, S. 136 u. 145; Hassfeldt 2018, S. 502</div>
-    </div>
-
-    <div class="slide" id="slide8">
-        <h2>Analyse B: Ökonomische Faktoren</h2>
-        <div style="margin-top: 40px;">
-            <div class="analysis-point" id="eco-point-1">
-                <h3>1. Extreme strukturelle Armut</h3>
-                <p>Die Menschen im Delta lebten von der Hand in den Mund. Es gab keine Reserven für Notfälle, keine stabilen Steinhäuser.</p>
-            </div>
-            <div class="analysis-point" id="eco-point-2">
-                <h3>2. Instabile Bambushäuser</h3>
-                <p>Die traditionelle Bauweise war der 5-Meter-Sturmflut nicht gewachsen. Ganze Dörfer wurden einfach weggespült.</p>
-            </div>
-             <div class="analysis-point" id="eco-point-3">
-                <h3>3. Keine Evakuierungsmöglichkeiten</h3>
-                <p>Es fehlten Boote, Fahrzeuge und befestigte Straßen, um das riesige Delta rechtzeitig zu verlassen.</p>
+            <div class="role-card" onclick="selectRole('local')">
+                <span class="role-title">Die Bevölkerung</span>
+                <span class="role-desc">Sie sind Dorfvorsteher im Delta. Sie kennen das Land. Sie wollen, dass Ihre Familien die Nacht überleben.</span>
+                <span class="role-focus">Ziele: Schutzbauten, Überleben, Heimat.</span>
             </div>
         </div>
     </div>
 
-    <div class="slide" id="slide9">
-        <h2>Der Faktor "Preparedness" (Vergleich: Mala 2006)</h2>
-        <p>Zoom auf ein Dorf während Zyklon Mala (2006). Dank Warnung wussten die Menschen, was zu tun war.</p>
-        <canvas id="evacuation-canvas"></canvas>
-        <div style="text-align: center; margin-top: 20px;">
-             <button class="btn" onclick="startEvacuationDemo()">Evakuierung starten</button>
+    <div class="slide" id="slide-briefing">
+        <h1>Missionsbefehl</h1>
+        <div class="briefing-box">
+            <h3 id="briefing-role-title" style="color: var(--highlight); margin-top:0;">...</h3>
+            <p id="briefing-text" style="text-align: left;">...</p>
         </div>
+        <p style="font-size: 16px; color: #888;">Sie haben <strong>10 Ressourcen-Punkte</strong>. Verteilen Sie diese auf die Sektoren.</p>
+        <button class="btn" onclick="goToGame()">Simulation Starten</button>
     </div>
 
-    <div class="slide" id="slide10">
-        <h2>Analyse C: Umweltfaktoren</h2>
-        <div style="display: flex; align-items: center; gap: 40px; margin-top: 40px;">
-            <div style="width: 50%">
-                 <div class="analysis-point" id="env-point-1">
-                    <h3>Die Mangrovenrodung</h3>
-                    <p>Über Jahrzehnte wurden die Mangrovenwälder des Deltas für Holzkohle und Garnelenzucht abgeholzt.</p>
-                    <p>Dieser natürliche "Puffer" gegen Sturmfluten war 2008 größtenteils verschwunden.</p>
-                </div>
+    <div class="slide" id="slide-game">
+        <div class="points-display">
+            Verfügbare Punkte: <span id="points-remaining">10</span> / 10
+        </div>
+
+        <div class="budget-ui">
+            <div class="slider-row">
+                <div class="slider-label">📡 Frühwarnsysteme</div>
+                <input type="range" id="inp-warn" value="0" max="10" oninput="updateBudget()">
+                <div class="slider-val">0</div>
             </div>
-            <div style="width: 40%; text-align: center;">
-                 <img src="./assets/vorhernacher.png" alt="Mangroven Vorher/Nachher" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                 <div class="image-caption">Abb. 11</div>
+            <div class="slider-row">
+                <div class="slider-label">🧱 Schutzbauten / Mangroven</div>
+                <input type="range" id="inp-protect" value="0" max="10" oninput="updateBudget()">
+                <div class="slider-val">0</div>
             </div>
-        </div>
-    </div>
-
-    <div class="slide" id="slide11">
-        <h2>Die Anatomie des Sturms (Simulation)</h2>
-        <p>Das Ayeyarwady-Delta liegt extrem tief. Eine 5-Meter-Sturmflut traf auf ungeschützte Küsten.</p>
-        <canvas id="flood-canvas"></canvas>
-        <div class="sim-controls">
-            <button class="btn" id="btn-mangroves" onclick="toggleMangroves()">Mangroven: INTAKT</button>
-            <button class="btn" onclick="startFlood()">Flut auslösen</button>
-            <button class="btn-outline" onclick="resetFlood()">Reset</button>
-        </div>
-    </div>
-
-    <div class="slide" id="slide12">
-        <h2>Das Ergebnis: Totale Verwüstung</h2>
-        <div class="house-grid-container">
-            <div class="house-grid" id="house-grid"></div>
-            <div style="text-align: center;">
-                <div class="destruction-arrow">➔</div>
-                <div class="destruction-text">Nahezu 100%<br>Zerstörung</div>
+            <div class="slider-row">
+                <div class="slider-label">🚚 Infrastruktur / Evakuierung</div>
+                <input type="range" id="inp-infra" value="0" max="10" oninput="updateBudget()">
+                <div class="slider-val">0</div>
+            </div>
+            <div style="height: 1px; background: #444; margin: 15px 0;"></div>
+            <div class="slider-row">
+                <div class="slider-label" style="color: #ff6666;">🔫 Militär & Kontrolle</div>
+                <input type="range" id="inp-mil" value="0" max="10" oninput="updateBudget()">
+                <div class="slider-val">0</div>
+            </div>
+            <div class="slider-row">
+                <div class="slider-label" style="color: #ff6666;">📢 Staatsmedien & Propaganda</div>
+                <input type="range" id="inp-prop" value="0" max="10" oninput="updateBudget()">
+                <div class="slider-val">0</div>
             </div>
         </div>
-        <div style="text-align: center; margin-top: 30px;">
-             <button class="btn" onclick="animateDestruction()">Zerstörung visualisieren</button>
-        </div>
+
+        <button class="btn" onclick="checkSimulation()">Ausführen</button>
     </div>
 
-    <div class="slide" id="slide13">
-        <h2 style="border-bottom: none; margin-bottom: 20px; font-size: 36px; text-align: center;">Das Urteil: Eine von Menschen gemachte Tragödie</h2>
+    <div class="slide" id="slide-result">
+        <h1>Simulationsergebnis</h1>
         
-        <div class="urteil-container">
-            <div class="diagram-top-row">
-                <div class="diagram-box">
-                    <div class="diagram-box-header">Politisches System</div>
-                    <ul><li>Isolation</li><li>Paranoia</li><li>Blockierte Hilfe</li><li>Fehlende Warnung</li></ul>
-                </div>
-                <div class="diagram-box" style="margin-left: auto;">
-                    <div class="diagram-box-header">Ökonomische Struktur</div>
-                    <ul><li>Misswirtschaft</li><li>Strukturelle Armut</li><li>Keine Fluchtmöglichkeit</li><li>Instabile Lebensgrundlage</li></ul>
-                </div>
-                <div class="big-arrow arrow-left-to-center"></div>
-                <div class="big-arrow arrow-right-to-center"></div>
-            </div>
-            <div class="diagram-center">
-                <div class="central-circle">KATASTROPHE<br>NARGIS</div>
-            </div>
-            <div class="diagram-bottom-row">
-                <div class="big-arrow arrow-connecting-up"></div>
-                <div class="diagram-box diagram-box-bottom">
-                    <div class="diagram-box-header">Ökologische Lage</div>
-                    <ul><li>Systematische Vernachlässigung</li><li>Fehlender Küstenschutz</li><li>Zerstörte Schutzwälle</li></ul>
-                </div>
-            </div>
-            <div class="diagram-summary-text">
-                Der Zyklon Nargis war der Auslöser, aber die jahrzehntelange Politik der Militärjunta war die Ursache. Die Katastrophe war das Resultat eines Systems, das seine eigene Bevölkerung extrem verwundbar gemacht hatte.
-            </div>
-            <div class="final-answer-box">
-                Antwort auf die Leitfrage: Die Gegebenheiten waren nicht zufällig, sondern das Ergebnis gezielter Politik, die Kontrolle über Wohlstand und Sicherheit stellte.
-            </div>
+        <div id="outcome-container" class="outcome-box">
+            <span class="outcome-title" id="out-title">Titel</span>
+            <div class="outcome-text" id="out-text">Text</div>
         </div>
-    </div>
 
-    <div class="slide story-slide" id="slide14">
-        <div class="typewriter-container" id="story-text-1"></div>
-        <div class="typewriter-container" id="story-text-2"></div>
-        <div class="typewriter-container" id="story-text-3"></div>
-        <div class="typewriter-container" id="story-text-4"></div>
-        <div class="typewriter-container" id="story-text-5" style="margin-top: 40px; font-weight: bold; color: white;"></div>
-        
-        <div id="story-btn-container">
-             <button class="btn" onclick="nextSlide()" style="font-family: 'Courier New', monospace; font-size: 24px; background: #333; border: 2px solid var(--terminal-green); color: var(--terminal-green);">MISSION STARTEN >></button>
-        </div>
-    </div>
+        <div id="role-feedback" style="margin-top: 20px; font-style: italic; color: #888;"></div>
 
-    <div class="slide" id="slide15">
-        <h2>Krisenmanager: Budget verteilen</h2>
-        <p>Sie haben <strong>10 Punkte</strong>. Verteilen Sie diese weise. Achten Sie auf die Art der Investition!</p>
-        <div class="budget-container">
-            <div class="slider-row">
-                <label>Frühwarnsysteme</label>
-                <input type="range" class="budget-input budget-good" value="0" max="10" oninput="updateBudget()">
-                <span class="points">0</span>
-            </div>
-            <div class="slider-row">
-                <label>Schutzbauten / Mangroven</label>
-                <input type="range" class="budget-input budget-good" value="0" max="10" oninput="updateBudget()">
-                <span class="points">0</span>
-            </div>
-            <div class="slider-row">
-                <label>Infrastruktur / Evakuierung</label>
-                <input type="range" class="budget-input budget-good" value="0" max="10" oninput="updateBudget()">
-                <span class="points">0</span>
-            </div>
-
-            <div class="slider-row" style="margin-top: 30px;">
-                <label>Militärausrüstung & Kontrolle</label>
-                <input type="range" class="budget-input budget-bad" value="0" max="10" oninput="updateBudget()">
-                <span class="points">0</span>
-            </div>
-            <div class="slider-row">
-                <label>Staatsmedien & Propaganda</label>
-                <input type="range" class="budget-input budget-bad" value="0" max="10" oninput="updateBudget()">
-                <span class="points">0</span>
-            </div>
-
-            <div class="budget-summary">
-                <div>Verbraucht: <span id="total-points" style="font-weight: bold;">0</span> / 10</div>
-                <div style="font-size: 16px; display: none;">(Gut: <span id="good-points">0</span> | Schlecht: <span id="bad-points" style="color: var(--myanmar-red);">0</span>)</div>
-            </div>
-        </div>
-        <div style="text-align: center; margin-top: 20px;">
-            <button class="btn" onclick="checkBudget()">Prüfen</button>
-        </div>
-    </div>
-
-    <div class="slide" id="slide16">
-        <h2>Abschluss</h2>
-        <div style="text-align: center; margin-top: 150px;">
-            <h1>Vielen Dank für Ihre Aufmerksamkeit.</h1>
-        </div>
-        <div style="text-align: center; margin-top: 30px;">
-            <button class="btn-outline" onclick="location.reload()">Präsentation Neustarten</button>
-        </div>
-    </div>
-
-    <div class="nav-controls">
-        <button class="btn" onclick="prevSlide()">❮ Zurück</button>
-        <button class="btn" onclick="nextSlide()">Weiter ❯</button>
+        <button class="btn" onclick="location.reload()">Neustart</button>
     </div>
 
 </div>
 
 <script>
-    // --- SETUP & GLOBALS ---
-    let currentSlide = 0; const totalSlides = 16; // Start bei 0 (Home)
-    let canvas, ctx, evacCanvas, evacCtx, histCanvas, histCtx, blockadeCanvas, blockadeCtx;
-    let waterParticles = [], debrisParticles = [], mangroveRoots = [], villagers = [];
-    let isFlooding = false, mangrovesActive = true, villageDestroyed = false, isEvacuating = false;
-    let time = 0; let timelineStep = 0;
+    // --- STATE ---
+    let currentRole = "";
+    let maxPoints = 10;
     
-    // Globals für Historische Timeline
-    let histStep = 0; let histActorX = 0; let histTargetX = 0; let isHistAnimating = false;
-    let histActorType = 'people'; let showUprising = false; let uprisingEliminated = false;
-    let tankFiredTimer = 0; let chainBroken = false;
-
-    // GLOBALS FÜR BLOCKADE ANIMATION
-    let helpArrows = [];
-    let isBlockadeAnimating = false;
-
-    // --- AVATAR CONFIG ---
-    const expertImages = ["./assets/avatars/expertin1.png", "./assets/avatars/expertin2.png", "./assets/avatars/expertin8.png"];
-    const generalImages = ["./assets/avatars/general1.png", "./assets/avatars/general2.png", "./assets/avatars/general3.png"];
-
-    let expertMouthOpen = false; let generalMouthOpen = false; let talkingInterval = null;
-
-    // SVG Strings für Häuser
-    const houseIntactSVG = `<svg viewBox="0 0 100 100" class="house-svg"><path d="M50 0 L100 40 L90 40 L90 100 L10 100 L10 40 L0 40 Z" fill="#8D6E63"/><rect x="35" y="60" width="30" height="40" fill="#5D4037"/></svg>`;
-    const houseDestroyedSVG = `<svg viewBox="0 0 100 100" class="house-svg"><path d="M10 90 L30 70 L50 85 L70 60 L90 95 Z" fill="#5D4037"/><path d="M0 100 L20 80 L40 95 L60 70 L80 100 Z" fill="#3E2723" opacity="0.7"/></svg>`;
-
-
-    // --- FUNKTIONEN (AVATARE & DIALOG) ---
-    function setSpeakerImage(who, index) {
-        let imgId = ''; let imageArray = [];
-        if(who === 'expert') { imgId = 'expert-img'; imageArray = expertImages; }
-        else if(who === 'general') { imgId = 'general-img'; imageArray = generalImages; }
-        else { return; }
-        const img = document.getElementById(imgId);
-        if(img && typeof index === 'number' && imageArray[index]) { img.src = imageArray[index]; }
-    }
-
-    function startTalkingAnimation(who) {
-        if(talkingInterval) clearInterval(talkingInterval);
-        if(['expert','general'].indexOf(who) === -1) return;
-        talkingInterval = setInterval(() => {
-            if (who === 'expert') { expertMouthOpen = !expertMouthOpen; setSpeakerImage('expert', expertMouthOpen ? 1 : 0); } 
-            else if (who === 'general') { generalMouthOpen = !generalMouthOpen; setSpeakerImage('general', generalMouthOpen ? 1 : 0); }
-        }, 200); 
-    }
-
-    function stopTalkingAnimation() {
-        if(talkingInterval) clearInterval(talkingInterval);
-        talkingInterval = null;
-        setSpeakerImage('expert', 0); expertMouthOpen = false;
-        setSpeakerImage('general', 0); generalMouthOpen = false;
-    }
-
+    // --- INTRO TYPEWRITER ---
+    const introLines = "Initialisiere Simulation...\nStandort: Irawadi-Delta, Myanmar.\nZeitpunkt: April 2008.\n\nWarnung: Tropischer Zyklon 'Nargis' formiert sich.\nKategorie: 4.\nGeschätzte Ankunftszeit: 72 Stunden.\n\nDie Regierung ist isoliert. Die Bevölkerung ist unvorbereitet.\nDas Schicksal von 2 Millionen Menschen hängt von Ihren Entscheidungen ab.";
+    
     window.onload = function() {
-        canvas = document.getElementById('flood-canvas'); ctx = canvas.getContext('2d');
-        evacCanvas = document.getElementById('evacuation-canvas'); evacCtx = evacCanvas.getContext('2d');
-        histCanvas = document.getElementById('hist-canvas'); histCtx = histCanvas.getContext('2d');
-        blockadeCanvas = document.getElementById('blockade-canvas'); blockadeCtx = blockadeCanvas.getContext('2d');
-        resizeAllCanvases();
-        initSimulationEnhanced(); animateFloodLoopEnhanced(); initEvacuationScene();
-        initHistCanvas(); 
-        
-        document.getElementById('dialog-bubble').style.display = 'none';
-        stopTalkingAnimation();
-        setSpeakerImage('expert', 0); setSpeakerImage('general', 0);
-
-        // Sicherstellen, dass die Home Slide aktiv ist
-        showSlide('home'); 
+        typeWriter(introLines, 'intro-text', 30, () => {
+            const btn = document.getElementById('intro-btn');
+            btn.style.opacity = 1;
+            btn.style.pointerEvents = 'auto';
+        });
     };
-    window.onresize = resizeAllCanvases;
-    function resizeAllCanvases() {
-         if(canvas) { canvas.width = canvas.parentElement.offsetWidth; canvas.height = 350; }
-         if(evacCanvas) { evacCanvas.width = evacCanvas.parentElement.offsetWidth; evacCanvas.height = 350; initEvacuationScene(); }
-         if(histCanvas) { histCanvas.width = histCanvas.parentElement.offsetWidth; histCanvas.height = 400; initHistCanvas(); }
-         if(blockadeCanvas) { blockadeCanvas.width = blockadeCanvas.parentElement.offsetWidth; blockadeCanvas.height = 450; initBlockadeScene(); }
-    }
-
-    // --- NAVIGATION & NEUE LOGIK ---
-    
-    // HOME FUNCTIONS
-    function startFromBeginning() {
-        currentSlide = 1;
-        showSlide(1);
-    }
-
-    function jumpToGame() {
-        currentSlide = 14;
-        showSlide(14);
-    }
-
-
-    function showSlide(n) {
-        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-        
-        let targetId = '';
-        if (n === 'home' || n === 0) {
-            targetId = 'slide-home';
-            currentSlide = 0; // Setze currentSlide zurück auf 0 wenn Home gezeigt wird
-        } else {
-            targetId = `slide${n}`;
-        }
-
-        const slideElement = document.getElementById(targetId);
-        if(slideElement) slideElement.classList.add('active');
-        
-        // Generelles Ausblenden der Avatare zu Beginn jedes Slide-Wechsels
-        ['expert', 'general'].forEach(c => document.getElementById(`char-${c}`).classList.remove('visible'));
-        closeDialog();
-
-        // SLIDE 2: Historie (KEINE EXPERTIN)
-        if(n === 2) {
-             initHistCanvas();
-             // Expertin entfernt
-        }
-        
-        // SLIDE 3: Diagramm (KEINE EXPERTIN)
-        if(n === 3) { 
-            resetDiagram(); 
-            document.getElementById('leitfrage-popup').classList.remove('visible'); // Popup reset
-        }
-        
-        // SLIDE 4: Nargis Timeline (Nur General)
-        if(n === 4) { 
-            document.getElementById('char-general').classList.add('visible');
-            resetTimeline();
-        }
-
-        // SLIDE 6: Politische Analyse (Expertin erscheint hier erstmals!)
-        if(n === 6) { 
-            document.getElementById('char-expert').classList.add('visible');
-            setTimeout(() => triggerDialog('expert', 'Der Staat war auf Kontrolle ausgerichtet, nicht auf den Schutz seiner Bürger.'), 500); 
-        }
-
-        // SLIDE 7: Blockade (Nur General)
-        if(n === 7) {
-             document.getElementById('char-general').classList.add('visible');
-             initBlockadeScene();
-             setSpeakerImage('general', 2); // Böser Blick
-             setTimeout(() => triggerDialog('general', 'Unsere Souveränität ist unantastbar. Diese "Hilfe" ist nur ein Vorwand für ausländische Einmischung.'), 500);
-        }
-
-        // SLIDE 8 & 10 (Keine Avatare)
-        if(n === 8) { 
-            // Avatare bleiben unsichtbar
-            document.querySelectorAll('.analysis-point').forEach(p => p.classList.remove('visible'));
-            setTimeout(() => { document.getElementById('eco-point-1').classList.add('visible'); }, 1000);
-            setTimeout(() => { document.getElementById('eco-point-2').classList.add('visible'); }, 3000);
-            setTimeout(() => { document.getElementById('eco-point-3').classList.add('visible'); }, 5000);
-        }
-        if(n === 10) {
-            document.getElementById('env-point-1').classList.remove('visible');
-            setTimeout(() => { document.getElementById('env-point-1').classList.add('visible'); }, 1000);
-        }
-        
-        // SLIDE 12: Zerstörung (Expertin erscheint wieder)
-        if(n === 12) {
-            initHouseGrid();
-            document.getElementById('char-expert').classList.add('visible');
-        }
-
-        // SLIDE 14: STORYTELLING STARTEN
-        if(n === 14) {
-             startStorySequence();
-        }
-
-        if(n === 16) { stopTalkingAnimation(); }
-    }
-    
-    // NAVIGATION HELPER
-    function nextSlide() { 
-        if(currentSlide < totalSlides) showSlide(++currentSlide); 
-    }
-    
-    function prevSlide() { 
-        if(currentSlide > 1) {
-            showSlide(--currentSlide);
-        } else if (currentSlide === 1) {
-            // Wenn man auf Slide 1 ist und zurück klickt, gehe zu Home
-            showSlide('home');
-        }
-    }
-
-    function triggerDialog(who, text) {
-        const bubble = document.getElementById('dialog-bubble');
-        let displayName = '', bubbleClass = '';
-        if(who === 'expert') { displayName = 'Expertin'; bubbleClass = 'bubble-pos-expert'; }
-        else if(who === 'general') { displayName = 'General'; bubbleClass = 'bubble-pos-general'; }
-        
-        document.getElementById('dialog-text').innerHTML = `<strong>${displayName}:</strong><br>"${text}"`;
-        bubble.className = "speech-bubble " + bubbleClass;
-        bubble.style.display = 'block';
-        document.getElementById(`char-${who}`).classList.add('visible');
-        startTalkingAnimation(who);
-    }
-    function closeDialog() { 
-        document.getElementById('dialog-bubble').style.display = 'none'; 
-        const current = document.querySelector('.slide.active').id;
-        stopTalkingAnimation();
-        // Weiterleitungslogik
-        if(current === 'slide1') nextSlide(); 
-    }
-
-    // --- FUNKTIONEN FÜR DIAGRAMM ANIMATION (Slide 3) ---
-    function animateDiagram() {
-        document.getElementById('bar-mala').classList.add('mala-shrunk');
-        setTimeout(() => {
-             const nargisBar = document.getElementById('bar-nargis');
-             nargisBar.classList.remove('nargis-placeholder');
-             nargisBar.classList.add('nargis-grown');
-             
-             // Popup mit der Leitfrage anzeigen (Keine Expertin!)
-             setTimeout(() => {
-                 document.getElementById('leitfrage-popup').classList.add('visible');
-             }, 1000);
-
-        }, 1500);
-    }
-    function resetDiagram() {
-        document.getElementById('bar-mala').classList.remove('mala-shrunk');
-        const nargisBar = document.getElementById('bar-nargis');
-        nargisBar.classList.remove('nargis-grown');
-        nargisBar.classList.add('nargis-placeholder');
-    }
-
-    // ==========================================
-    // --- TIMELINE LOGIK (Slide 4) ---
-    // ==========================================
-    function resetTimeline() {
-        timelineStep = 0;
-        ['tl-ev-1', 'tl-ev-2', 'tl-ev-3'].forEach(id => document.getElementById(id).classList.remove('active'));
-        document.getElementById('timeline-status').innerText = "Verfolgen Sie die Ereignisse.";
-        document.getElementById('timeline-btn').innerText = "Ereignis starten";
-    }
-    function advanceTimeline() {
-        timelineStep++;
-        const status = document.getElementById('timeline-status');
-        const btn = document.getElementById('timeline-btn');
-        if(timelineStep === 1) {
-            document.getElementById('tl-ev-1').classList.add('active'); status.innerText = "Phase 1: Die ignorierte Warnung.";
-             btn.innerText = "Weiter";
-        } else if(timelineStep === 2) {
-            document.getElementById('tl-ev-2').classList.add('active'); status.innerText = "Phase 2: Die Katastrophe trifft ein.";
-        } else if(timelineStep === 3) {
-            document.getElementById('tl-ev-3').classList.add('active'); status.innerText = "Phase 3: Politik über Menschenleben.";
-            triggerDialog('general', 'Das Referendum ist entscheidend für die Stabilität. Ausländische Hilfe bringt nur Unruhe. Die Lage ist unter Kontrolle.'); btn.innerText = "Zu den Fakten";
-        } else if(timelineStep > 3) { nextSlide(); }
-    }
-
-    // ==========================================
-    // --- HISTORISCHE TIMELINE ANIMATION (Slide 2) ---
-    // ==========================================
-    function initHistCanvas() {
-        histStep = 0; histActorX = histCanvas.width * 0.1; histTargetX = histActorX;
-        isHistAnimating = false; histActorType = 'people'; showUprising = false; uprisingEliminated = false;
-        tankFiredTimer = 0; chainBroken = false;
-        drawHistFrame();
-        // Reset Bilder
-        ['img-1948', 'img-1962', 'img-1988', 'img-2008'].forEach(id => document.getElementById(id).classList.remove('visible'));
-        document.getElementById('hist-btn').innerText = "Geschichte starten";
-        document.getElementById('hist-status').innerText = "Klicken Sie, um die Geschichte zu starten.";
-    }
-    function updateHistAnimation() {
-        if(tankFiredTimer > 0) tankFiredTimer--;
-        if(histActorX < histTargetX) {
-            histActorX += 3; 
-            if(histActorX >= histTargetX) {
-                histActorX = histTargetX;
-                if(histStep === 2) { histActorType = 'tank'; 
-                    document.getElementById('img-1962').classList.add('visible'); 
-                    // Kein Dialog hier
-                }
-                if(histStep === 3) { 
-                    tankFiredTimer = 30; setTimeout(() => { uprisingEliminated = true; }, 500); isHistAnimating = false; 
-                    document.getElementById('img-1988').classList.add('visible');
-                    document.getElementById('hist-btn').innerText = "Weiter zu 2008"; 
-                }
-                if(histStep === 4) { 
-                    histActorType = 'ballotbox'; 
-                    document.getElementById('img-2008').classList.add('visible');
-                    document.getElementById('hist-btn').innerText = "Zum Vergleich"; 
-                }
-            }
-        }
-    }
-    function drawChain(x, y, broken) {
-        histCtx.strokeStyle = '#555'; histCtx.lineWidth = 4;
-        for(let i=0; i<5; i++) {
-            let offsetX = 0; let offsetY = 0; let rotation = 0;
-            if(broken) { offsetX = (i-2) * 15 * (Math.sin(time*0.05)+1); offsetY = Math.abs(i-2) * 10 * (Math.cos(time*0.05)+1); rotation = (i-2) * 0.5 * time*0.05; }
-            histCtx.save(); histCtx.translate(x + i*15 + offsetX, y + offsetY); histCtx.rotate(rotation);
-            histCtx.beginPath(); histCtx.ellipse(0, 0, 8, 4, 0, 0, Math.PI*2); histCtx.stroke(); histCtx.restore();
-        }
-    }
-    function drawBalloons(x, y) {
-        const colors = ['#FF5722', '#2196F3', '#FFC107', '#4CAF50'];
-        for(let i=0; i<5; i++) {
-            let rise = (time*0.5 + i*20) % 100; let wobble = Math.sin(time*0.1 + i);
-            histCtx.fillStyle = colors[i%colors.length]; histCtx.beginPath(); histCtx.arc(x - 30 + i*15 + wobble, y - 50 - rise, 8, 0, Math.PI*2); histCtx.fill();
-            histCtx.strokeStyle = '#ccc'; histCtx.lineWidth=1; histCtx.beginPath(); histCtx.moveTo(x - 30 + i*15 + wobble, y - 42 - rise); histCtx.lineTo(x - 30 + i*15 + wobble, y - 20 - rise); histCtx.stroke();
-        }
-    }
-    function drawPeopleGroup(x, y, color, isJumping, isDead) {
-        histCtx.fillStyle = isDead ? '#888' : color; histCtx.strokeStyle = isDead ? '#888' : color; histCtx.lineWidth = 2;
-        for(let i=0; i<3; i++) {
-            let jump = isJumping ? Math.sin(time*0.3 + i)*5 : 0; let scale = isDead ? 0.7 : 1; 
-            histCtx.save(); histCtx.translate(x + i*20, y); histCtx.scale(scale, scale); histCtx.translate(-(x + i*20), -y);
-            histCtx.beginPath(); histCtx.arc(x + i*20, y - 25 - jump, 6, 0, Math.PI*2); histCtx.fill();
-            histCtx.beginPath(); histCtx.moveTo(x+i*20, y-20-jump); histCtx.lineTo(x+i*20, y-5-jump);
-            histCtx.moveTo(x+i*20-5, y-15-jump); histCtx.lineTo(x+i*20+5, y-15-jump);
-            histCtx.moveTo(x+i*20, y-5-jump); histCtx.lineTo(x+i*20-5, y-jump);
-            histCtx.moveTo(x+i*20, y-5-jump); histCtx.lineTo(x+i*20+5, y-jump);
-            histCtx.stroke(); histCtx.restore();
-        }
-    }
-    function drawTankShape(x, y) {
-        histCtx.fillStyle = '#3A421B'; histCtx.fillRect(x-30, y-25, 60, 20); histCtx.fillRect(x-15, y-35, 30, 10); histCtx.fillRect(x+10, y-32, 25, 4); 
-        histCtx.fillStyle = '#1b1b1b'; histCtx.fillRect(x-35, y-5, 70, 8); histCtx.fillStyle = '#555'; for(let i=0;i<3;i++) { histCtx.beginPath(); histCtx.arc(x-20+i*20, y-1, 4,0,Math.PI*2); histCtx.fill();}
-    }
-    function drawTankFire(x, y) {
-        if(tankFiredTimer > 0) { histCtx.fillStyle = 'orange'; histCtx.beginPath(); histCtx.arc(x+35, y-30, 15 + Math.random()*5, 0, Math.PI*2); histCtx.fill(); histCtx.fillStyle = 'yellow'; histCtx.beginPath(); histCtx.arc(x+35, y-30, 8 + Math.random()*3, 0, Math.PI*2); histCtx.fill(); }
-    }
-    function drawBallotBox(x, y) {
-        histCtx.fillStyle = '#8B4513'; histCtx.fillRect(x-25, y-40, 50, 40); histCtx.fillStyle = '#222'; histCtx.fillRect(x-15, y-45, 30, 5); histCtx.fillStyle = '#fff'; histCtx.fillRect(x-10, y-35, 20, 20); 
-        histCtx.strokeStyle = 'var(--myanmar-red)'; histCtx.lineWidth=3; histCtx.beginPath(); histCtx.moveTo(x-5,y-25); histCtx.lineTo(x,y-20); histCtx.lineTo(x+10,y-30); histCtx.stroke(); 
-    }
-    function drawConfetti(x, y) {
-         histCtx.fillStyle = '#FFD700'; for(let i=0;i<15;i++) histCtx.fillRect(x-30+Math.random()*60, y-50+Math.random()*40, 4, 4);
-         histCtx.fillStyle = '#FF5722'; for(let i=0;i<10;i++) histCtx.fillRect(x-30+Math.random()*60, y-50+Math.random()*40, 3, 3);
-    }
-    function drawCycloneShape(x, y) {
-        histCtx.strokeStyle = 'rgba(50,50,50,0.6)'; histCtx.lineWidth = 4; histCtx.beginPath();
-        for(let i=0; i<4; i++) { histCtx.arc(x, y-40, 10+i*8, time*0.1+i, time*0.1+i+Math.PI*1.5); }
-        histCtx.stroke();
-    }
-    function drawHistFrame() {
-        histCtx.clearRect(0, 0, histCanvas.width, histCanvas.height); let groundY = histCanvas.height * 0.65;
-        if(histStep >= 1) drawChain(histCanvas.width * 0.1, groundY - 60, chainBroken);
-        if(histStep >= 1 && chainBroken && histActorType === 'people') { drawConfetti(histCanvas.width * 0.1, groundY); drawBalloons(histCanvas.width * 0.1, groundY - 20); }
-        if(histStep >= 3 && showUprising) drawPeopleGroup(histCanvas.width * 0.6, groundY, '#D32F2F', !uprisingEliminated, uprisingEliminated);
-        if(histStep === 4 && histActorType === 'ballotbox') drawCycloneShape(histCanvas.width * 0.9, groundY);
-        if(histActorType === 'people') { drawPeopleGroup(histActorX, groundY, '#4CAF50', isHistAnimating && histActorX < histTargetX, false); } 
-        else if (histActorType === 'tank') { drawTankShape(histActorX, groundY); drawTankFire(histActorX, groundY); } 
-        else if (histActorType === 'ballotbox') { drawBallotBox(histActorX, groundY); }
-    }
-    function animateHistLoop() { updateHistAnimation(); drawHistFrame(); if(currentSlide === 2) requestAnimationFrame(animateHistLoop); }
-    function advanceHistory() {
-        histStep++; const status = document.getElementById('hist-status'); const btn = document.getElementById('hist-btn');
-        if(histStep === 1) { 
-            chainBroken = true; isHistAnimating = true; animateHistLoop(); 
-            status.innerText = "1948: Unabhängigkeit! Doch die Freude währt kurz."; btn.innerText = "Aufbruch nach 1962"; 
-            document.getElementById('img-1948').classList.add('visible'); 
-            // KEIN Dialog mehr hier
-        } 
-        else if(histStep === 2) { 
-            histTargetX = histCanvas.width * 0.35; isHistAnimating = true; 
-            status.innerText = "1962: Der Putsch beendet die Demokratie."; btn.innerText = "Weiter zum Aufstand (1988)"; 
-            document.getElementById('img-1962').classList.add('visible');
-            // KEIN Dialog mehr hier
-        } 
-        else if(histStep === 3) { 
-            histTargetX = histCanvas.width * 0.6; showUprising = true; isHistAnimating = true; 
-            status.innerText = "1988: Volksaufstand wird niedergeschlagen."; 
-            document.getElementById('img-1988').classList.add('visible');
-        } 
-        else if(histStep === 4) { 
-            histTargetX = histCanvas.width * 0.9; isHistAnimating = true; 
-            status.innerText = "2008: Eine isolierte Militärdiktatur trifft auf einen Zyklon."; 
-            document.getElementById('img-2008').classList.add('visible');
-        } 
-        else if(histStep > 4) { nextSlide(); }
-    }
-
-    // ==========================================
-    // --- BLOCKADE ANIMATION (Slide 7) ---
-    // ==========================================
-    class HelpArrow {
-        constructor(side) {
-            this.side = side; // 'left', 'bottom', 'right'
-            this.reset();
-        }
-        reset() {
-            this.speed = Math.random() * 2 + 2;
-            this.blocked = false; this.blockedTimer = 0;
-            if(this.side === 'left') { this.x = -50; this.y = Math.random() * blockadeCanvas.height; this.vx = this.speed; this.vy = (blockadeCanvas.height/2 - this.y) * 0.01; }
-            if(this.side === 'bottom') { this.x = Math.random() * blockadeCanvas.width; this.y = blockadeCanvas.height + 50; this.vx = (blockadeCanvas.width/2 - this.x) * 0.01; this.vy = -this.speed; }
-            if(this.side === 'right') { this.x = blockadeCanvas.width + 50; this.y = Math.random() * blockadeCanvas.height; this.vx = -this.speed; this.vy = (blockadeCanvas.height/2 - this.y) * 0.01; }
-        }
-        update() {
-            if(this.blocked) { this.blockedTimer++; if(this.blockedTimer > 20) this.reset(); return; }
-            this.x += this.vx; this.y += this.vy;
-            let centerX = blockadeCanvas.width/2; let centerY = blockadeCanvas.height/2;
-            if(this.x > centerX - 80 && this.x < centerX + 80 && this.y > centerY - 150 && this.y < centerY + 150) {
-                this.blocked = true;
-            }
-        }
-        draw() {
-            blockadeCtx.fillStyle = this.blocked ? 'red' : '#2196F3';
-            blockadeCtx.save(); blockadeCtx.translate(this.x, this.y); blockadeCtx.rotate(Math.atan2(this.vy, this.vx));
-            blockadeCtx.beginPath(); blockadeCtx.moveTo(-10, -5); blockadeCtx.lineTo(0, -5); blockadeCtx.lineTo(0, -10); blockadeCtx.lineTo(15, 0); blockadeCtx.lineTo(0, 10); blockadeCtx.lineTo(0, 5); blockadeCtx.lineTo(-10, 5); blockadeCtx.fill();
-            blockadeCtx.restore();
-            if(this.blocked) { blockadeCtx.strokeStyle = 'red'; blockadeCtx.lineWidth = 3; blockadeCtx.beginPath(); blockadeCtx.moveTo(this.x-10, this.y-10); blockadeCtx.lineTo(this.x+10, this.y+10); blockadeCtx.moveTo(this.x+10, this.y-10); blockadeCtx.lineTo(this.x-10, this.y+10); blockadeCtx.stroke(); }
-        }
-    }
-
-    function initBlockadeScene() {
-        isBlockadeAnimating = false; helpArrows = [];
-        for(let i=0; i<5; i++) helpArrows.push(new HelpArrow('left'));
-        for(let i=0; i<5; i++) helpArrows.push(new HelpArrow('bottom'));
-        for(let i=0; i<5; i++) helpArrows.push(new HelpArrow('right'));
-        drawBlockadeFrame();
-    }
-    function drawBlockadeFrame() {
-        blockadeCtx.clearRect(0, 0, blockadeCanvas.width, blockadeCanvas.height);
-        helpArrows.forEach(a => a.draw());
-    }
-    function animateBlockadeLoop() {
-        if(!isBlockadeAnimating) return;
-        helpArrows.forEach(a => a.update());
-        drawBlockadeFrame();
-        requestAnimationFrame(animateBlockadeLoop);
-    }
-    function startBlockadeAnimation() {
-        if(isBlockadeAnimating) return;
-        isBlockadeAnimating = true;
-        triggerDialog('general', 'Sehen Sie die roten Kreuze? Das sind Hilfslieferungen, die wir abweisen. Unsere Souveränität ist wichtiger.');
-        animateBlockadeLoop();
-    }
-
-
-    // ==========================================
-    // --- SIMULATIONEN (Slides 9 & 11) ---
-    // ==========================================
-    class WaterParticle {
-        constructor() { this.reset(); }
-        reset() {
-            this.x = Math.random() * -150; this.yBase = Math.random() * (canvas.height - 60) + 30;
-            this.y = this.yBase; this.vx = Math.random() * 4 + 3; this.size = Math.random() * 8 + 5; 
-            this.waveOffset = Math.random() * Math.PI * 2; this.isMuddy = false;
-        }
-        update() {
-            this.y = this.yBase + Math.sin(time * 0.05 + this.waveOffset) * 5;
-            if (mangrovesActive && this.x > canvas.width*0.28 && this.x < canvas.width*0.45) this.vx *= 0.9;
-            this.x += this.vx;
-            if(!mangrovesActive && this.x > canvas.width*0.25) {
-                this.isMuddy = true;
-                if(this.x > canvas.width * 0.62 && !villageDestroyed) destroyVillage();
-            }
-            if(this.x > canvas.width + 50) this.reset();
-        }
-        draw() {
-            const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
-            if(this.isMuddy) { grad.addColorStop(0, 'rgba(121, 85, 72, 0.8)'); grad.addColorStop(1, 'rgba(93, 64, 55, 0.1)'); } 
-            else { grad.addColorStop(0, 'rgba(79, 195, 247, 0.8)'); grad.addColorStop(1, 'rgba(2, 136, 209, 0.1)'); }
-            ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-        }
-    }
-    function initMangroves() {
-        mangroveRoots = [];
-        for(let i=0; i<25; i++) {
-           let startX = canvas.width * 0.3 + (i * 10); let startY = canvas.height - 80;
-           let path = new Path2D(); path.moveTo(startX, startY);
-           path.bezierCurveTo(startX - 10, startY + 30, startX + 15, startY + 50, startX + 5, canvas.height - 10);
-           mangroveRoots.push({ path: path, x: startX, y: startY, offset: Math.random() });
-        }
-    }
-    function drawRealisticMangroves() {
-        if (!mangrovesActive) return;
-        ctx.save(); ctx.strokeStyle = '#33691e'; ctx.lineWidth = 4; ctx.lineCap = 'round';
-        const sway = Math.sin(time * 0.02) * 3; 
-        mangroveRoots.forEach(root => {
-            ctx.save(); ctx.translate(root.x, root.y); ctx.rotate((sway + root.offset) * 0.02 * Math.PI); 
-            ctx.translate(-root.x, -root.y); ctx.stroke(root.path); ctx.restore();
-            ctx.fillStyle = '#558b2f'; ctx.beginPath(); ctx.arc(root.x + sway, root.y - 10, 12, 0, Math.PI*2); ctx.fill();
-        });
-        ctx.restore();
-        ctx.fillStyle = '#1b5e20'; ctx.font = "bold 16px Arial"; ctx.fillText("MANGROVEN SCHUTZ", canvas.width*0.28, 60);
-    }
-    class DebrisParticle {
-        constructor(x, y) {
-            this.x = x; this.y = y; this.vx = (Math.random() - 0.5) * 10; this.vy = Math.random() * -15;
-            this.gravity = 0.8; this.rotation = Math.random() * Math.PI; this.rSpeed = (Math.random() - 0.5) * 0.2;
-            this.width = Math.random() * 20 + 10; this.height = Math.random() * 8 + 4;
-            this.color = Math.random() > 0.5 ? '#8D6E63' : '#5D4037';
-        }
-        update() {
-            this.vy += this.gravity; this.x += this.vx; this.y += this.vy; this.rotation += this.rSpeed;
-            if(this.y > canvas.height - 20) { this.y = canvas.height - 20; this.vy *= -0.3; this.vx *= 0.8; }
-        }
-        draw() { ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation); ctx.fillStyle = this.color; ctx.fillRect(-this.width/2, -this.height/2, this.width, this.height); ctx.restore(); }
-    }
-    function destroyVillage() {
-        villageDestroyed = true;
-        const villageX = canvas.width * 0.65; const groundY = canvas.height - 10;
-        for(let i=0; i<3; i++) { let hx = villageX + (i * 70) + 20; let hy = groundY - 30; for(let k=0; k<15; k++) debrisParticles.push(new DebrisParticle(hx, hy)); }
-    }
-    function drawEnhancedVillage() {
-        const villageX = canvas.width * 0.65; const groundY = canvas.height - 10;
-        if(!villageDestroyed) {
-            for(let i=0; i<3; i++) {
-                let hx = villageX + (i * 70); let hy = groundY - 50;
-                ctx.fillStyle = '#a1887f'; ctx.fillRect(hx, hy, 50, 50); ctx.fillStyle = '#4e342e'; ctx.fillRect(hx+15, hy+25, 20, 25);
-                ctx.beginPath(); ctx.moveTo(hx-10, hy); ctx.lineTo(hx+25, hy-35); ctx.lineTo(hx+60, hy); ctx.fillStyle = '#795548'; ctx.fill();
-            }
-             ctx.fillStyle = '#333'; ctx.font = "bold 14px Arial"; ctx.fillText("Dorf (Ungeschützt)", villageX, groundY - 80);
-        } else { ctx.fillStyle = '#8B0000'; ctx.font = "bold 14px Arial"; ctx.fillText("DORF ZERSTÖRT", villageX, groundY - 80); }
-    }
-    function initSimulationEnhanced() { waterParticles = []; debrisParticles = []; for(let i=0; i<250; i++) waterParticles.push(new WaterParticle()); initMangroves(); }
-    function animateFloodLoopEnhanced() {
-        ctx.clearRect(0,0,canvas.width,canvas.height); time++; 
-        drawRealisticMangroves(); drawEnhancedVillage();
-        if(villageDestroyed) debrisParticles.forEach(d => { d.update(); d.draw(); });
-        if(isFlooding) { ctx.globalCompositeOperation = 'lighter'; waterParticles.forEach(p => { p.update(); p.draw(); }); ctx.globalCompositeOperation = 'source-over'; }
-        requestAnimationFrame(animateFloodLoopEnhanced);
-    }
-    function toggleMangroves() {
-        mangrovesActive = !mangrovesActive;
-        const btn = document.getElementById('btn-mangroves');
-        btn.innerText = mangrovesActive ? "Mangroven: INTAKT" : "Mangroven: ZERSTÖRT";
-        btn.style.background = mangrovesActive ? "#2e7d32" : "#8B0000";
-    }
-    function startFlood() { 
-        isFlooding = true; stopTalkingAnimation(); 
-    }
-    function resetFlood() { isFlooding = false; villageDestroyed = false; initSimulationEnhanced(); stopTalkingAnimation(); }
-
-    // Evacuation Sim
-    class Villager {
-        constructor(x, y) {
-            this.x = x; this.y = y; this.targetX = evacCanvas.width + 50; this.speed = Math.random() * 2 + 1.5;
-            this.color = Math.random() > 0.5 ? '#333' : '#555';
-        }
-        update() { if(isEvacuating) this.x += this.speed; }
-        draw() {
-            evacCtx.fillStyle = this.color; evacCtx.strokeStyle = this.color; evacCtx.lineWidth = 2;
-            evacCtx.beginPath(); evacCtx.arc(this.x, this.y - 20, 5, 0, Math.PI*2); evacCtx.fill();
-            evacCtx.beginPath(); evacCtx.moveTo(this.x, this.y - 15); evacCtx.lineTo(this.x, this.y - 5);
-            evacCtx.moveTo(this.x, this.y-5); evacCtx.lineTo(this.x-5 + Math.sin(time*0.2)*5, this.y);
-            evacCtx.moveTo(this.x, this.y-5); evacCtx.lineTo(this.x+5 - Math.sin(time*0.2)*5, this.y);
-            evacCtx.stroke();
-        }
-    }
-    function initEvacuationScene() {
-        villagers = []; isEvacuating = false;
-        const startX = 100; const groundY = evacCanvas.height - 20;
-        for(let i=0; i<5; i++) {
-            let hx = startX + (i * 150);
-            for(let k=0; k<3; k++) villagers.push(new Villager(hx + Math.random()*40, groundY));
-        }
-    }
-    function drawEvacuationBg() {
-        const startX = 100; const groundY = evacCanvas.height - 20;
-        for(let i=0; i<5; i++) {
-            let hx = startX + (i * 150); let hy = groundY - 60;
-            evacCtx.fillStyle = '#795548'; evacCtx.fillRect(hx, hy, 60, 60);
-            evacCtx.beginPath(); evacCtx.moveTo(hx-10, hy); evacCtx.lineTo(hx+30, hy-40); evacCtx.lineTo(hx+70, hy); evacCtx.fillStyle = '#5D4037'; evacCtx.fill();
-        }
-        evacCtx.fillStyle = 'rgba(46, 125, 50, 0.3)'; evacCtx.fillRect(evacCanvas.width - 100, 0, 100, evacCanvas.height);
-        evacCtx.fillStyle = '#1b5e20'; evacCtx.font = "bold 16px Arial"; evacCtx.fillText("SICHERE ZONE", evacCanvas.width - 90, 50);
-    }
-    function animateEvacuationLoop() {
-        evacCtx.clearRect(0,0,evacCanvas.width,evacCanvas.height);
-        drawEvacuationBg();
-        villagers.forEach(v => { v.update(); v.draw(); });
-        if(isEvacuating) requestAnimationFrame(animateEvacuationLoop);
-    }
-    function startEvacuationDemo() {
-        if(isEvacuating) return; initEvacuationScene(); isEvacuating = true; animateEvacuationLoop();
-    }
-
-    // --- NEU: FUNKTIONEN FÜR HOUSE GRID ANIMATION (Slide 12) ---
-    function initHouseGrid() {
-        const grid = document.getElementById('house-grid');
-        grid.innerHTML = '';
-        for (let i = 0; i < 100; i++) {
-            const houseCell = document.createElement('div');
-            houseCell.className = 'house-cell';
-            // Füge das intakte Haus SVG ein
-            houseCell.innerHTML = houseIntactSVG;
-            grid.appendChild(houseCell);
-        }
-    }
-
-    function animateDestruction() {
-        const houseCells = document.querySelectorAll('.house-cell');
-        const survivorIndex = 99; // Das letzte Haus (Index 99 bei 100 Häusern) überlebt
-        
-        houseCells.forEach((cell, index) => {
-            if (index !== survivorIndex) {
-                setTimeout(() => {
-                    // Ersetze das SVG und füge die Zerstörungsklasse hinzu
-                    cell.innerHTML = houseDestroyedSVG;
-                    cell.classList.add('is-destroyed');
-                }, index * 10); // Etwas schnellere Animation für alle
-            } else {
-                 // Das überlebende Haus hervorheben
-                 cell.classList.add('survivor');
-            }
-        });
-        setTimeout(() => {
-             triggerDialog('expert', 'Das ist die Realität. Von 100 Häusern im Delta blieben oft nur ein oder zwei stehen. Die Zerstörung war total.');
-        }, 1500);
-    }
-
-    // --- BUDGET (NEU MIT SCHLECHTEN OPTIONEN - NEUTRAL) ---
-    function updateBudget() {
-        let total = 0;
-        let good = 0;
-        let bad = 0;
-
-        document.querySelectorAll('.budget-input').forEach(i => {
-            let val = parseInt(i.value);
-            total += val;
-            i.nextElementSibling.innerText = val;
-            if(i.classList.contains('budget-good')) good += val;
-            if(i.classList.contains('budget-bad')) bad += val;
-        });
-
-        document.getElementById('total-points').innerText = total;
-        // Die genaue Aufschlüsselung wird im HTML versteckt, aber hier berechnet
-        document.getElementById('good-points').innerText = good;
-        document.getElementById('bad-points').innerText = bad;
-        document.getElementById('total-points').style.color = total > 10 ? "red" : "black";
-    }
-
-    function checkBudget() {
-        let total = parseInt(document.getElementById('total-points').innerText);
-        let good = parseInt(document.getElementById('good-points').innerText);
-        let bad = parseInt(document.getElementById('bad-points').innerText);
-
-        if(total > 10) {
-            alert("Budget überschritten! Sie haben nicht mehr als 10 Punkte.");
-        } else if (bad > 3) {
-            alert("Prioritäten falsch gesetzt! Sie haben zu viel in Kontrolle und Propaganda investiert, statt in den Schutz der Menschen. Die Katastrophe wird verheerend sein.");
-        } else if (good < 5) {
-             alert("Zu wenig in echten Schutz investiert! Frühwarnsysteme und Schutzbauten sind unzureichend. Das Risiko bleibt extrem hoch.");
-        } else {
-            alert("Gute Verteilung! Sie haben den Fokus auf Schutz und Vorsorge gelegt und die Prioritäten der Junta ignoriert. Sie haben viele Leben gerettet.");
-            nextSlide();
-        }
-    }
-
-    // --- TYPEWRITER STORYTELLING FUNKTIONEN (Slide 14) ---
-    let storyHasPlayed = false;
 
     function typeWriter(text, elementId, speed, callback) {
         let i = 0;
@@ -1352,46 +274,155 @@
                 i++;
                 setTimeout(typing, speed);
             } else {
-                 container.classList.remove('cursor');
+                container.classList.remove('cursor');
                 if(callback) callback();
             }
         }
         typing();
     }
 
-    function startStorySequence() {
-        if(storyHasPlayed) return;
-        storyHasPlayed = true;
-        
-        document.getElementById('story-text-1').innerHTML = "";
-        document.getElementById('story-text-2').innerHTML = "";
-        document.getElementById('story-text-3').innerHTML = "";
-        document.getElementById('story-text-4').innerHTML = "";
-        document.getElementById('story-text-5').innerHTML = "";
-        document.getElementById('story-btn-container').classList.remove('visible');
-
-        setTimeout(() => {
-            typeWriter("Jahr 2008. Die Katastrophe ist eingetreten. Das Ausmaß der Zerstörung ist unvorstellbar.", 'story-text-1', 50, () => {
-                setTimeout(() => {
-                    typeWriter("Das Militärregime ist überfordert – oder unwillig. Das Schicksal von Millionen liegt nun in *Ihren* Händen.", 'story-text-2', 50, () => {
-                        setTimeout(() => {
-                             typeWriter("Ihre Mission: Bilden Sie drei Krisenstäbe. Sie haben begrenzte Mittel. 10 Einheiten. Nicht mehr.", 'story-text-3', 50, () => {
-                                 setTimeout(() => {
-                                     typeWriter("Entscheiden Sie weise. Investieren Sie in Rettung... oder in Kontrolle? Die Geschichte wird über Sie urteilen.", 'story-text-4', 50, () => {
-                                         setTimeout(() => {
-                                             typeWriter("Sind Sie bereit?", 'story-text-5', 100, () => {
-                                                 document.getElementById('story-btn-container').classList.add('visible');
-                                             });
-                                         }, 1000);
-                                     });
-                                 }, 1000);
-                             });
-                        }, 1000);
-                    });
-                }, 1000);
-            });
-        }, 500);
+    // --- NAVIGATION ---
+    function showSlide(id) {
+        document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
     }
+
+    function goToRoles() { showSlide('slide-roles'); }
+
+    // --- ROLE LOGIC ---
+    function selectRole(role) {
+        currentRole = role;
+        const titleEl = document.getElementById('briefing-role-title');
+        const textEl = document.getElementById('briefing-text');
+
+        if (role === 'junta') {
+            titleEl.innerText = "ROLLE: GENERAL (SPDC)";
+            textEl.innerHTML = "Ihre Priorität ist die <strong>Nationale Sicherheit</strong>. In wenigen Tagen findet das Verfassungsreferendum statt. Es darf nicht verschoben werden.<br><br>Ausländische Hilfe bedeutet Spione im Land. Das darf nicht passieren. Halten Sie die Ordnung aufrecht, egal was es kostet.";
+        } else if (role === 'un') {
+            titleEl.innerText = "ROLLE: UN-KOORDINATOR";
+            textEl.innerHTML = "Ihre Priorität ist <strong>Humanitäre Hilfe</strong>. Sie wissen, dass die Bambushütten dem Sturm nicht standhalten.<br><br>Versuchen Sie, so viele Ressourcen wie möglich in Warnung und Infrastruktur zu stecken, um die Logistik für Hilfslieferungen vorzubereiten. Ignorieren Sie die Politik.";
+        } else if (role === 'local') {
+            titleEl.innerText = "ROLLE: DORFVORSTEHER";
+            textEl.innerHTML = "Ihre Priorität ist das <strong>Überleben Ihres Dorfes</strong>. Sie brauchen keine Propaganda. Sie brauchen Schutzbunker und Mangroven, die die Flutwelle brechen.<br><br>Wenn der Sturm vorbei ist, müssen Sie hier weiterleben. Denken Sie langfristig.";
+        }
+        
+        showSlide('slide-briefing');
+    }
+
+    function goToGame() { showSlide('slide-game'); updateBudget(); }
+
+    // --- GAME LOGIC ---
+    function updateBudget() {
+        const inputs = document.querySelectorAll('input[type=range]');
+        let sum = 0;
+        inputs.forEach(inp => {
+            let val = parseInt(inp.value);
+            sum += val;
+            inp.nextElementSibling.innerText = val;
+        });
+
+        const display = document.getElementById('points-remaining');
+        const remaining = maxPoints - sum;
+        display.innerText = remaining;
+
+        if (remaining < 0) {
+            display.parentElement.classList.add('error');
+            display.innerText = "ÜBERSCHRITTEN (" + remaining + ")";
+            return false;
+        } else {
+            display.parentElement.classList.remove('error');
+            return true;
+        }
+    }
+
+    function checkSimulation() {
+        if (!updateBudget()) {
+            alert("Sie haben mehr als 10 Punkte ausgegeben! Korrigieren Sie Ihre Verteilung.");
+            return;
+        }
+        
+        // Werte holen
+        let warn = parseInt(document.getElementById('inp-warn').value);
+        let protect = parseInt(document.getElementById('inp-protect').value);
+        let infra = parseInt(document.getElementById('inp-infra').value);
+        let mil = parseInt(document.getElementById('inp-mil').value);
+        let prop = parseInt(document.getElementById('inp-prop').value);
+        
+        let total = warn + protect + infra + mil + prop;
+        let badSum = mil + prop;
+
+        if (total < 10) {
+            if(!confirm("Sie haben noch Punkte übrig. Wirklich fortfahren?")) return;
+        }
+
+        // --- ENDINGS ---
+        let title = "";
+        let text = "";
+        let type = ""; // catastrophe, mixed, success
+        let feedback = "";
+
+        // 1. HISTORISCH (BAD)
+        if (badSum > 3) {
+            type = "res-catastrophe";
+            title = "SZENARIO: HISTORISCHE REALITÄT (2008)";
+            text = "Sie haben gehandelt wie die echte Junta. Das Referendum wurde durchgezogen, das Militär hat die Kontrolle behalten.<br><br><strong>Der Preis:</strong> 138.000 Tote. Hilfsschiffe wurden abgewiesen. Die Welt blickt mit Entsetzen auf Ihr Land.";
+            
+            if(currentRole === 'junta') feedback = "Als General haben Sie Ihr Ziel erreicht: Machterhalt. Aber um welchen Preis?";
+            else feedback = "Sie haben in Ihrer Rolle versagt und sich dem Regime gebeugt.";
+        }
+        // 2. PANIK (BAD)
+        else if (warn >= 5 && protect < 2 && infra < 2) {
+            type = "res-catastrophe";
+            title = "SZENARIO: TÖDLICHE PANIK";
+            text = "Das Radio warnte ununterbrochen vor dem Sturm. Die Menschen wussten Bescheid.<br><br>Aber ohne Bunker und Boote saßen sie in der Falle. Die Fluchtwege waren verstopft oder nicht existent. Die Menschen starben in Angst.";
+        }
+        // 3. LOGISTIK ALBTRAUM (BAD)
+        else if (protect >= 4 && infra === 0) {
+            type = "res-catastrophe";
+            title = "SZENARIO: ISOLIERTE INSELN";
+            text = "Die Schutzbauten haben die erste Welle abgehalten. Viele überlebten die Nacht.<br><br>Aber danach kam keine Hilfe. Keine Straßen, keine Boote. In den Wochen danach starben Tausende an Seuchen und Hunger. Ein langsamer Tod.";
+        }
+        // 4. KURZFRISTIG GUT (EVAKUIERUNG)
+        else if (infra >= 5 && protect <= 2 && warn >= 2) {
+            type = "res-mixed";
+            title = "SZENARIO: ERFOLGREICHE FLUCHT, VERLORENE HEIMAT";
+            text = "Dank massiver Evakuierung wurden fast alle Leben gerettet! Ein humanitärer Erfolg.<br><br><strong>Aber:</strong> Das Delta ist zerstört. Keine Mangroven, keine Deiche. Die Felder sind versalzen. Die Überlebenden sind nun mittellose Flüchtlinge.";
+            
+            if(currentRole === 'un') feedback = "Als UN-Helfer haben Sie Ihr Hauptziel erreicht: Leben retten.";
+            if(currentRole === 'local') feedback = "Sie leben noch, aber Ihr Dorf ist für immer verschwunden.";
+        }
+        // 5. LANGFRISTIG GUT (NACHHALTIGKEIT)
+        else if (protect >= 5 && warn >= 2) {
+            type = "res-success";
+            title = "SZENARIO: NACHHALTIGE SICHERHEIT";
+            text = "Die Investition in Mangroven und Bunker hat sich ausgezahlt. Die Flutwelle wurde gebrochen.<br><br>Die Häuser stehen noch. Es gab Verletzte, aber keine Massenkatastrophe. Das Delta kann sich schnell erholen. Ein Vorbild für Katastrophenschutz.";
+            
+            if(currentRole === 'local') feedback = "Als Dorfvorsteher haben Sie Ihre Heimat für die nächste Generation gerettet.";
+        }
+        // 6. MITTELWEG
+        else {
+            type = "res-mixed";
+            title = "SZENARIO: SOLIDE KRISENHILFE";
+            text = "Sie haben einen Mittelweg gefunden. Es gab Opfer, aber weit weniger als in der Realität.<br><br>Sie haben gezeigt, dass Nargis kein unabwendbares Schicksal war, sondern eine Frage des Managements.";
+        }
+
+        // Ergebnis anzeigen
+        const container = document.getElementById('outcome-container');
+        container.className = "outcome-box " + type;
+        document.getElementById('out-title').innerText = title;
+        document.getElementById('out-text').innerHTML = text;
+        
+        // Rollenspezifisches Feedback hinzufügen, falls noch leer
+        if(feedback === "") {
+            if(currentRole === 'junta' && type !== 'res-catastrophe') feedback = "Als General haben Sie untypische Gnade gezeigt. Das Volk dankt es Ihnen vielleicht.";
+            if(currentRole === 'un' && type === 'res-success') feedback = "Perfekte Arbeit. Das ist Disaster Risk Reduction (DRR) in Bestform.";
+        }
+        document.getElementById('role-feedback').innerText = feedback;
+
+        showSlide('slide-result');
+    }
+
 </script>
+
 </body>
 </html>
