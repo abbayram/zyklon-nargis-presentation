@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nargis Crisis Simulator - Visual Edition</title>
+    <title>Nargis – Krisenstab Delta</title>
     <style>
         :root {
             --bg-color: #111;
@@ -178,81 +178,81 @@
     </div>
 
     <div class="slide" id="slide-roles">
-        <h1>Identität Wählen</h1>
-        <p style="margin-bottom: 20px;">Wähle deine Perspektive oder starte direkt den Krisenstab.</p>
+        <h1>Autorisierung wählen</h1>
+        <p style="margin-bottom: 20px;">Wählen Sie Ihre Perspektive im Delta-Kommando.</p>
         
         <div class="role-container">
             <div class="role-card" onclick="selectRole('junta')">
                 <div class="role-icon">⚙️</div>
                 <span class="role-title">Militärjunta</span>
-                <span class="role-desc">Kontrolle. Stabilität. Souveränität. Ausländer sind eine Gefahr für das Regime.</span>
+                <span class="role-desc">Kontrolle. Stabilität. Souveränität. Jede Einmischung von außen schwächt das Regime.</span>
             </div>
             <div class="role-card" onclick="selectRole('un')">
                 <div class="role-icon">💬</div>
                 <span class="role-title">Internationale Hilfe</span>
-                <span class="role-desc">Rettung. Logistik. Menschenrechte. Wir müssen helfen, egal wie.</span>
+                <span class="role-desc">Logistik. Schutz. Menschenrechte. Wir müssen handeln, bevor die Welt zuschaut.</span>
             </div>
             <div class="role-card" onclick="selectRole('local')">
                 <div class="role-icon">💡</div>
                 <span class="role-title">Zivilbevölkerung</span>
-                <span class="role-desc">Überleben. Schutz. Heimat. Wir kennen das Land und wollen überleben.</span>
+                <span class="role-desc">Heimat. Überleben. Erbe. Wir verteidigen unseren Boden gegen die Flut.</span>
             </div>
         </div>
 
         <div style="margin-top: 40px; border-top: 1px solid #333; width: 80%; padding-top: 20px; text-align: center;">
-            <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Simulation überspringen & gemeinsam entscheiden?</p>
-            <button class="btn btn-gold btn-small" onclick="selectRole('collective')">Zum Krisenstab (Alle Parteien) >></button>
+            <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Parteien zusammenführen & Schicksal gemeinsam lenken?</p>
+            <button class="btn btn-gold btn-small" onclick="selectRole('collective')">Krisenstab einberufen (Alle Parteien) >></button>
         </div>
     </div>
 
     <div class="slide" id="slide-briefing">
-        <h1 id="briefing-header">Missionsbefehl</h1>
+        <h1 id="briefing-header">Einsatzbefehl</h1>
         <div class="briefing-box" id="briefing-container">
             <h3 id="briefing-role-title" style="color: var(--highlight); margin-top:0;">...</h3>
             <p id="briefing-text" style="text-align: left;">...</p>
         </div>
-        <p style="font-size: 16px; color: #888;">Verteilen Sie Ihre <strong>10 Ressourcen-Punkte</strong>.</p>
-        <button class="btn" onclick="goToGame()" id="start-sim-btn">Simulation Starten</button>
+        <p style="font-size: 16px; color: #888;">Verteilen Sie Ihre <strong>10 Ressourcen-Einheiten</strong>.</p>
+        <button class="btn" onclick="goToGame()" id="start-sim-btn">Einsatz beginnen</button>
     </div>
 
     <div class="slide" id="slide-game">
-        <div class="points-display">Verfügbare Punkte: <span id="points-remaining">10</span> / 10</div>
+        <div class="points-display">Verfügbare Einheiten: <span id="points-remaining">10</span> / 10</div>
         <div class="budget-ui">
             <div class="slider-row">
-                <div class="slider-label">📡 Frühwarnsysteme</div>
+                <div class="slider-label">📡 Frühwarn-Netzwerke</div>
                 <input type="range" id="inp-warn" value="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
             <div class="slider-row">
-                <div class="slider-label">🧱 Schutzbauten / Mangroven</div>
+                <div class="slider-label">🧱 Deichbau / Mangroven</div>
                 <input type="range" id="inp-protect" value="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
             <div class="slider-row">
-                <div class="slider-label">🚚 Infrastruktur / Evakuierung</div>
+                <div class="slider-label">🚚 Logistik / Evakuierung</div>
                 <input type="range" id="inp-infra" value="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
             <div style="height: 1px; background: #444; margin: 15px 0;"></div>
             <div class="slider-row">
-                <div class="slider-label" style="color: #ff6666;">🔫 Militär & Kontrolle</div>
+                <div class="slider-label" style="color: #ff6666;">🔫 Militärische Absicherung</div>
                 <input type="range" id="inp-mil" value="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
             <div class="slider-row">
-                <div class="slider-label" style="color: #ff6666;">📢 Staatsmedien & Propaganda</div>
+                <div class="slider-label" style="color: #ff6666;">📢 Staatliche Informationskontrolle</div>
                 <input type="range" id="inp-prop" value="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
         </div>
-        <button class="btn" onclick="checkSimulation()">Simulation ausführen</button>
+        <button class="btn" onclick="checkSimulation()">Befehle bestätigen</button>
     </div>
 
     <div class="slide" id="slide-result">
-        <img id="outcome-image" src="" alt="Szenario Bild">
+        <img id="outcome-image" src="" alt="Szenario Ausgang">
         <div id="role-feedback"></div>
         <div style="display: flex; gap: 20px;">
-            <button class="btn btn-small" onclick="restartGame()">Rollen-Auswahl</button>
+            <button class="btn btn-small" onclick="restartGame()">Zurück zur Auswahl</button>
             <button class="btn btn-gold" id="collective-retry-btn" onclick="selectRole('collective')">Krisenstab einberufen</button>
         </div>
         <div class="ai-credit">Visuals erstellt mit Google Gemini AI</div>
@@ -265,13 +265,14 @@
     let isCollectiveMode = false;
     const maxPoints = 10;
     
-    // --- INTRO ---
-    const introLines = "Initialisiere Crisis Management Simulator...\nStandort: Irawadi-Delta, Myanmar.\nZeitpunkt: April 2008.\n\nZyklon 'Nargis' (Kategorie 4) nähert sich.\nAnkunftszeit: 72 Stunden.\n\nDas Schicksal von 2 Millionen Menschen liegt in Ihrer Hand.";
+    // --- INTRO (Ohne "Simulation" und "2 Mio") ---
+    const introLines = "Etabliere verschlüsselte Verbindung zum Delta-Kommando...\nStandort: Irawadi-Delta, Myanmar.\nZeitpunkt: April 2008.\n\nStatusbericht: Tropischer Zyklon 'Nargis' gewinnt an Stärke.\nKategorie: 4.\nAnkunftszeit: 72 Stunden.\n\nDie Kommunikationswege sind instabil. Das Regime schweigt.\nIn diesem Sturm entscheidet allein Ihre Verteilung über den Fortbestand ganzer Gemeinschaften.";
     
     window.onload = function() {
-        typeWriter(introLines, 'intro-text', 20, () => {
+        typeWriter(introLines, 'intro-text', 25, () => {
             const btn = document.getElementById('intro-btn');
-            btn.style.opacity = 1; btn.style.pointerEvents = 'auto';
+            btn.style.opacity = 1; 
+            btn.style.pointerEvents = 'auto'; // SICHERGESTELLT: Button wird klickbar
         });
     };
 
@@ -285,7 +286,6 @@
         typing();
     }
 
-    // --- NAVIGATION ---
     function showSlide(id) {
         document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -296,7 +296,7 @@
         list.forEach(id => document.getElementById(id).classList.remove('collective-mode-ui'));
         document.getElementById('briefing-container').classList.remove('collective');
         document.getElementById('briefing-role-title').style.color = "var(--highlight)";
-        document.getElementById('briefing-header').innerText = "Missionsbefehl";
+        document.getElementById('briefing-header').innerText = "Einsatzbefehl";
     }
 
     function selectRole(role) {
@@ -308,27 +308,32 @@
 
         if (role === 'junta') {
             isCollectiveMode = false;
-            titleEl.innerText = "ROLLE: GENERAL (SPDC)";
-            textEl.innerHTML = "Priorität: <strong>Nationale Sicherheit</strong>. Das Referendum darf nicht gestört werden. Ausländische Hilfe ist eine Gefahr für die Souveränität.";
+            titleEl.innerText = "AUTORISIERUNG: GENERAL (SPDC)";
+            textEl.innerHTML = "Priorität: <strong>Nationale Sicherheit</strong>. Das geplante Verfassungsreferendum darf unter keinen Umständen gefährdet werden. Hilfe von außen wird als Infiltrationsversuch gewertet.";
         } else if (role === 'un') {
             isCollectiveMode = false;
-            titleEl.innerText = "ROLLE: UN-KOORDINATOR";
-            textEl.innerHTML = "Priorität: <strong>Humanitäre Hilfe</strong>. Schützen Sie Leben durch Information und Logistik. Ignorieren Sie politische Hürden.";
+            titleEl.innerText = "AUTORISIERUNG: UN-KOORDINATOR";
+            textEl.innerHTML = "Priorität: <strong>Katastrophenhilfe</strong>. Das Delta ist schutzlos. Wir müssen Wege finden, Vorräte und Warnungen zu den Menschen zu bringen – ungeachtet politischer Barrieren.";
         } else if (role === 'local') {
             isCollectiveMode = false;
-            titleEl.innerText = "ROLLE: DORFVORSTEHER";
-            textEl.innerHTML = "Priorität: <strong>Überleben</strong>. Sie brauchen Bunker und Mangroven, um Ihre Heimat vor der Flut zu retten.";
+            titleEl.innerText = "AUTORISIERUNG: DORFVORSTEHER";
+            textEl.innerHTML = "Priorität: <strong>Schutz des Bodens</strong>. Wir kennen die Gezeiten. Ohne Deiche und Mangroven wird die Flutwelle unser Erbe für immer auslöschen.";
         } else if (role === 'collective') {
             isCollectiveMode = true;
             document.getElementById('slide-briefing').classList.add('collective-mode-ui');
             document.getElementById('slide-game').classList.add('collective-mode-ui');
             document.getElementById('briefing-container').classList.add('collective');
             document.getElementById('briefing-header').innerText = "GEMEINSAMER KRISENSTAB";
-            titleEl.innerText = "SZENARIO: DER RUNDE TISCH";
+            titleEl.innerText = "SZENARIO: RUNDER TISCH";
             titleEl.style.color = "var(--gold)";
-            textEl.innerHTML = "Alle Parteien müssen sich auf EIN Budget einigen. Finden Sie einen Kompromiss zwischen Kontrolle, Warnung und Schutz.";
+            textEl.innerHTML = "Die Befehlshaber sitzen am Tisch. Ein Kompromiss ist unumgänglich. Finden Sie ein Gleichgewicht zwischen militärischer Kontrolle und lebensnotwendigem Küstenschutz.";
         }
         showSlide('slide-briefing');
+    }
+
+    function goToRoles() { 
+        resetUIStyles();
+        showSlide('slide-roles'); 
     }
 
     function goToGame() { showSlide('slide-game'); updateBudget(); }
@@ -350,67 +355,58 @@
             display.innerText = "LIMIT ÜBERSCHRITTEN (" + remaining + ")";
         } else {
             display.parentElement.classList.remove('error');
-            display.parentElement.innerText = "Verfügbare Punkte: " + remaining + " / 10";
+            display.parentElement.innerText = "Verfügbare Einheiten: " + remaining + " / 10";
         }
     }
 
-    // --- CHECK SIMULATION & LOAD IMAGES ---
     function checkSimulation() {
         const warn = parseInt(document.getElementById('inp-warn').value);
         const protect = parseInt(document.getElementById('inp-protect').value);
         const infra = parseInt(document.getElementById('inp-infra').value);
         const mil = parseInt(document.getElementById('inp-mil').value);
         const prop = parseInt(document.getElementById('inp-prop').value);
-        if ((warn + protect + infra + mil + prop) > maxPoints) { alert("Zu viele Punkte!"); return; }
+        if ((warn + protect + infra + mil + prop) > maxPoints) { alert("Punktelimit überschritten!"); return; }
 
         let imageName = ""; let feedback = ""; let fColor = "";
         const path = "assets/";
 
-        // 1. Der Eiserne Vorhang
         if (mil + prop >= 6) {
             imageName = "ending1.png"; fColor = "text-red";
-            feedback = isCollectiveMode ? "Der Krisenstab scheiterte an der Paranoia des Militärs." : "Sicherheit wurde über Leben gestellt.";
+            feedback = isCollectiveMode ? "Der Krisenstab scheiterte an der Paranoia. Das Delta blieb isoliert." : "Sicherheit wurde über das Leben der Delta-Bewohner gestellt.";
         }
-        // 2. Tödliche Klarheit
         else if (warn >= 6 && protect <= 1 && infra <= 1) {
             imageName = "ending2.png"; fColor = "text-red";
-            feedback = "Die Menschen wussten vom Tod, konnten ihm aber nicht entkommen.";
+            feedback = "Tödliche Klarheit: Die Menschen sahen die Welle kommen, hatten aber keine Zuflucht.";
         }
-        // 3. Die schwimmenden Friedhöfe
         else if (infra >= 5 && protect <= 1) {
             imageName = "ending3.png"; fColor = "text-red";
-            feedback = "Ohne Küstenschutz wurde die Flucht zur Todesfalle.";
+            feedback = "Schwimmende Friedhöfe: Die Evakuierung ohne Küstenschutz wurde zur Falle.";
         }
-        // 4. Das Mangroven-Wunder
         else if (protect >= 5 && warn >= 3) {
             imageName = "ending4.png"; fColor = "text-green";
-            feedback = "Ein Triumph der Vernunft. Die Natur bot den besten Schutz.";
+            feedback = "Das Mangroven-Wunder: Die Natur und solide Planung retteten das Delta.";
         }
-        // 5. Exil in der Heimat
         else if (infra >= 4 && warn >= 4) {
             imageName = "ending5.png"; fColor = "text-orange";
-            feedback = "Leben gerettet, aber die Existenzgrundlage ist weggespült.";
+            feedback = "Exil in der Heimat: Leben wurden gerettet, doch der Boden ist unbewohnbar.";
         }
-        // 6. Die Festung im Schlamm
         else if (protect >= 6 && warn <= 1) {
             imageName = "ending6.png"; fColor = "text-orange";
-            feedback = "Massive Bunker nützen nichts, wenn niemand rechtzeitig gewarnt wird.";
+            feedback = "Festung im Schlamm: Die Bunker blieben ohne rechtzeitige Warnung oft leer.";
         }
-        // 7. Zusammenbruch der Ordnung
         else if (mil === 0 && warn + infra >= 5) {
             imageName = "ending7.png"; fColor = "text-orange";
-            feedback = "Humanitärer Erfolg, gefolgt von politischem Chaos.";
+            feedback = "Zusammenbruch der Ordnung: Humanitärer Erfolg führte zu politischem Chaos.";
         }
-        // 8. Staatsversagen
         else {
             imageName = "ending8.png"; fColor = "text-red";
-            feedback = "Zu wenig, zu spät. Die Planung war nicht konsequent genug.";
+            feedback = "Zögerliches Handeln führte zu unzureichendem Schutz an allen Fronten.";
         }
 
         document.getElementById('outcome-image').src = path + imageName;
         const fb = document.getElementById('role-feedback');
         fb.innerText = feedback; fb.className = fColor;
-        document.getElementById('collective-retry-btn').innerText = isCollectiveMode ? "Neue Verhandlung" : "Runden Tisch einberufen";
+        document.getElementById('collective-retry-btn').innerText = isCollectiveMode ? "Krisenstab neu besetzen" : "Runden Tisch einberufen";
         showSlide('slide-result');
     }
 </script>
