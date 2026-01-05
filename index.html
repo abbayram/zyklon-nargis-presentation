@@ -60,7 +60,7 @@
 
         h1 { text-transform: uppercase; letter-spacing: 3px; color: var(--terminal-green); text-shadow: 0 0 10px rgba(51, 255, 51, 0.3); margin-bottom: 30px;}
 
-        /* --- ZÄHLER --- */
+        /* --- DYNAMISCHER ZÄHLER --- */
         .points-tracker {
             font-size: 28px;
             font-weight: bold;
@@ -96,12 +96,15 @@
         .btn-gold { border-color: var(--gold); color: var(--gold); }
         .btn-gold:hover { background: var(--gold); color: black; }
 
+        .btn-small { font-size: 14px; padding: 10px 20px; border: 1px solid #666; color: #888; margin-top: 0; }
+        .btn-small:hover { border-color: white; color: white; background: transparent; box-shadow: none; }
+
         /* --- TYPEWRITER --- */
         .typewriter-text { color: var(--terminal-green); font-size: 22px; text-align: left; white-space: pre-wrap; min-height: 250px; width: 85%; line-height: 1.4; }
         .cursor::after { content: '█'; animation: blink 0.8s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* --- ROLE CARDS --- */
+        /* --- ROLLEN-KARTEN --- */
         .role-container { display: flex; gap: 20px; margin-top: 20px; }
         .role-card {
             background-color: var(--role-btn-color);
@@ -118,16 +121,16 @@
         .role-title { font-size: 20px; font-weight: 900; display: block; margin-bottom: 10px; font-family: sans-serif; text-transform: uppercase; }
         .role-desc { font-size: 13px; font-weight: 500; }
 
-        /* --- SLIDERS --- */
+        /* --- REGLER-BEREICH --- */
         .budget-ui { width: 85%; background: #1a1a1a; padding: 25px; border: 1px solid #333; }
         .slider-row { display: flex; align-items: center; margin-bottom: 18px; }
         .slider-label { width: 320px; text-align: left; font-size: 15px; }
         input[type=range] { flex-grow: 1; cursor: pointer; accent-color: var(--terminal-green); }
         .slider-val { width: 40px; text-align: right; font-weight: bold; color: var(--highlight); margin-left: 10px;}
 
-        /* --- RESULT --- */
-        #outcome-image { max-width: 95%; max-height: 60vh; border: 1px solid #444; margin-bottom: 10px; }
-        #role-feedback { font-style: italic; font-size: 16px; margin-bottom: 20px; }
+        /* --- ERGEBNIS-ANZEIGE --- */
+        #outcome-image { max-width: 95%; max-height: 60vh; border: 1px solid #444; margin-bottom: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
+        #role-feedback { font-style: italic; font-size: 17px; margin-bottom: 20px; text-align: center; max-width: 80%; }
 
         .ai-credit { position: absolute; bottom: 10px; right: 15px; font-size: 10px; color: #444; opacity: 0.7; }
 
@@ -180,28 +183,28 @@
         <div class="budget-ui">
             <div class="slider-row">
                 <div class="slider-label">📡 Frühwarn-Netzwerke</div>
-                <input type="range" class="res-slider" id="inp-warn" value="0" max="10" oninput="updateBudget()">
+                <input type="range" class="res-slider" id="inp-warn" value="0" min="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
             <div class="slider-row">
                 <div class="slider-label">🧱 Küstenschutz / Mangroven</div>
-                <input type="range" class="res-slider" id="inp-protect" value="0" max="10" oninput="updateBudget()">
+                <input type="range" class="res-slider" id="inp-protect" value="0" min="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
             <div class="slider-row">
                 <div class="slider-label">🚚 Evakuierung & Logistik</div>
-                <input type="range" class="res-slider" id="inp-infra" value="0" max="10" oninput="updateBudget()">
+                <input type="range" class="res-slider" id="inp-infra" value="0" min="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
             <div style="height: 1px; background: #333; margin: 15px 0;"></div>
             <div class="slider-row">
                 <div class="slider-label" style="color: #ff6666;">🔫 Militärische Absicherung</div>
-                <input type="range" class="res-slider" id="inp-mil" value="0" max="10" oninput="updateBudget()">
+                <input type="range" class="res-slider" id="inp-mil" value="0" min="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
             <div class="slider-row">
                 <div class="slider-label" style="color: #ff6666;">📢 Informations-Zensur</div>
-                <input type="range" class="res-slider" id="inp-prop" value="0" max="10" oninput="updateBudget()">
+                <input type="range" class="res-slider" id="inp-prop" value="0" min="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
         </div>
@@ -224,6 +227,7 @@
     let currentRole = "";
     let isCollectiveMode = false;
 
+    // Atmosphärischer Einstiegstext
     const introLines = "SYSTEM-LOGIN: DELTA-KOMMANDO [AUTORISIERT]\nSTANDORT: IRAWADI-DELTA, MYANMAR\nZEITPUNKT: 02. MAI 2008 | 04:00 UHR\n\nWARNUNG: ZYKLON 'NARGIS' HAT KATEGORIE 4 ERREICHT.\nWINDGESCHWINDIGKEITEN BIS ZU 215 KM/H.\nEINSCHLAG IN 72 STUNDEN UNVERMEIDLICH.\n\nDIE FLUTWELLE WIRD KOMMEN. DIE REAKTION DES REGIMES IST GELÄHMT.\nDREI MÄCHTE RINGEN UM DIE KONTROLLE.\nIHRE ENTSCHEIDUNG BESTIMMT, WER DEN MORGEN ERLEBT.";
 
     window.onload = function() {
@@ -312,35 +316,55 @@
         let imageName = ""; let feedback = ""; let fColor = "";
         const path = "assets/";
 
+        // PRIORITÄTEN-KETTE (Korrigiert)
+        
+        // 1. MACHTERHALT
         if (mil + prop >= 6) {
             imageName = "ending1.png"; fColor = "text-red";
             feedback = "Die Kontrolle wurde gewahrt. Das Schweigen des Deltas ist nun absolut.";
-        } else if (warn >= 6 && protect <= 1 && infra <= 1) {
-            imageName = "ending2.png"; fColor = "text-red";
-            feedback = "Tödliche Klarheit: Alle wussten vom Tod, niemand konnte ihm entkommen.";
-        } else if (infra >= 5 && protect <= 1) {
-            imageName = "ending3.png"; fColor = "text-red";
-            feedback = "Die Fluchtwege wurden zu Gräbern. Die Welle war schneller als die Boote.";
-        } else if (protect >= 5 && warn >= 3) {
+        } 
+        // 2. DAS WUNDER (Bestes Ende)
+        else if (protect >= 5 && warn >= 3) {
             imageName = "ending4.png"; fColor = "text-green";
             feedback = "Das Mangroven-Wunder: Die Natur hielt stand. Das Delta überlebt.";
-        } else if (infra >= 4 && warn >= 4) {
+        }
+        // 3. EXIL (Rettung ohne Schutz)
+        else if (infra >= 4 && warn >= 4) {
             imageName = "ending5.png"; fColor = "text-orange";
             feedback = "Die Häuser sind fort, aber die Menschen leben. Ein hoher Preis für das Exil.";
-        } else if (protect >= 6 && warn <= 1) {
+        }
+        // 4. SCHWIMMENDE FRIEDHÖFE
+        else if (infra >= 5 && protect <= 1) {
+            imageName = "ending3.png"; fColor = "text-red";
+            feedback = "Die Fluchtwege wurden zu Gräbern. Die Welle war schneller als die Boote.";
+        }
+        // 5. TÖDLICHE KLARHEIT
+        else if (warn >= 6 && protect <= 1 && infra <= 1) {
+            imageName = "ending2.png"; fColor = "text-red";
+            feedback = "Tödliche Klarheit: Alle wussten vom Tod, niemand konnte ihm entkommen.";
+        }
+        // 6. FESTUNG IM SCHLAMM
+        else if (protect >= 6 && warn <= 1) {
             imageName = "ending6.png"; fColor = "text-orange";
             feedback = "Stumme Festungen: Die Bunker blieben leer, weil der Ruf nicht gehört wurde.";
-        } else if (mil === 0 && warn + infra >= 5) {
+        }
+        // 7. ZUSAMMENBRUCH
+        else if (mil === 0 && (warn + infra >= 5)) {
             imageName = "ending7.png"; fColor = "text-orange";
             feedback = "Humanitärer Sieg – politisches Chaos. Das Delta atmet, das Regime wankt.";
-        } else {
+        }
+        // 8. DEFAULT: STAATSVERSAGEN
+        else {
             imageName = "ending8.png"; fColor = "text-red";
             feedback = "Halbherzige Befehle führen zu ganzem Leid. Die Chance wurde vertan.";
         }
 
         const imgEl = document.getElementById('outcome-image');
         imgEl.src = path + imageName;
-        imgEl.onerror = function() { this.alt = "Fehler: Bild " + imageName + " nicht in /assets gefunden."; };
+        imgEl.onerror = function() { 
+            this.alt = "Fehler: Bild " + imageName + " fehlt in /assets."; 
+            this.style.background = "#333";
+        };
         
         const fb = document.getElementById('role-feedback');
         fb.innerText = feedback;
