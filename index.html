@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nargis Crisis Simulator</title>
+    <title>Nargis Crisis Simulator - Extended</title>
     <style>
         :root {
             --bg-color: #111;
@@ -12,7 +12,7 @@
             --ui-gray: #333;
             --text-white: #f0f0f0;
             --highlight: #00bcd4;
-            /* Farbe aus deinem Bild */
+            --gold: #ffd700;
             --role-btn-color: #a88b8b; 
             --role-btn-border: #5d4a4a;
         }
@@ -54,7 +54,8 @@
             justify-content: center;
             opacity: 0;
             transition: opacity 0.5s ease;
-            background: #1a1a1a; /* Sicherstellen, dass Slides deckend sind */
+            background: #1a1a1a;
+            z-index: 1;
         }
         .slide.active {
             display: flex;
@@ -75,12 +76,26 @@
             font-size: 20px;
             font-family: inherit;
             cursor: pointer;
-            margin-top: 30px;
+            margin-top: 20px;
             transition: all 0.2s;
             text-transform: uppercase;
             font-weight: bold;
         }
         .btn:hover { background: var(--terminal-green); color: black; box-shadow: 0 0 15px var(--terminal-green); }
+
+        .btn-gold {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        .btn-gold:hover { background: var(--gold); color: black; box-shadow: 0 0 15px var(--gold); }
+
+        .btn-small {
+            font-size: 14px;
+            padding: 10px 20px;
+            border: 1px solid #666;
+            color: #888;
+        }
+        .btn-small:hover { border-color: white; color: white; background: transparent; box-shadow: none; }
 
         /* --- TYPEWRITER (INTRO) --- */
         .typewriter-text {
@@ -94,16 +109,16 @@
         .cursor::after { content: '█'; animation: blink 0.8s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* --- ROLE SELECTION (Angepasst an dein Bild) --- */
+        /* --- ROLE SELECTION --- */
         .role-container { display: flex; gap: 30px; width: 100%; justify-content: center; margin-top: 20px; }
         
         .role-card {
             background-color: var(--role-btn-color);
             border: 3px solid var(--role-btn-border);
-            border-radius: 20px; /* Abgerundete Ecken wie im Bild */
+            border-radius: 20px;
             padding: 25px;
-            width: 260px;
-            height: 280px;
+            width: 240px;
+            height: 260px;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             text-align: center;
@@ -112,7 +127,7 @@
             align-items: center;
             justify-content: flex-start;
             box-shadow: 0 10px 15px rgba(0,0,0,0.3);
-            color: #222; /* Dunkler Text für Kontrast auf dem rosa Hintergrund */
+            color: #222;
         }
         
         .role-card:hover { transform: translateY(-8px); box-shadow: 0 15px 25px rgba(0,0,0,0.4); filter: brightness(1.1); }
@@ -120,14 +135,14 @@
         .role-icon { font-size: 50px; margin-bottom: 15px; display: block; }
         
         .role-title { 
-            font-size: 24px; 
+            font-size: 22px; 
             font-weight: 900; 
             margin-bottom: 10px; 
             display: block; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Serifenschrift wie im Bild */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        .role-desc { font-size: 14px; line-height: 1.4; color: #333; font-weight: 500; }
+        .role-desc { font-size: 13px; line-height: 1.4; color: #333; font-weight: 500; }
 
         /* --- MISSION BRIEFING --- */
         .briefing-box {
@@ -136,6 +151,10 @@
             background: rgba(0, 188, 212, 0.05);
             margin-bottom: 20px;
             width: 80%;
+        }
+        .briefing-box.collective {
+            border-color: var(--gold);
+            background: rgba(255, 215, 0, 0.05);
         }
 
         /* --- GAME SLIDERS --- */
@@ -173,6 +192,29 @@
         .res-success { border-color: var(--terminal-green); }
         .res-success .outcome-title { color: var(--terminal-green); }
 
+        .collective-mode-ui {
+            border: 1px solid var(--gold);
+        }
+        .collective-mode-ui h1 {
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        .collective-mode-ui .points-display {
+            color: var(--gold);
+        }
+        .collective-mode-ui input[type=range] {
+            accent-color: var(--gold);
+        }
+        .collective-mode-ui .btn {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+        .collective-mode-ui .btn:hover {
+            background: var(--gold);
+            color: black;
+            box-shadow: 0 0 15px var(--gold);
+        }
+
     </style>
 </head>
 <body>
@@ -186,7 +228,7 @@
 
     <div class="slide" id="slide-roles">
         <h1>Identität Wählen</h1>
-        <p style="margin-bottom: 30px;">Teilt euch in 3 Teams auf. Wählt eure Perspektive.</p>
+        <p style="margin-bottom: 20px;">Wählt eure Perspektive für die Simulation.</p>
         
         <div class="role-container">
             <div class="role-card" onclick="selectRole('junta')">
@@ -207,16 +249,21 @@
                 <span class="role-desc">Überleben. Schutz. Heimat. Wir kennen das Land und wollen überleben.</span>
             </div>
         </div>
+
+        <div style="margin-top: 40px; border-top: 1px solid #333; width: 80%; padding-top: 20px; text-align: center;">
+            <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Simulation überspringen & gemeinsam entscheiden?</p>
+            <button class="btn btn-gold btn-small" onclick="selectRole('collective')">Zum Krisenstab (Alle Parteien) >></button>
+        </div>
     </div>
 
     <div class="slide" id="slide-briefing">
-        <h1>Missionsbefehl</h1>
-        <div class="briefing-box">
+        <h1 id="briefing-header">Missionsbefehl</h1>
+        <div class="briefing-box" id="briefing-container">
             <h3 id="briefing-role-title" style="color: var(--highlight); margin-top:0;">...</h3>
             <p id="briefing-text" style="text-align: left;">...</p>
         </div>
         <p style="font-size: 16px; color: #888;">Sie haben <strong>10 Ressourcen-Punkte</strong>. Verteilen Sie diese weise.</p>
-        <button class="btn" onclick="goToGame()">Simulation Starten</button>
+        <button class="btn" onclick="goToGame()" id="start-sim-btn">Simulation Starten</button>
     </div>
 
     <div class="slide" id="slide-game">
@@ -264,9 +311,12 @@
             <div class="outcome-text" id="out-text">Text</div>
         </div>
 
-        <div id="role-feedback" style="margin-top: 20px; font-style: italic; color: #aaa; max-width: 80%; text-align: center;"></div>
+        <div id="role-feedback" style="margin-top: 10px; font-style: italic; color: #aaa; max-width: 80%; text-align: center; margin-bottom: 20px;"></div>
 
-        <button class="btn" onclick="restartGame()">Neustart</button>
+        <div style="display: flex; gap: 20px;">
+            <button class="btn btn-small" onclick="restartGame()">Neustart (Einzeln)</button>
+            <button class="btn btn-gold" id="collective-retry-btn" onclick="selectRole('collective')">Runden Tisch einberufen</button>
+        </div>
     </div>
 
 </div>
@@ -274,13 +324,14 @@
 <script>
     // --- STATE ---
     let currentRole = "";
+    let isCollectiveMode = false;
     const maxPoints = 10;
     
     // --- INTRO TYPEWRITER ---
     const introLines = "Initialisiere Crisis Management Simulator...\nStandort: Irawadi-Delta, Myanmar.\nZeitpunkt: April 2008.\n\nWarnung: Tropischer Zyklon 'Nargis' formiert sich.\nKategorie: 4.\nGeschätzte Ankunftszeit: 72 Stunden.\n\nDie Regierung ist isoliert. Die Bevölkerung ist unvorbereitet.\nDas Schicksal von 2 Millionen Menschen liegt in Ihrer Hand.";
     
     window.onload = function() {
-        typeWriter(introLines, 'intro-text', 25, () => {
+        typeWriter(introLines, 'intro-text', 20, () => {
             const btn = document.getElementById('intro-btn');
             btn.style.opacity = 1;
             btn.style.pointerEvents = 'auto';
@@ -311,23 +362,56 @@
         document.getElementById(id).classList.add('active');
     }
 
-    function goToRoles() { showSlide('slide-roles'); }
+    function goToRoles() { 
+        resetUIStyles();
+        showSlide('slide-roles'); 
+    }
+
+    function resetUIStyles() {
+        // Entferne Collective Styling
+        document.getElementById('slide-briefing').classList.remove('collective-mode-ui');
+        document.getElementById('slide-game').classList.remove('collective-mode-ui');
+        document.getElementById('briefing-container').classList.remove('collective');
+        document.getElementById('briefing-role-title').style.color = "var(--highlight)";
+    }
 
     // --- ROLE LOGIC ---
     function selectRole(role) {
         currentRole = role;
         const titleEl = document.getElementById('briefing-role-title');
         const textEl = document.getElementById('briefing-text');
+        const briefContainer = document.getElementById('briefing-container');
+        const briefingHeader = document.getElementById('briefing-header');
+        
+        // Reset Inputs before start
+        document.querySelectorAll('input[type=range]').forEach(i => i.value = 0);
+
+        resetUIStyles();
 
         if (role === 'junta') {
+            isCollectiveMode = false;
             titleEl.innerText = "ROLLE: GENERAL (SPDC)";
-            textEl.innerHTML = "Ihre Priorität ist die <strong>Nationale Sicherheit</strong>. In wenigen Tagen findet das Verfassungsreferendum statt. Es darf nicht verschoben werden.<br><br>Ausländische Hilfe bedeutet Spione im Land. Halten Sie die Ordnung aufrecht, egal was es kostet. Zeigen Sie keine Schwäche.";
+            textEl.innerHTML = "Ihre Priorität ist die <strong>Nationale Sicherheit</strong>. In wenigen Tagen findet das Verfassungsreferendum statt. Es darf nicht verschoben werden.<br><br>Ausländische Hilfe bedeutet Spione im Land. Halten Sie die Ordnung aufrecht, egal was es kostet.";
         } else if (role === 'un') {
+            isCollectiveMode = false;
             titleEl.innerText = "ROLLE: UN-KOORDINATOR";
-            textEl.innerHTML = "Ihre Priorität ist <strong>Humanitäre Hilfe</strong>. Sie wissen, dass die Bambushütten dem Sturm nicht standhalten.<br><br>Versuchen Sie, Ressourcen in Warnung und Infrastruktur zu stecken, um die Logistik für Hilfslieferungen vorzubereiten. Ignorieren Sie die politische Paranoia.";
+            textEl.innerHTML = "Ihre Priorität ist <strong>Humanitäre Hilfe</strong>. Sie wissen, dass die Bambushütten dem Sturm nicht standhalten.<br><br>Versuchen Sie, Ressourcen in Warnung und Infrastruktur zu stecken. Ignorieren Sie die politische Paranoia.";
         } else if (role === 'local') {
+            isCollectiveMode = false;
             titleEl.innerText = "ROLLE: DORFVORSTEHER";
-            textEl.innerHTML = "Ihre Priorität ist das <strong>Überleben Ihres Dorfes</strong>. Sie brauchen keine Propaganda. Sie brauchen Schutzbunker und Mangroven, die die Flutwelle brechen.<br><br>Wenn der Sturm vorbei ist, müssen Sie hier weiterleben. Denken Sie langfristig an Ihre Heimat.";
+            textEl.innerHTML = "Ihre Priorität ist das <strong>Überleben Ihres Dorfes</strong>. Sie brauchen keine Propaganda. Sie brauchen Schutzbunker und Mangroven.<br><br>Wenn der Sturm vorbei ist, müssen Sie hier weiterleben. Denken Sie langfristig an Ihre Heimat.";
+        } else if (role === 'collective') {
+            isCollectiveMode = true;
+            
+            // Apply Gold Styles
+            document.getElementById('slide-briefing').classList.add('collective-mode-ui');
+            document.getElementById('slide-game').classList.add('collective-mode-ui');
+            briefContainer.classList.add('collective');
+            titleEl.style.color = "var(--gold)";
+
+            briefingHeader.innerText = "GEMEINSAMER KRISENSTAB";
+            titleEl.innerText = "SZENARIO: DER RUNDE TISCH";
+            textEl.innerHTML = "Der General, der UN-Koordinator und der Dorfvorsteher sitzen zusammen in einem Raum. Die Türen sind verschlossen.<br><br><strong>Sie müssen sich auf EIN Budget einigen.</strong><br>Die UN will Warnung, das Dorf will Bunker, das Militär will Kontrolle. Finden Sie einen Kompromiss, der die Katastrophe abwendet, ohne einen Bürgerkrieg auszulösen.";
         }
         
         showSlide('slide-briefing');
@@ -336,8 +420,6 @@
     function goToGame() { showSlide('slide-game'); updateBudget(); }
     
     function restartGame() {
-        // Reset Inputs
-        document.querySelectorAll('input[type=range]').forEach(i => i.value = 0);
         goToRoles();
     }
 
@@ -400,54 +482,56 @@
         if (badSum > 3) {
             type = "res-catastrophe";
             title = "SZENARIO: HISTORISCHE REALITÄT (2008)";
-            text = "Sie haben gehandelt wie die echte Junta. Das Referendum wurde durchgezogen, das Militär hat die Kontrolle behalten.<br><br><strong>Der Preis:</strong> 138.000 Tote. Hilfsschiffe wurden abgewiesen, weil Sie Spione fürchteten. Ein humanitäres Desaster, das in die Geschichte eingeht.";
+            text = "Das Referendum wurde durchgezogen, das Militär hat die Kontrolle behalten.<br><br><strong>Der Preis:</strong> 138.000 Tote. Hilfsschiffe wurden abgewiesen. Ein humanitäres Desaster.";
             
-            if(currentRole === 'junta') feedback = "Mission: ERFÜLLT. Das Regime steht stabil. Aber Ihr Gewissen wird Sie verfolgen.";
-            else feedback = "Mission: GESCHEITERT. Sie haben sich dem Druck des Regimes gebeugt und die Menschlichkeit verraten.";
+            if(isCollectiveMode) feedback = "Der Runde Tisch ist gescheitert. Das Militär hat die Verhandlung dominiert und die anderen zum Schweigen gebracht.";
+            else if(currentRole === 'junta') feedback = "Mission: ERFÜLLT. Das Regime steht stabil.";
+            else feedback = "Mission: GESCHEITERT. Sie haben sich dem Druck des Regimes gebeugt.";
         }
         
-        // 2. PANIK (BAD) - Warnung ohne Schutz/Weg
+        // 2. PANIK (BAD)
         else if (warn >= 5 && protect < 2 && infra < 2) {
             type = "res-catastrophe";
             title = "SZENARIO: TÖDLICHE PANIK";
-            text = "Das Radio warnte ununterbrochen vor dem Sturm. Die Menschen wussten Bescheid.<br><br><strong>Das Problem:</strong> Ohne Bunker und ohne Boote saßen sie in der Falle. Die Fluchtwege waren verstopft. Das Wissen um den Tod hat ihn nicht verhindert. Massenpanik führte zu noch mehr Opfern.";
-             feedback = "Wissen ist Macht, aber ohne Infrastruktur ist es nutzlos.";
+            text = "Das Radio warnte ununterbrochen. Die Menschen wussten Bescheid.<br><br><strong>Das Problem:</strong> Ohne Bunker und ohne Boote saßen sie in der Falle. Massenpanik führte zu noch mehr Opfern.";
+             feedback = isCollectiveMode ? "Der Gruppe fehlte die praktische Weitsicht. Warnung allein reicht nicht." : "Wissen ist Macht, aber ohne Infrastruktur ist es nutzlos.";
         }
         
-        // 3. LOGISTIK ALBTRAUM (BAD) - Schutz ohne Infrastruktur
+        // 3. LOGISTIK ALBTRAUM (BAD)
         else if (protect >= 4 && infra === 0) {
             type = "res-catastrophe";
             title = "SZENARIO: ISOLIERTE INSELN";
-            text = "Die Schutzbauten haben die erste Welle abgehalten. Viele überlebten die Nacht.<br><br><strong>Das Problem:</strong> Danach kam keine Hilfe. Keine Straßen, keine Boote. In den Wochen danach starben Tausende an Cholera, Durst und Hunger. Ein langsamer, qualvoller Tod.";
+            text = "Die Schutzbauten haben die erste Welle abgehalten.<br><br><strong>Das Problem:</strong> Danach kam keine Hilfe. Keine Straßen, keine Boote. Seuchen breiteten sich aus.";
             feedback = "Katastrophenschutz endet nicht mit dem Sturm. Sie haben die Logistik vergessen.";
         }
         
-        // 4. KURZFRISTIG GUT (MIXED/SUCCESS) - Evakuierung > Schutz
+        // 4. KURZFRISTIG GUT (MIXED/SUCCESS)
         else if (infra >= 5 && protect <= 2 && warn >= 2) {
             type = "res-mixed";
-            title = "SZENARIO: ERFOLGREICHE FLUCHT, VERLORENE HEIMAT";
-            text = "Dank massiver Evakuierung wurden fast alle Leben gerettet! Ein humanitärer Erfolg.<br><br><strong>Der Preis:</strong> Das Delta ist zerstört. Keine Mangroven, keine Deiche. Die Felder sind versalzen. Die Überlebenden sind nun mittellose Flüchtlinge in Lagern. Eine Wirtschaftskrise folgt.";
+            title = "SZENARIO: FLUCHT OHNE RÜCKKEHR";
+            text = "Dank Evakuierung wurden fast alle Leben gerettet!<br><br><strong>Der Preis:</strong> Das Delta ist zerstört. Die Überlebenden sind nun mittellose Flüchtlinge. Eine Wirtschaftskrise folgt.";
             
-            if(currentRole === 'un') feedback = "Als UN-Koordinator haben Sie Leben gerettet. Das war Ihr Ziel. Gute Arbeit.";
-            if(currentRole === 'local') feedback = "Sie leben noch, aber Ihr Dorf ist für immer verschwunden. War es das wert?";
+            if(isCollectiveMode) feedback = "Die Gruppe hat Menschenleben priorisiert, aber die Heimat aufgegeben. Ein harter, aber humaner Kompromiss.";
+            else if(currentRole === 'un') feedback = "Gute Arbeit. Leben gerettet.";
+            else if(currentRole === 'local') feedback = "Sie leben noch, aber Ihr Dorf ist verschwunden.";
         }
         
-        // 5. LANGFRISTIG GUT (SUCCESS) - Schutz > Evakuierung
+        // 5. LANGFRISTIG GUT (SUCCESS)
         else if (protect >= 5 && warn >= 2) {
             type = "res-success";
             title = "SZENARIO: NACHHALTIGE SICHERHEIT";
-            text = "Die Investition in Mangroven und Bunker hat sich ausgezahlt. Die Flutwelle wurde gebrochen.<br><br><strong>Das Ergebnis:</strong> Die Häuser stehen noch. Es gab Verletzte, aber keine Massenkatastrophe. Das Delta kann sich sofort erholen. Ein Musterbeispiel für 'Disaster Risk Reduction'.";
+            text = "Die Investition in Mangroven und Bunker hat sich ausgezahlt.<br><br><strong>Das Ergebnis:</strong> Die Häuser stehen noch. Es gab Verletzte, aber keine Massenkatastrophe. Das Delta erholt sich schnell.";
             
-            if(currentRole === 'local') feedback = "Hervorragend! Als Dorfvorsteher haben Sie Ihre Heimat für die nächste Generation gerettet.";
-            else feedback = "Eine visionäre Entscheidung. Nachhaltigkeit hat über Kurzfristigkeit gesiegt.";
+            if(isCollectiveMode) feedback = "HERVORRAGEND! Die Gruppe hat politische Differenzen überwunden und die rationalste Lösung gefunden.";
+            else feedback = "Eine visionäre Entscheidung. Nachhaltigkeit hat gesiegt.";
         }
         
         // 6. MITTELWEG (MIXED)
         else {
             type = "res-mixed";
             title = "SZENARIO: SOLIDE KRISENHILFE";
-            text = "Sie haben einen Mittelweg gefunden. Es gab Opfer, aber weit weniger als in der Realität.<br><br>Sie haben gezeigt, dass Nargis kein unabwendbares Schicksal war, sondern eine Frage des Managements. Es wäre noch besser gegangen, aber Sie haben das Schlimmste verhindert.";
-            feedback = "Eine pragmatische Lösung in einer schwierigen Lage.";
+            text = "Sie haben einen Mittelweg gefunden. Es gab Opfer, aber weit weniger als in der Realität.<br><br>Es wäre noch besser gegangen, aber Sie haben das Schlimmste verhindert.";
+            feedback = isCollectiveMode ? "Ein demokratischer Kompromiss: Niemand ist ganz glücklich, aber alle haben überlebt." : "Eine pragmatische Lösung.";
         }
 
         // Ergebnis anzeigen
@@ -456,6 +540,14 @@
         document.getElementById('out-title').innerText = title;
         document.getElementById('out-text').innerHTML = text;
         document.getElementById('role-feedback').innerText = feedback;
+
+        // Button im Ergebnis-Screen steuern
+        const collBtn = document.getElementById('collective-retry-btn');
+        if(isCollectiveMode) {
+            collBtn.innerText = "Neue Verhandlung starten";
+        } else {
+            collBtn.innerText = "Runden Tisch einberufen";
+        }
 
         showSlide('slide-result');
     }
