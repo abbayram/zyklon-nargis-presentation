@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nargis Crisis Simulator - Extended</title>
+    <title>Nargis Crisis Simulator - Visual Edition</title>
     <style>
         :root {
             --bg-color: #111;
             --terminal-green: #33ff33;
             --alert-red: #ff3333;
+            --alert-orange: #ff9800;
             --ui-gray: #333;
             --text-white: #f0f0f0;
             --highlight: #00bcd4;
@@ -36,13 +37,13 @@
             background: #1a1a1a;
             border: 2px solid var(--ui-gray);
             position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 30px rgba(0,0,0,0.6);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* --- ALLGEMEINE UI --- */
+        /* --- SLIDE MANAGEMENT --- */
         .slide {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -63,11 +64,10 @@
             z-index: 10;
         }
 
-        h1, h2 { text-transform: uppercase; letter-spacing: 2px; text-align: center; }
-        h1 { color: var(--terminal-green); text-shadow: 0 0 10px rgba(51, 255, 51, 0.5); margin-bottom: 40px;}
-        h2 { color: var(--text-white); border-bottom: 1px solid var(--ui-gray); padding-bottom: 10px; width: 80%; }
+        h1 { text-transform: uppercase; letter-spacing: 2px; text-align: center; color: var(--terminal-green); text-shadow: 0 0 10px rgba(51, 255, 51, 0.5); margin-bottom: 30px;}
         p { font-size: 18px; line-height: 1.5; max-width: 800px; text-align: center; }
 
+        /* --- BUTTONS --- */
         .btn {
             background: transparent;
             border: 2px solid var(--terminal-green);
@@ -83,35 +83,19 @@
         }
         .btn:hover { background: var(--terminal-green); color: black; box-shadow: 0 0 15px var(--terminal-green); }
 
-        .btn-gold {
-            border-color: var(--gold);
-            color: var(--gold);
-        }
+        .btn-gold { border-color: var(--gold); color: var(--gold); }
         .btn-gold:hover { background: var(--gold); color: black; box-shadow: 0 0 15px var(--gold); }
 
-        .btn-small {
-            font-size: 14px;
-            padding: 10px 20px;
-            border: 1px solid #666;
-            color: #888;
-        }
+        .btn-small { font-size: 14px; padding: 10px 20px; border: 1px solid #666; color: #888; margin-top: 0; }
         .btn-small:hover { border-color: white; color: white; background: transparent; box-shadow: none; }
 
-        /* --- TYPEWRITER (INTRO) --- */
-        .typewriter-text {
-            color: var(--terminal-green);
-            font-size: 24px;
-            text-align: left;
-            white-space: pre-wrap;
-            min-height: 200px;
-            width: 80%;
-        }
+        /* --- TYPEWRITER --- */
+        .typewriter-text { color: var(--terminal-green); font-size: 24px; text-align: left; white-space: pre-wrap; min-height: 200px; width: 80%; }
         .cursor::after { content: '█'; animation: blink 0.8s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* --- ROLE SELECTION --- */
+        /* --- ROLE CARDS --- */
         .role-container { display: flex; gap: 30px; width: 100%; justify-content: center; margin-top: 20px; }
-        
         .role-card {
             background-color: var(--role-btn-color);
             border: 3px solid var(--role-btn-border);
@@ -129,33 +113,14 @@
             box-shadow: 0 10px 15px rgba(0,0,0,0.3);
             color: #222;
         }
-        
         .role-card:hover { transform: translateY(-8px); box-shadow: 0 15px 25px rgba(0,0,0,0.4); filter: brightness(1.1); }
-        
         .role-icon { font-size: 50px; margin-bottom: 15px; display: block; }
-        
-        .role-title { 
-            font-size: 22px; 
-            font-weight: 900; 
-            margin-bottom: 10px; 
-            display: block; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
+        .role-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; display: block; font-family: 'Segoe UI', Tahoma, sans-serif;}
         .role-desc { font-size: 13px; line-height: 1.4; color: #333; font-weight: 500; }
 
-        /* --- MISSION BRIEFING --- */
-        .briefing-box {
-            border: 2px dashed var(--highlight);
-            padding: 30px;
-            background: rgba(0, 188, 212, 0.05);
-            margin-bottom: 20px;
-            width: 80%;
-        }
-        .briefing-box.collective {
-            border-color: var(--gold);
-            background: rgba(255, 215, 0, 0.05);
-        }
+        /* --- BRIEFING --- */
+        .briefing-box { border: 2px dashed var(--highlight); padding: 30px; background: rgba(0, 188, 212, 0.05); margin-bottom: 20px; width: 80%; }
+        .briefing-box.collective { border-color: var(--gold); background: rgba(255, 215, 0, 0.05); }
 
         /* --- GAME SLIDERS --- */
         .budget-ui { width: 80%; background: #222; padding: 20px; border-radius: 4px; border: 1px solid #444; }
@@ -163,57 +128,43 @@
         .slider-label { width: 280px; text-align: left; font-size: 16px; display: flex; align-items: center; gap: 10px;}
         input[type=range] { flex-grow: 1; margin: 0 15px; cursor: pointer; accent-color: var(--terminal-green); }
         .slider-val { width: 30px; text-align: right; font-weight: bold; color: var(--highlight); }
-        
-        .points-display { 
-            font-size: 24px; margin-bottom: 20px; color: var(--terminal-green); font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 10px; width: 100%; text-align: center;
-        }
+        .points-display { font-size: 24px; margin-bottom: 20px; color: var(--terminal-green); font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 10px; width: 100%; text-align: center; }
         .points-display.error { color: var(--alert-red); animation: shake 0.5s; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
-        /* --- OUTCOME --- */
-        .outcome-box {
-            border-left: 8px solid;
-            padding: 30px;
-            background: #222;
-            width: 80%;
-            margin-bottom: 20px;
-            text-align: left;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        /* --- RESULT --- */
+        #outcome-image {
+            max-width: 95%;
+            max-height: 65vh;
+            width: auto;
+            height: auto;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+            border-radius: 4px;
+            margin-bottom: 15px;
         }
-        .outcome-title { font-size: 28px; margin-bottom: 20px; display: block; font-weight: bold; text-transform: uppercase;}
-        .outcome-text { font-size: 18px; line-height: 1.6; }
-        
-        .res-catastrophe { border-color: var(--alert-red); }
-        .res-catastrophe .outcome-title { color: var(--alert-red); }
-        
-        .res-mixed { border-color: #ff9800; }
-        .res-mixed .outcome-title { color: #ff9800; }
-        
-        .res-success { border-color: var(--terminal-green); }
-        .res-success .outcome-title { color: var(--terminal-green); }
+        #role-feedback { margin-top: 0px; font-style: italic; max-width: 85%; text-align: center; margin-bottom: 20px; font-size: 16px; }
+        .text-red { color: var(--alert-red); }
+        .text-orange { color: var(--alert-orange); }
+        .text-green { color: var(--terminal-green); }
 
-        .collective-mode-ui {
-            border: 1px solid var(--gold);
+        .ai-credit {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 11px;
+            color: #555;
+            pointer-events: none;
+            opacity: 0.6;
+            z-index: 50;
         }
-        .collective-mode-ui h1 {
-            color: var(--gold);
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-        .collective-mode-ui .points-display {
-            color: var(--gold);
-        }
-        .collective-mode-ui input[type=range] {
-            accent-color: var(--gold);
-        }
-        .collective-mode-ui .btn {
-            border-color: var(--gold);
-            color: var(--gold);
-        }
-        .collective-mode-ui .btn:hover {
-            background: var(--gold);
-            color: black;
-            box-shadow: 0 0 15px var(--gold);
-        }
+
+        /* Collective Styling */
+        .collective-mode-ui { border: 1px solid var(--gold); }
+        .collective-mode-ui h1 { color: var(--gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+        .collective-mode-ui .points-display { color: var(--gold); }
+        .collective-mode-ui input[type=range] { accent-color: var(--gold); }
+        .collective-mode-ui .btn { border-color: var(--gold); color: var(--gold); }
+        .collective-mode-ui .btn:hover { background: var(--gold); color: black; }
 
     </style>
 </head>
@@ -228,7 +179,7 @@
 
     <div class="slide" id="slide-roles">
         <h1>Identität Wählen</h1>
-        <p style="margin-bottom: 20px;">Wählt eure Perspektive für die Simulation.</p>
+        <p style="margin-bottom: 20px;">Wähle deine Perspektive oder starte direkt den Krisenstab.</p>
         
         <div class="role-container">
             <div class="role-card" onclick="selectRole('junta')">
@@ -236,13 +187,11 @@
                 <span class="role-title">Militärjunta</span>
                 <span class="role-desc">Kontrolle. Stabilität. Souveränität. Ausländer sind eine Gefahr für das Regime.</span>
             </div>
-
             <div class="role-card" onclick="selectRole('un')">
                 <div class="role-icon">💬</div>
                 <span class="role-title">Internationale Hilfe</span>
                 <span class="role-desc">Rettung. Logistik. Menschenrechte. Wir müssen helfen, egal wie.</span>
             </div>
-
             <div class="role-card" onclick="selectRole('local')">
                 <div class="role-icon">💡</div>
                 <span class="role-title">Zivilbevölkerung</span>
@@ -262,15 +211,12 @@
             <h3 id="briefing-role-title" style="color: var(--highlight); margin-top:0;">...</h3>
             <p id="briefing-text" style="text-align: left;">...</p>
         </div>
-        <p style="font-size: 16px; color: #888;">Sie haben <strong>10 Ressourcen-Punkte</strong>. Verteilen Sie diese weise.</p>
+        <p style="font-size: 16px; color: #888;">Verteilen Sie Ihre <strong>10 Ressourcen-Punkte</strong>.</p>
         <button class="btn" onclick="goToGame()" id="start-sim-btn">Simulation Starten</button>
     </div>
 
     <div class="slide" id="slide-game">
-        <div class="points-display">
-            Verfügbare Punkte: <span id="points-remaining">10</span> / 10
-        </div>
-
+        <div class="points-display">Verfügbare Punkte: <span id="points-remaining">10</span> / 10</div>
         <div class="budget-ui">
             <div class="slider-row">
                 <div class="slider-label">📡 Frühwarnsysteme</div>
@@ -299,59 +245,42 @@
                 <div class="slider-val">0</div>
             </div>
         </div>
-
         <button class="btn" onclick="checkSimulation()">Simulation ausführen</button>
     </div>
 
     <div class="slide" id="slide-result">
-        <h1>Simulationsergebnis</h1>
-        
-        <div id="outcome-container" class="outcome-box">
-            <span class="outcome-title" id="out-title">Titel</span>
-            <div class="outcome-text" id="out-text">Text</div>
-        </div>
-
-        <div id="role-feedback" style="margin-top: 10px; font-style: italic; color: #aaa; max-width: 80%; text-align: center; margin-bottom: 20px;"></div>
-
+        <img id="outcome-image" src="" alt="Szenario Bild">
+        <div id="role-feedback"></div>
         <div style="display: flex; gap: 20px;">
-            <button class="btn btn-small" onclick="restartGame()">Neustart (Einzeln)</button>
-            <button class="btn btn-gold" id="collective-retry-btn" onclick="selectRole('collective')">Runden Tisch einberufen</button>
+            <button class="btn btn-small" onclick="restartGame()">Rollen-Auswahl</button>
+            <button class="btn btn-gold" id="collective-retry-btn" onclick="selectRole('collective')">Krisenstab einberufen</button>
         </div>
+        <div class="ai-credit">Visuals erstellt mit Google Gemini AI</div>
     </div>
 
 </div>
 
 <script>
-    // --- STATE ---
     let currentRole = "";
     let isCollectiveMode = false;
     const maxPoints = 10;
     
-    // --- INTRO TYPEWRITER ---
-    const introLines = "Initialisiere Crisis Management Simulator...\nStandort: Irawadi-Delta, Myanmar.\nZeitpunkt: April 2008.\n\nWarnung: Tropischer Zyklon 'Nargis' formiert sich.\nKategorie: 4.\nGeschätzte Ankunftszeit: 72 Stunden.\n\nDie Regierung ist isoliert. Die Bevölkerung ist unvorbereitet.\nDas Schicksal von 2 Millionen Menschen liegt in Ihrer Hand.";
+    // --- INTRO ---
+    const introLines = "Initialisiere Crisis Management Simulator...\nStandort: Irawadi-Delta, Myanmar.\nZeitpunkt: April 2008.\n\nZyklon 'Nargis' (Kategorie 4) nähert sich.\nAnkunftszeit: 72 Stunden.\n\nDas Schicksal von 2 Millionen Menschen liegt in Ihrer Hand.";
     
     window.onload = function() {
         typeWriter(introLines, 'intro-text', 20, () => {
             const btn = document.getElementById('intro-btn');
-            btn.style.opacity = 1;
-            btn.style.pointerEvents = 'auto';
+            btn.style.opacity = 1; btn.style.pointerEvents = 'auto';
         });
     };
 
     function typeWriter(text, elementId, speed, callback) {
-        let i = 0;
-        let container = document.getElementById(elementId);
-        container.innerHTML = "";
-        container.classList.add('cursor');
+        let i = 0; let container = document.getElementById(elementId);
+        container.innerHTML = ""; container.classList.add('cursor');
         function typing() {
-            if (i < text.length) {
-                container.innerHTML += text.charAt(i);
-                i++;
-                setTimeout(typing, speed);
-            } else {
-                container.classList.remove('cursor');
-                if(callback) callback();
-            }
+            if (i < text.length) { container.innerHTML += text.charAt(i); i++; setTimeout(typing, speed); }
+            else { container.classList.remove('cursor'); if(callback) callback(); }
         }
         typing();
     }
@@ -362,68 +291,49 @@
         document.getElementById(id).classList.add('active');
     }
 
-    function goToRoles() { 
-        resetUIStyles();
-        showSlide('slide-roles'); 
-    }
-
     function resetUIStyles() {
-        // Entferne Collective Styling
-        document.getElementById('slide-briefing').classList.remove('collective-mode-ui');
-        document.getElementById('slide-game').classList.remove('collective-mode-ui');
+        const list = ['slide-briefing', 'slide-game'];
+        list.forEach(id => document.getElementById(id).classList.remove('collective-mode-ui'));
         document.getElementById('briefing-container').classList.remove('collective');
         document.getElementById('briefing-role-title').style.color = "var(--highlight)";
+        document.getElementById('briefing-header').innerText = "Missionsbefehl";
     }
 
-    // --- ROLE LOGIC ---
     function selectRole(role) {
         currentRole = role;
         const titleEl = document.getElementById('briefing-role-title');
         const textEl = document.getElementById('briefing-text');
-        const briefContainer = document.getElementById('briefing-container');
-        const briefingHeader = document.getElementById('briefing-header');
-        
-        // Reset Inputs before start
         document.querySelectorAll('input[type=range]').forEach(i => i.value = 0);
-
         resetUIStyles();
 
         if (role === 'junta') {
             isCollectiveMode = false;
             titleEl.innerText = "ROLLE: GENERAL (SPDC)";
-            textEl.innerHTML = "Ihre Priorität ist die <strong>Nationale Sicherheit</strong>. In wenigen Tagen findet das Verfassungsreferendum statt. Es darf nicht verschoben werden.<br><br>Ausländische Hilfe bedeutet Spione im Land. Halten Sie die Ordnung aufrecht, egal was es kostet.";
+            textEl.innerHTML = "Priorität: <strong>Nationale Sicherheit</strong>. Das Referendum darf nicht gestört werden. Ausländische Hilfe ist eine Gefahr für die Souveränität.";
         } else if (role === 'un') {
             isCollectiveMode = false;
             titleEl.innerText = "ROLLE: UN-KOORDINATOR";
-            textEl.innerHTML = "Ihre Priorität ist <strong>Humanitäre Hilfe</strong>. Sie wissen, dass die Bambushütten dem Sturm nicht standhalten.<br><br>Versuchen Sie, Ressourcen in Warnung und Infrastruktur zu stecken. Ignorieren Sie die politische Paranoia.";
+            textEl.innerHTML = "Priorität: <strong>Humanitäre Hilfe</strong>. Schützen Sie Leben durch Information und Logistik. Ignorieren Sie politische Hürden.";
         } else if (role === 'local') {
             isCollectiveMode = false;
             titleEl.innerText = "ROLLE: DORFVORSTEHER";
-            textEl.innerHTML = "Ihre Priorität ist das <strong>Überleben Ihres Dorfes</strong>. Sie brauchen keine Propaganda. Sie brauchen Schutzbunker und Mangroven.<br><br>Wenn der Sturm vorbei ist, müssen Sie hier weiterleben. Denken Sie langfristig an Ihre Heimat.";
+            textEl.innerHTML = "Priorität: <strong>Überleben</strong>. Sie brauchen Bunker und Mangroven, um Ihre Heimat vor der Flut zu retten.";
         } else if (role === 'collective') {
             isCollectiveMode = true;
-            
-            // Apply Gold Styles
             document.getElementById('slide-briefing').classList.add('collective-mode-ui');
             document.getElementById('slide-game').classList.add('collective-mode-ui');
-            briefContainer.classList.add('collective');
-            titleEl.style.color = "var(--gold)";
-
-            briefingHeader.innerText = "GEMEINSAMER KRISENSTAB";
+            document.getElementById('briefing-container').classList.add('collective');
+            document.getElementById('briefing-header').innerText = "GEMEINSAMER KRISENSTAB";
             titleEl.innerText = "SZENARIO: DER RUNDE TISCH";
-            textEl.innerHTML = "Der General, der UN-Koordinator und der Dorfvorsteher sitzen zusammen in einem Raum. Die Türen sind verschlossen.<br><br><strong>Sie müssen sich auf EIN Budget einigen.</strong><br>Die UN will Warnung, das Dorf will Bunker, das Militär will Kontrolle. Finden Sie einen Kompromiss, der die Katastrophe abwendet, ohne einen Bürgerkrieg auszulösen.";
+            titleEl.style.color = "var(--gold)";
+            textEl.innerHTML = "Alle Parteien müssen sich auf EIN Budget einigen. Finden Sie einen Kompromiss zwischen Kontrolle, Warnung und Schutz.";
         }
-        
         showSlide('slide-briefing');
     }
 
     function goToGame() { showSlide('slide-game'); updateBudget(); }
-    
-    function restartGame() {
-        goToRoles();
-    }
+    function restartGame() { showSlide('slide-roles'); }
 
-    // --- GAME LOGIC ---
     function updateBudget() {
         const inputs = document.querySelectorAll('input[type=range]');
         let sum = 0;
@@ -432,127 +342,77 @@
             sum += val;
             inp.nextElementSibling.innerText = val;
         });
-
         const display = document.getElementById('points-remaining');
         const remaining = maxPoints - sum;
         display.innerText = remaining;
-
         if (remaining < 0) {
             display.parentElement.classList.add('error');
-            display.innerText = "ÜBERSCHRITTEN (" + remaining + ")";
-            return false;
+            display.innerText = "LIMIT ÜBERSCHRITTEN (" + remaining + ")";
         } else {
             display.parentElement.classList.remove('error');
             display.parentElement.innerText = "Verfügbare Punkte: " + remaining + " / 10";
-            return true;
         }
     }
 
+    // --- CHECK SIMULATION & LOAD IMAGES ---
     function checkSimulation() {
-        // Budget Check
-        const inputs = document.querySelectorAll('input[type=range]');
-        let sum = 0;
-        inputs.forEach(inp => sum += parseInt(inp.value));
-        if (sum > maxPoints) {
-            alert("Sie haben mehr als 10 Punkte ausgegeben! Korrigieren Sie Ihre Verteilung.");
-            return;
-        }
-        
-        // Werte holen
-        let warn = parseInt(document.getElementById('inp-warn').value);
-        let protect = parseInt(document.getElementById('inp-protect').value);
-        let infra = parseInt(document.getElementById('inp-infra').value);
-        let mil = parseInt(document.getElementById('inp-mil').value);
-        let prop = parseInt(document.getElementById('inp-prop').value);
-        
-        let total = warn + protect + infra + mil + prop;
-        let badSum = mil + prop;
+        const warn = parseInt(document.getElementById('inp-warn').value);
+        const protect = parseInt(document.getElementById('inp-protect').value);
+        const infra = parseInt(document.getElementById('inp-infra').value);
+        const mil = parseInt(document.getElementById('inp-mil').value);
+        const prop = parseInt(document.getElementById('inp-prop').value);
+        if ((warn + protect + infra + mil + prop) > maxPoints) { alert("Zu viele Punkte!"); return; }
 
-        if (total < 10) {
-            if(!confirm("Sie haben noch Punkte übrig (" + (10-total) + "). Wirklich fortfahren?")) return;
-        }
+        let imageName = ""; let feedback = ""; let fColor = "";
+        const path = "assets/";
 
-        // --- 6 ENDINGS LOGIC ---
-        let title = "";
-        let text = "";
-        let type = ""; // catastrophe, mixed, success
-        let feedback = "";
-
-        // 1. HISTORISCH (BAD) - Zu viel Fokus auf Militär
-        if (badSum > 3) {
-            type = "res-catastrophe";
-            title = "SZENARIO: HISTORISCHE REALITÄT (2008)";
-            text = "Das Referendum wurde durchgezogen, das Militär hat die Kontrolle behalten.<br><br><strong>Der Preis:</strong> 138.000 Tote. Hilfsschiffe wurden abgewiesen. Ein humanitäres Desaster.";
-            
-            if(isCollectiveMode) feedback = "Der Runde Tisch ist gescheitert. Das Militär hat die Verhandlung dominiert und die anderen zum Schweigen gebracht.";
-            else if(currentRole === 'junta') feedback = "Mission: ERFÜLLT. Das Regime steht stabil.";
-            else feedback = "Mission: GESCHEITERT. Sie haben sich dem Druck des Regimes gebeugt.";
+        // 1. Der Eiserne Vorhang
+        if (mil + prop >= 6) {
+            imageName = "ending1.png"; fColor = "text-red";
+            feedback = isCollectiveMode ? "Der Krisenstab scheiterte an der Paranoia des Militärs." : "Sicherheit wurde über Leben gestellt.";
         }
-        
-        // 2. PANIK (BAD)
-        else if (warn >= 5 && protect < 2 && infra < 2) {
-            type = "res-catastrophe";
-            title = "SZENARIO: TÖDLICHE PANIK";
-            text = "Das Radio warnte ununterbrochen. Die Menschen wussten Bescheid.<br><br><strong>Das Problem:</strong> Ohne Bunker und ohne Boote saßen sie in der Falle. Massenpanik führte zu noch mehr Opfern.";
-             feedback = isCollectiveMode ? "Der Gruppe fehlte die praktische Weitsicht. Warnung allein reicht nicht." : "Wissen ist Macht, aber ohne Infrastruktur ist es nutzlos.";
+        // 2. Tödliche Klarheit
+        else if (warn >= 6 && protect <= 1 && infra <= 1) {
+            imageName = "ending2.png"; fColor = "text-red";
+            feedback = "Die Menschen wussten vom Tod, konnten ihm aber nicht entkommen.";
         }
-        
-        // 3. LOGISTIK ALBTRAUM (BAD)
-        else if (protect >= 4 && infra === 0) {
-            type = "res-catastrophe";
-            title = "SZENARIO: ISOLIERTE INSELN";
-            text = "Die Schutzbauten haben die erste Welle abgehalten.<br><br><strong>Das Problem:</strong> Danach kam keine Hilfe. Keine Straßen, keine Boote. Seuchen breiteten sich aus.";
-            feedback = "Katastrophenschutz endet nicht mit dem Sturm. Sie haben die Logistik vergessen.";
+        // 3. Die schwimmenden Friedhöfe
+        else if (infra >= 5 && protect <= 1) {
+            imageName = "ending3.png"; fColor = "text-red";
+            feedback = "Ohne Küstenschutz wurde die Flucht zur Todesfalle.";
         }
-        
-        // 4. KURZFRISTIG GUT (MIXED/SUCCESS)
-        else if (infra >= 5 && protect <= 2 && warn >= 2) {
-            type = "res-mixed";
-            title = "SZENARIO: FLUCHT OHNE RÜCKKEHR";
-            text = "Dank Evakuierung wurden fast alle Leben gerettet!<br><br><strong>Der Preis:</strong> Das Delta ist zerstört. Die Überlebenden sind nun mittellose Flüchtlinge. Eine Wirtschaftskrise folgt.";
-            
-            if(isCollectiveMode) feedback = "Die Gruppe hat Menschenleben priorisiert, aber die Heimat aufgegeben. Ein harter, aber humaner Kompromiss.";
-            else if(currentRole === 'un') feedback = "Gute Arbeit. Leben gerettet.";
-            else if(currentRole === 'local') feedback = "Sie leben noch, aber Ihr Dorf ist verschwunden.";
+        // 4. Das Mangroven-Wunder
+        else if (protect >= 5 && warn >= 3) {
+            imageName = "ending4.png"; fColor = "text-green";
+            feedback = "Ein Triumph der Vernunft. Die Natur bot den besten Schutz.";
         }
-        
-        // 5. LANGFRISTIG GUT (SUCCESS)
-        else if (protect >= 5 && warn >= 2) {
-            type = "res-success";
-            title = "SZENARIO: NACHHALTIGE SICHERHEIT";
-            text = "Die Investition in Mangroven und Bunker hat sich ausgezahlt.<br><br><strong>Das Ergebnis:</strong> Die Häuser stehen noch. Es gab Verletzte, aber keine Massenkatastrophe. Das Delta erholt sich schnell.";
-            
-            if(isCollectiveMode) feedback = "HERVORRAGEND! Die Gruppe hat politische Differenzen überwunden und die rationalste Lösung gefunden.";
-            else feedback = "Eine visionäre Entscheidung. Nachhaltigkeit hat gesiegt.";
+        // 5. Exil in der Heimat
+        else if (infra >= 4 && warn >= 4) {
+            imageName = "ending5.png"; fColor = "text-orange";
+            feedback = "Leben gerettet, aber die Existenzgrundlage ist weggespült.";
         }
-        
-        // 6. MITTELWEG (MIXED)
+        // 6. Die Festung im Schlamm
+        else if (protect >= 6 && warn <= 1) {
+            imageName = "ending6.png"; fColor = "text-orange";
+            feedback = "Massive Bunker nützen nichts, wenn niemand rechtzeitig gewarnt wird.";
+        }
+        // 7. Zusammenbruch der Ordnung
+        else if (mil === 0 && warn + infra >= 5) {
+            imageName = "ending7.png"; fColor = "text-orange";
+            feedback = "Humanitärer Erfolg, gefolgt von politischem Chaos.";
+        }
+        // 8. Staatsversagen
         else {
-            type = "res-mixed";
-            title = "SZENARIO: SOLIDE KRISENHILFE";
-            text = "Sie haben einen Mittelweg gefunden. Es gab Opfer, aber weit weniger als in der Realität.<br><br>Es wäre noch besser gegangen, aber Sie haben das Schlimmste verhindert.";
-            feedback = isCollectiveMode ? "Ein demokratischer Kompromiss: Niemand ist ganz glücklich, aber alle haben überlebt." : "Eine pragmatische Lösung.";
+            imageName = "ending8.png"; fColor = "text-red";
+            feedback = "Zu wenig, zu spät. Die Planung war nicht konsequent genug.";
         }
 
-        // Ergebnis anzeigen
-        const container = document.getElementById('outcome-container');
-        container.className = "outcome-box " + type;
-        document.getElementById('out-title').innerText = title;
-        document.getElementById('out-text').innerHTML = text;
-        document.getElementById('role-feedback').innerText = feedback;
-
-        // Button im Ergebnis-Screen steuern
-        const collBtn = document.getElementById('collective-retry-btn');
-        if(isCollectiveMode) {
-            collBtn.innerText = "Neue Verhandlung starten";
-        } else {
-            collBtn.innerText = "Runden Tisch einberufen";
-        }
-
+        document.getElementById('outcome-image').src = path + imageName;
+        const fb = document.getElementById('role-feedback');
+        fb.innerText = feedback; fb.className = fColor;
+        document.getElementById('collective-retry-btn').innerText = isCollectiveMode ? "Neue Verhandlung" : "Runden Tisch einberufen";
         showSlide('slide-result');
     }
-
 </script>
-
 </body>
 </html>
