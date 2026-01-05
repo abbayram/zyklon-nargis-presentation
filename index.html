@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nargis – Krisenstab Delta</title>
+    <title>Nargis – Delta Kommando 2008</title>
     <style>
         :root {
-            --bg-color: #111;
+            --bg-color: #0a0a0a;
             --terminal-green: #33ff33;
             --alert-red: #ff3333;
             --alert-orange: #ff9800;
-            --ui-gray: #333;
-            --text-white: #f0f0f0;
+            --ui-gray: #222;
+            --text-white: #e0e0e0;
             --highlight: #00bcd4;
             --gold: #ffd700;
             --role-btn-color: #a88b8b; 
@@ -28,22 +28,20 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            user-select: none;
         }
 
         #game-stage {
             width: 1000px;
             height: 700px;
-            background: #1a1a1a;
+            background: #111;
             border: 2px solid var(--ui-gray);
             position: relative;
-            box-shadow: 0 0 30px rgba(0,0,0,0.6);
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* --- SLIDE MANAGEMENT --- */
         .slide {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -55,117 +53,87 @@
             justify-content: center;
             opacity: 0;
             transition: opacity 0.5s ease;
-            background: #1a1a1a;
+            background: #111;
             z-index: 1;
         }
-        .slide.active {
-            display: flex;
-            opacity: 1;
-            z-index: 10;
-        }
+        .slide.active { display: flex; opacity: 1; z-index: 10; }
 
-        h1 { text-transform: uppercase; letter-spacing: 2px; text-align: center; color: var(--terminal-green); text-shadow: 0 0 10px rgba(51, 255, 51, 0.5); margin-bottom: 30px;}
-        p { font-size: 18px; line-height: 1.5; max-width: 800px; text-align: center; }
+        h1 { text-transform: uppercase; letter-spacing: 3px; color: var(--terminal-green); text-shadow: 0 0 10px rgba(51, 255, 51, 0.3); margin-bottom: 30px;}
+
+        /* --- ZÄHLER --- */
+        .points-tracker {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            border: 1px solid var(--ui-gray);
+            background: rgba(0,0,0,0.3);
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .points-tracker.warning {
+            color: var(--alert-red);
+            border-color: var(--alert-red);
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
         /* --- BUTTONS --- */
         .btn {
             background: transparent;
             border: 2px solid var(--terminal-green);
             color: var(--terminal-green);
-            padding: 15px 30px;
+            padding: 15px 35px;
             font-size: 20px;
             font-family: inherit;
             cursor: pointer;
             margin-top: 20px;
             transition: all 0.2s;
             text-transform: uppercase;
-            font-weight: bold;
         }
-        .btn:hover { background: var(--terminal-green); color: black; box-shadow: 0 0 15px var(--terminal-green); }
+        .btn:hover:not(:disabled) { background: var(--terminal-green); color: black; box-shadow: 0 0 20px var(--terminal-green); }
+        .btn:disabled { border-color: #444; color: #444; cursor: not-allowed; }
 
         .btn-gold { border-color: var(--gold); color: var(--gold); }
-        .btn-gold:hover { background: var(--gold); color: black; box-shadow: 0 0 15px var(--gold); }
-
-        .btn-small { font-size: 14px; padding: 10px 20px; border: 1px solid #666; color: #888; margin-top: 0; }
-        .btn-small:hover { border-color: white; color: white; background: transparent; box-shadow: none; }
+        .btn-gold:hover { background: var(--gold); color: black; }
 
         /* --- TYPEWRITER --- */
-        .typewriter-text { color: var(--terminal-green); font-size: 24px; text-align: left; white-space: pre-wrap; min-height: 200px; width: 80%; }
+        .typewriter-text { color: var(--terminal-green); font-size: 22px; text-align: left; white-space: pre-wrap; min-height: 250px; width: 85%; line-height: 1.4; }
         .cursor::after { content: '█'; animation: blink 0.8s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         /* --- ROLE CARDS --- */
-        .role-container { display: flex; gap: 30px; width: 100%; justify-content: center; margin-top: 20px; }
+        .role-container { display: flex; gap: 20px; margin-top: 20px; }
         .role-card {
             background-color: var(--role-btn-color);
             border: 3px solid var(--role-btn-border);
-            border-radius: 20px;
-            padding: 25px;
-            width: 240px;
-            height: 260px;
+            border-radius: 15px;
+            padding: 20px;
+            width: 230px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s;
+            color: #111;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            box-shadow: 0 10px 15px rgba(0,0,0,0.3);
-            color: #222;
         }
-        .role-card:hover { transform: translateY(-8px); box-shadow: 0 15px 25px rgba(0,0,0,0.4); filter: brightness(1.1); }
-        .role-icon { font-size: 50px; margin-bottom: 15px; display: block; }
-        .role-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; display: block; font-family: 'Segoe UI', Tahoma, sans-serif;}
-        .role-desc { font-size: 13px; line-height: 1.4; color: #333; font-weight: 500; }
+        .role-card:hover { transform: translateY(-5px); filter: brightness(1.1); }
+        .role-title { font-size: 20px; font-weight: 900; display: block; margin-bottom: 10px; font-family: sans-serif; text-transform: uppercase; }
+        .role-desc { font-size: 13px; font-weight: 500; }
 
-        /* --- BRIEFING --- */
-        .briefing-box { border: 2px dashed var(--highlight); padding: 30px; background: rgba(0, 188, 212, 0.05); margin-bottom: 20px; width: 80%; }
-        .briefing-box.collective { border-color: var(--gold); background: rgba(255, 215, 0, 0.05); }
-
-        /* --- GAME SLIDERS --- */
-        .budget-ui { width: 80%; background: #222; padding: 20px; border-radius: 4px; border: 1px solid #444; }
-        .slider-row { display: flex; align-items: center; margin-bottom: 15px; }
-        .slider-label { width: 280px; text-align: left; font-size: 16px; display: flex; align-items: center; gap: 10px;}
-        input[type=range] { flex-grow: 1; margin: 0 15px; cursor: pointer; accent-color: var(--terminal-green); }
-        .slider-val { width: 30px; text-align: right; font-weight: bold; color: var(--highlight); }
-        .points-display { font-size: 24px; margin-bottom: 20px; color: var(--terminal-green); font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 10px; width: 100%; text-align: center; }
-        .points-display.error { color: var(--alert-red); animation: shake 0.5s; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        /* --- SLIDERS --- */
+        .budget-ui { width: 85%; background: #1a1a1a; padding: 25px; border: 1px solid #333; }
+        .slider-row { display: flex; align-items: center; margin-bottom: 18px; }
+        .slider-label { width: 320px; text-align: left; font-size: 15px; }
+        input[type=range] { flex-grow: 1; cursor: pointer; accent-color: var(--terminal-green); }
+        .slider-val { width: 40px; text-align: right; font-weight: bold; color: var(--highlight); margin-left: 10px;}
 
         /* --- RESULT --- */
-        #outcome-image {
-            max-width: 95%;
-            max-height: 65vh;
-            width: auto;
-            height: auto;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
-            border-radius: 4px;
-            margin-bottom: 15px;
-        }
-        #role-feedback { margin-top: 0px; font-style: italic; max-width: 85%; text-align: center; margin-bottom: 20px; font-size: 16px; }
-        .text-red { color: var(--alert-red); }
-        .text-orange { color: var(--alert-orange); }
-        .text-green { color: var(--terminal-green); }
+        #outcome-image { max-width: 95%; max-height: 60vh; border: 1px solid #444; margin-bottom: 10px; }
+        #role-feedback { font-style: italic; font-size: 16px; margin-bottom: 20px; }
 
-        .ai-credit {
-            position: absolute;
-            bottom: 10px;
-            right: 15px;
-            font-size: 11px;
-            color: #555;
-            pointer-events: none;
-            opacity: 0.6;
-            z-index: 50;
-        }
+        .ai-credit { position: absolute; bottom: 10px; right: 15px; font-size: 10px; color: #444; opacity: 0.7; }
 
-        /* Collective Styling */
-        .collective-mode-ui { border: 1px solid var(--gold); }
-        .collective-mode-ui h1 { color: var(--gold); text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
-        .collective-mode-ui .points-display { color: var(--gold); }
+        .collective-mode-ui { border: 2px solid var(--gold); }
+        .collective-mode-ui h1 { color: var(--gold); }
         .collective-mode-ui input[type=range] { accent-color: var(--gold); }
-        .collective-mode-ui .btn { border-color: var(--gold); color: var(--gold); }
-        .collective-mode-ui .btn:hover { background: var(--gold); color: black; }
-
     </style>
 </head>
 <body>
@@ -174,88 +142,80 @@
     
     <div class="slide active" id="slide-intro">
         <div class="typewriter-text" id="intro-text"></div>
-        <button class="btn" id="intro-btn" onclick="goToRoles()" style="opacity:0; pointer-events: none;">Verbindung herstellen >></button>
+        <button class="btn" id="intro-btn" onclick="goToRoles()" style="opacity:0; pointer-events: none;">>> SYSTEM INITIALISIEREN</button>
     </div>
 
     <div class="slide" id="slide-roles">
-        <h1>Autorisierung wählen</h1>
-        <p style="margin-bottom: 20px;">Wählen Sie Ihre Perspektive im Delta-Kommando.</p>
-        
+        <h1>AUTORISIERUNG ERFORDERLICH</h1>
+        <p>Wählen Sie Ihre operative Ebene im Delta-Kommando.</p>
         <div class="role-container">
             <div class="role-card" onclick="selectRole('junta')">
-                <div class="role-icon">⚙️</div>
-                <span class="role-title">Militärjunta</span>
-                <span class="role-desc">Kontrolle. Stabilität. Souveränität. Jede Einmischung von außen schwächt das Regime.</span>
+                <span class="role-title">MILITÄRJUNTA</span>
+                <span class="role-desc">Schutz der Souveränität. Kontrolle des Referendums. Misstrauen gegenüber dem Ausland.</span>
             </div>
             <div class="role-card" onclick="selectRole('un')">
-                <div class="role-icon">💬</div>
-                <span class="role-title">Internationale Hilfe</span>
-                <span class="role-desc">Logistik. Schutz. Menschenrechte. Wir müssen handeln, bevor die Welt zuschaut.</span>
+                <span class="role-title">HILFS-KOORDINATOR</span>
+                <span class="role-desc">Logistik unter Extrembedingungen. Rettung um jeden Preis. Politische Hürden ignorieren.</span>
             </div>
             <div class="role-card" onclick="selectRole('local')">
-                <div class="role-icon">💡</div>
-                <span class="role-title">Zivilbevölkerung</span>
-                <span class="role-desc">Heimat. Überleben. Erbe. Wir verteidigen unseren Boden gegen die Flut.</span>
+                <span class="role-title">DORFVORSTAND</span>
+                <span class="role-desc">Überleben der Gemeinschaft. Schutz des Bodens. Verteidigung gegen die Flut.</span>
             </div>
         </div>
-
-        <div style="margin-top: 40px; border-top: 1px solid #333; width: 80%; padding-top: 20px; text-align: center;">
-            <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Parteien zusammenführen & Schicksal gemeinsam lenken?</p>
-            <button class="btn btn-gold btn-small" onclick="selectRole('collective')">Krisenstab einberufen (Alle Parteien) >></button>
-        </div>
+        <button class="btn btn-gold" style="margin-top: 40px; font-size: 14px;" onclick="selectRole('collective')">Krisenstab einberufen (Gemeinsame Entscheidung)</button>
     </div>
 
     <div class="slide" id="slide-briefing">
-        <h1 id="briefing-header">Einsatzbefehl</h1>
-        <div class="briefing-box" id="briefing-container">
-            <h3 id="briefing-role-title" style="color: var(--highlight); margin-top:0;">...</h3>
-            <p id="briefing-text" style="text-align: left;">...</p>
+        <h1 id="briefing-header">EINSATZBEFEHL</h1>
+        <div style="border: 1px dashed var(--highlight); padding: 25px; width: 80%; margin-bottom: 20px; background: rgba(0,188,212,0.05);">
+            <h3 id="briefing-role-title" style="color: var(--highlight); margin-top:0;"></h3>
+            <p id="briefing-text" style="text-align: left; font-size: 16px;"></p>
         </div>
-        <p style="font-size: 16px; color: #888;">Verteilen Sie Ihre <strong>10 Ressourcen-Einheiten</strong>.</p>
-        <button class="btn" onclick="goToGame()" id="start-sim-btn">Einsatz beginnen</button>
+        <button class="btn" onclick="goToGame()">OPERATIVE PHASE STARTEN</button>
     </div>
 
     <div class="slide" id="slide-game">
-        <div class="points-display">Verfügbare Einheiten: <span id="points-remaining">10</span> / 10</div>
+        <div id="main-counter" class="points-tracker">EINHEITEN: 0 / 10</div>
+        
         <div class="budget-ui">
             <div class="slider-row">
                 <div class="slider-label">📡 Frühwarn-Netzwerke</div>
-                <input type="range" id="inp-warn" value="0" max="10" oninput="updateBudget()">
+                <input type="range" class="res-slider" id="inp-warn" value="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
             <div class="slider-row">
-                <div class="slider-label">🧱 Deichbau / Mangroven</div>
-                <input type="range" id="inp-protect" value="0" max="10" oninput="updateBudget()">
+                <div class="slider-label">🧱 Küstenschutz / Mangroven</div>
+                <input type="range" class="res-slider" id="inp-protect" value="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
             <div class="slider-row">
-                <div class="slider-label">🚚 Logistik / Evakuierung</div>
-                <input type="range" id="inp-infra" value="0" max="10" oninput="updateBudget()">
+                <div class="slider-label">🚚 Evakuierung & Logistik</div>
+                <input type="range" class="res-slider" id="inp-infra" value="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
-            <div style="height: 1px; background: #444; margin: 15px 0;"></div>
+            <div style="height: 1px; background: #333; margin: 15px 0;"></div>
             <div class="slider-row">
                 <div class="slider-label" style="color: #ff6666;">🔫 Militärische Absicherung</div>
-                <input type="range" id="inp-mil" value="0" max="10" oninput="updateBudget()">
+                <input type="range" class="res-slider" id="inp-mil" value="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
             <div class="slider-row">
-                <div class="slider-label" style="color: #ff6666;">📢 Staatliche Informationskontrolle</div>
-                <input type="range" id="inp-prop" value="0" max="10" oninput="updateBudget()">
+                <div class="slider-label" style="color: #ff6666;">📢 Informations-Zensur</div>
+                <input type="range" class="res-slider" id="inp-prop" value="0" max="10" oninput="updateBudget()">
                 <div class="slider-val">0</div>
             </div>
         </div>
-        <button class="btn" onclick="checkSimulation()">Befehle bestätigen</button>
+        <button class="btn" id="submit-btn" onclick="checkSimulation()">BEFEHLE BESTÄTIGEN</button>
     </div>
 
     <div class="slide" id="slide-result">
-        <img id="outcome-image" src="" alt="Szenario Ausgang">
+        <img id="outcome-image" src="" alt="Lagebericht">
         <div id="role-feedback"></div>
         <div style="display: flex; gap: 20px;">
-            <button class="btn btn-small" onclick="restartGame()">Zurück zur Auswahl</button>
-            <button class="btn btn-gold" id="collective-retry-btn" onclick="selectRole('collective')">Krisenstab einberufen</button>
+            <button class="btn btn-small" style="font-size: 14px; border-width: 1px;" onclick="location.reload()">NEUSTART</button>
+            <button class="btn btn-gold btn-small" id="collective-retry-btn" onclick="selectRole('collective')">RUNDEN TISCH EINBERUFEN</button>
         </div>
-        <div class="ai-credit">Visuals erstellt mit Google Gemini AI</div>
+        <div class="ai-credit">Visuals generiert via Google Gemini AI</div>
     </div>
 
 </div>
@@ -263,16 +223,14 @@
 <script>
     let currentRole = "";
     let isCollectiveMode = false;
-    const maxPoints = 10;
-    
-    // --- INTRO (Ohne "Simulation" und "2 Mio") ---
-    const introLines = "Etabliere verschlüsselte Verbindung zum Delta-Kommando...\nStandort: Irawadi-Delta, Myanmar.\nZeitpunkt: April 2008.\n\nStatusbericht: Tropischer Zyklon 'Nargis' gewinnt an Stärke.\nKategorie: 4.\nAnkunftszeit: 72 Stunden.\n\nDie Kommunikationswege sind instabil. Das Regime schweigt.\nIn diesem Sturm entscheidet allein Ihre Verteilung über den Fortbestand ganzer Gemeinschaften.";
-    
+
+    const introLines = "SYSTEM-LOGIN: DELTA-KOMMANDO [AUTORISIERT]\nSTANDORT: IRAWADI-DELTA, MYANMAR\nZEITPUNKT: 02. MAI 2008 | 04:00 UHR\n\nWARNUNG: ZYKLON 'NARGIS' HAT KATEGORIE 4 ERREICHT.\nWINDGESCHWINDIGKEITEN BIS ZU 215 KM/H.\nEINSCHLAG IN 72 STUNDEN UNVERMEIDLICH.\n\nDIE FLUTWELLE WIRD KOMMEN. DIE REAKTION DES REGIMES IST GELÄHMT.\nDREI MÄCHTE RINGEN UM DIE KONTROLLE.\nIHRE ENTSCHEIDUNG BESTIMMT, WER DEN MORGEN ERLEBT.";
+
     window.onload = function() {
-        typeWriter(introLines, 'intro-text', 25, () => {
+        typeWriter(introLines, 'intro-text', 20, () => {
             const btn = document.getElementById('intro-btn');
-            btn.style.opacity = 1; 
-            btn.style.pointerEvents = 'auto'; // SICHERGESTELLT: Button wird klickbar
+            btn.style.opacity = 1;
+            btn.style.pointerEvents = 'auto';
         });
     };
 
@@ -291,71 +249,56 @@
         document.getElementById(id).classList.add('active');
     }
 
-    function resetUIStyles() {
-        const list = ['slide-briefing', 'slide-game'];
-        list.forEach(id => document.getElementById(id).classList.remove('collective-mode-ui'));
-        document.getElementById('briefing-container').classList.remove('collective');
-        document.getElementById('briefing-role-title').style.color = "var(--highlight)";
-        document.getElementById('briefing-header').innerText = "Einsatzbefehl";
-    }
-
     function selectRole(role) {
         currentRole = role;
         const titleEl = document.getElementById('briefing-role-title');
         const textEl = document.getElementById('briefing-text');
-        document.querySelectorAll('input[type=range]').forEach(i => i.value = 0);
-        resetUIStyles();
+        document.querySelectorAll('.res-slider').forEach(i => i.value = 0);
+        
+        document.getElementById('slide-game').classList.remove('collective-mode-ui');
+        document.getElementById('slide-briefing').classList.remove('collective-mode-ui');
 
         if (role === 'junta') {
-            isCollectiveMode = false;
-            titleEl.innerText = "AUTORISIERUNG: GENERAL (SPDC)";
-            textEl.innerHTML = "Priorität: <strong>Nationale Sicherheit</strong>. Das geplante Verfassungsreferendum darf unter keinen Umständen gefährdet werden. Hilfe von außen wird als Infiltrationsversuch gewertet.";
+            titleEl.innerText = "EBENE: OBERKOMMANDO (SPDC)";
+            textEl.innerHTML = "Das Referendum hat Vorrang. Stabilität ist wichtiger als Hilfe. Verhindern Sie, dass ausländische Akteure das Chaos nutzen, um Unruhe zu stiften.";
         } else if (role === 'un') {
-            isCollectiveMode = false;
-            titleEl.innerText = "AUTORISIERUNG: UN-KOORDINATOR";
-            textEl.innerHTML = "Priorität: <strong>Katastrophenhilfe</strong>. Das Delta ist schutzlos. Wir müssen Wege finden, Vorräte und Warnungen zu den Menschen zu bringen – ungeachtet politischer Barrieren.";
+            titleEl.innerText = "EBENE: INTERNATIONALE KOORDINATION";
+            textEl.innerHTML = "Die Zeit läuft ab. Mobilisieren Sie Ressourcen für Warnung und Evakuierung. Jede Minute, die wir mit Verhandlungen verlieren, kostet Menschenleben.";
         } else if (role === 'local') {
-            isCollectiveMode = false;
-            titleEl.innerText = "AUTORISIERUNG: DORFVORSTEHER";
-            textEl.innerHTML = "Priorität: <strong>Schutz des Bodens</strong>. Wir kennen die Gezeiten. Ohne Deiche und Mangroven wird die Flutwelle unser Erbe für immer auslöschen.";
+            titleEl.innerText = "EBENE: LOKALE VERWALTUNG";
+            textEl.innerHTML = "Wir sind auf uns allein gestellt. Investieren Sie in Deiche und Bunker. Wenn die Flut kommt, ist der Boden unser einziger Schutz.";
         } else if (role === 'collective') {
             isCollectiveMode = true;
-            document.getElementById('slide-briefing').classList.add('collective-mode-ui');
             document.getElementById('slide-game').classList.add('collective-mode-ui');
-            document.getElementById('briefing-container').classList.add('collective');
-            document.getElementById('briefing-header').innerText = "GEMEINSAMER KRISENSTAB";
-            titleEl.innerText = "SZENARIO: RUNDER TISCH";
-            titleEl.style.color = "var(--gold)";
-            textEl.innerHTML = "Die Befehlshaber sitzen am Tisch. Ein Kompromiss ist unumgänglich. Finden Sie ein Gleichgewicht zwischen militärischer Kontrolle und lebensnotwendigem Küstenschutz.";
+            document.getElementById('slide-briefing').classList.add('collective-mode-ui');
+            titleEl.innerText = "EBENE: GEMEINSAMER KRISENSTAB";
+            textEl.innerHTML = "Ein gezwungener Kompromiss. Alle Parteien müssen sich auf eine Strategie einigen. Finden Sie die Balance zwischen Sicherheit und Rettung.";
         }
         showSlide('slide-briefing');
     }
 
-    function goToRoles() { 
-        resetUIStyles();
-        showSlide('slide-roles'); 
-    }
-
+    function goToRoles() { showSlide('slide-roles'); }
     function goToGame() { showSlide('slide-game'); updateBudget(); }
-    function restartGame() { showSlide('slide-roles'); }
 
     function updateBudget() {
-        const inputs = document.querySelectorAll('input[type=range]');
-        let sum = 0;
-        inputs.forEach(inp => {
-            let val = parseInt(inp.value);
-            sum += val;
-            inp.nextElementSibling.innerText = val;
+        const sliders = document.querySelectorAll('.res-slider');
+        let total = 0;
+        sliders.forEach(s => {
+            let val = parseInt(s.value);
+            total += val;
+            s.nextElementSibling.innerText = val;
         });
-        const display = document.getElementById('points-remaining');
-        const remaining = maxPoints - sum;
-        display.innerText = remaining;
-        if (remaining < 0) {
-            display.parentElement.classList.add('error');
-            display.innerText = "LIMIT ÜBERSCHRITTEN (" + remaining + ")";
+
+        const counter = document.getElementById('main-counter');
+        const submitBtn = document.getElementById('submit-btn');
+        counter.innerText = `EINHEITEN: ${total} / 10`;
+
+        if (total > 10) {
+            counter.classList.add('warning');
+            submitBtn.disabled = true;
         } else {
-            display.parentElement.classList.remove('error');
-            display.parentElement.innerText = "Verfügbare Einheiten: " + remaining + " / 10";
+            counter.classList.remove('warning');
+            submitBtn.disabled = false;
         }
     }
 
@@ -365,48 +308,44 @@
         const infra = parseInt(document.getElementById('inp-infra').value);
         const mil = parseInt(document.getElementById('inp-mil').value);
         const prop = parseInt(document.getElementById('inp-prop').value);
-        if ((warn + protect + infra + mil + prop) > maxPoints) { alert("Punktelimit überschritten!"); return; }
-
+        
         let imageName = ""; let feedback = ""; let fColor = "";
         const path = "assets/";
 
         if (mil + prop >= 6) {
             imageName = "ending1.png"; fColor = "text-red";
-            feedback = isCollectiveMode ? "Der Krisenstab scheiterte an der Paranoia. Das Delta blieb isoliert." : "Sicherheit wurde über das Leben der Delta-Bewohner gestellt.";
-        }
-        else if (warn >= 6 && protect <= 1 && infra <= 1) {
+            feedback = "Die Kontrolle wurde gewahrt. Das Schweigen des Deltas ist nun absolut.";
+        } else if (warn >= 6 && protect <= 1 && infra <= 1) {
             imageName = "ending2.png"; fColor = "text-red";
-            feedback = "Tödliche Klarheit: Die Menschen sahen die Welle kommen, hatten aber keine Zuflucht.";
-        }
-        else if (infra >= 5 && protect <= 1) {
+            feedback = "Tödliche Klarheit: Alle wussten vom Tod, niemand konnte ihm entkommen.";
+        } else if (infra >= 5 && protect <= 1) {
             imageName = "ending3.png"; fColor = "text-red";
-            feedback = "Schwimmende Friedhöfe: Die Evakuierung ohne Küstenschutz wurde zur Falle.";
-        }
-        else if (protect >= 5 && warn >= 3) {
+            feedback = "Die Fluchtwege wurden zu Gräbern. Die Welle war schneller als die Boote.";
+        } else if (protect >= 5 && warn >= 3) {
             imageName = "ending4.png"; fColor = "text-green";
-            feedback = "Das Mangroven-Wunder: Die Natur und solide Planung retteten das Delta.";
-        }
-        else if (infra >= 4 && warn >= 4) {
+            feedback = "Das Mangroven-Wunder: Die Natur hielt stand. Das Delta überlebt.";
+        } else if (infra >= 4 && warn >= 4) {
             imageName = "ending5.png"; fColor = "text-orange";
-            feedback = "Exil in der Heimat: Leben wurden gerettet, doch der Boden ist unbewohnbar.";
-        }
-        else if (protect >= 6 && warn <= 1) {
+            feedback = "Die Häuser sind fort, aber die Menschen leben. Ein hoher Preis für das Exil.";
+        } else if (protect >= 6 && warn <= 1) {
             imageName = "ending6.png"; fColor = "text-orange";
-            feedback = "Festung im Schlamm: Die Bunker blieben ohne rechtzeitige Warnung oft leer.";
-        }
-        else if (mil === 0 && warn + infra >= 5) {
+            feedback = "Stumme Festungen: Die Bunker blieben leer, weil der Ruf nicht gehört wurde.";
+        } else if (mil === 0 && warn + infra >= 5) {
             imageName = "ending7.png"; fColor = "text-orange";
-            feedback = "Zusammenbruch der Ordnung: Humanitärer Erfolg führte zu politischem Chaos.";
-        }
-        else {
+            feedback = "Humanitärer Sieg – politisches Chaos. Das Delta atmet, das Regime wankt.";
+        } else {
             imageName = "ending8.png"; fColor = "text-red";
-            feedback = "Zögerliches Handeln führte zu unzureichendem Schutz an allen Fronten.";
+            feedback = "Halbherzige Befehle führen zu ganzem Leid. Die Chance wurde vertan.";
         }
 
-        document.getElementById('outcome-image').src = path + imageName;
+        const imgEl = document.getElementById('outcome-image');
+        imgEl.src = path + imageName;
+        imgEl.onerror = function() { this.alt = "Fehler: Bild " + imageName + " nicht in /assets gefunden."; };
+        
         const fb = document.getElementById('role-feedback');
-        fb.innerText = feedback; fb.className = fColor;
-        document.getElementById('collective-retry-btn').innerText = isCollectiveMode ? "Krisenstab neu besetzen" : "Runden Tisch einberufen";
+        fb.innerText = feedback;
+        fb.style.color = (fColor === "text-green") ? "#33ff33" : (fColor === "text-orange" ? "#ff9800" : "#ff3333");
+        
         showSlide('slide-result');
     }
 </script>
