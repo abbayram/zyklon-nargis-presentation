@@ -129,7 +129,7 @@
         <p>Wählen Sie Ihre strategische Ausrichtung für die 10-Milliarden-Investition.</p>
         <div style="display: flex; gap: 20px; margin-top: 30px;">
             <div class="role-card" onclick="selectRole('junta')">
-                <strong style="display:block; margin-bottom:10px;">OBERKOMMANDO</strong>
+                <strong style="display:block; margin-bottom:10px;">MILITÄRJUNTA</strong>
                 <small>Fokus: Souveränität. Sicherung der Staatsmacht und Kontrolle über Finanzströme.</small>
             </div>
             <div class="role-card" onclick="selectRole('un')">
@@ -141,7 +141,7 @@
                 <small>Fokus: Ökologie. Schutz des Lebensraums durch Mangroven und lokale Autarkie.</small>
             </div>
         </div>
-        <button class="btn btn-gold" style="margin-top: 40px; font-size: 13px;" onclick="selectRole('collective')">KRISENSTAB EINBERUFEN (TRI-PARTITE GRUPPE)</button>
+        <button class="btn btn-gold" style="margin-top: 40px; font-size: 13px;" onclick="selectRole('collective')">GEMEINSAME BUDGETPLANUNG STARTEN</button>
     </div>
 
     <div class="slide" id="slide-briefing">
@@ -192,7 +192,7 @@
         <div id="role-feedback"></div>
         <div style="display: flex; gap: 20px; margin-top: 30px;">
             <button class="btn" style="font-size: 13px;" onclick="location.reload()">NEUSTART</button>
-            <button class="btn btn-gold" id="coll-btn" style="font-size: 13px;" onclick="selectRole('collective')">KRISENSTAB AKTIVIEREN</button>
+            <button class="btn btn-gold" id="coll-btn" style="font-size: 13px;" onclick="selectRole('collective')">RUNDEN TISCH EINBERUFEN</button>
         </div>
         <div class="ai-credit">Visuals generiert via Google Gemini AI</div>
     </div>
@@ -226,17 +226,17 @@
         const title = document.getElementById('briefing-title');
         const text = document.getElementById('briefing-text');
         if (role === 'junta') {
-            title.innerText = "AUFTRAG: MACHTERHALT & ORDNUNG";
+            title.innerText = "AUFTRAG: MILITÄRJUNTA - MACHTERHALT";
             text.innerText = "Investieren Sie in Grenzsicherung und Informationshoheit. Nur ein starkes Regime kann das Land schützen.";
         } else if (role === 'un') {
-            title.innerText = "AUFTRAG: GLOBALE RESILIENZ";
+            title.innerText = "AUFTRAG: INT. ALLIANZ - RESILIENZ";
             text.innerText = "Investieren Sie in High-Tech-Frühwarnsysteme und Logistik. Wir müssen schneller reagieren können.";
         } else if (role === 'local') {
-            title.innerText = "AUFTRAG: ÖKOLOGISCHER SCHUTZWALL";
+            title.innerText = "AUFTRAG: DELTA-KOMITEE - NATURSCHUTZ";
             text.innerText = "Die Natur ist unser bester Schutz. Investieren Sie in Mangroven und lokale Zyklon-Bunker.";
         } else if (role === 'collective') {
-            title.innerText = "AUFTRAG: DER RUNDE TISCH";
-            text.innerText = "Finden Sie einen Kompromiss zwischen Macht, Schutz und Rettung.";
+            title.innerText = "AUFTRAG: GEMEINSAME PLANUNG";
+            text.innerText = "Verschiedene Akteure müssen einen Kompromiss zwischen Macht, Schutz und Rettung finden.";
         }
         showSlide('slide-briefing');
     }
@@ -265,22 +265,21 @@
 
         // --- PRIORITÄTEN-HIERARCHIE ---
 
-        // 1. SECRET ENDING 7: DER ZUSAMMENBRUCH (Sehr schwer)
+        // 1. SECRET ENDING 7: DER ZUSAMMENBRUCH (Extrem schwer)
         if (mil === 0 && prop === 0 && warn >= 4 && infra >= 4) {
             img = "ending7.png"; color = "#ff9800";
-            feedback = "DER ZUSAMMENBRUCH: Durch völlige Transparenz und Verzicht auf Macht verlor die Junta die Kontrolle. Eine neue Ära beginnt im Chaos.";
+            feedback = "DER ZUSAMMENBRUCH: Durch völligen Verzicht auf Machtmittel verlor die Junta die Kontrolle. Eine neue Ära beginnt im Chaos.";
         }
-        // 2. ENDING 4: DAS MANGROVEN-WUNDER (Siegbedingung nach deinen Vorgaben)
+        // 2. ENDING 4: DAS MANGROVEN-WUNDER (Siegbedingung)
         else if ((protect + warn + infra >= 7) && (protect >= 1 && warn >= 1 && infra >= 1)) {
             img = "ending4.png"; color = "#33ff33";
-            feedback = "DAS MANGROVEN-WUNDER: Überragender Erfolg! Die Kombination aus Natur, Technik und Logistik macht das Delta uneinnehmbar für den Sturm.";
+            feedback = "DAS MANGROVEN-WUNDER: Überragender Erfolg! Die Kombination aus Natur, Technik und Logistik macht das Delta sicher.";
         }
         // 3. ENDING 1: DER EISERNE VORHANG
         else if (mil + prop >= 6) {
             img = "ending1.png"; color = "#ff3333";
-            feedback = "DER EISERNE VORHANG: Das Geld sicherte die Diktatur. Das Delta bleibt fest im Griff der Generäle, aber schutzlos gegen die See.";
+            feedback = "DER EISERNE VORHANG: Das Geld sicherte die Diktatur. Das Delta bleibt fest im Griff der Junta, aber schutzlos gegen die See.";
         }
-        // 4. WEITERE SZENARIEN
         else if (infra >= 5 && warn >= 3) {
             img = "ending5.png"; color = "#ff9800";
             feedback = "EXIL IN DER HEIMAT: Die Menschen überleben, aber das Land ist verloren.";
